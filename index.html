@@ -2,18 +2,31 @@
 <html lang="id">
 <head>
 <meta charset="utf-8" />
-<title>Live Streaming | Rendy Casual</title>
+<title>RENDY CASUAL</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <style>
-body.dark { background: linear-gradient(135deg, #000, #111); color: white; }
-body.light { background: #f9f9f9; color: #111; }
+body.dark { background: linear-gradient(135deg,#000,#111); color:white; }
+body.light { background:#f9f9f9; color:#111; }
 .btn { @apply px-3 py-1 rounded-lg transition text-sm; }
-video::-webkit-media-controls { display: none !important; }
-.text-watermark { position: absolute; top: 10px; right: 15px; background: #000; color: white; font-weight: bold; font-size: 14px; padding: 3px 6px; border-radius: 8px; pointer-events: none; z-index: 10; }
-#errorOverlay, #loadingOverlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); color:#ffcccc; font-size:18px; font-weight:bold; display:none; align-items:center; justify-content:center; text-align:center; padding:20px; z-index:20; }
+video::-webkit-media-controls { display:none !important; }
+
+#channelName {
+  font-style: italic; font-weight:bold; text-align:center;
+  font-size:32px; margin-bottom:8px;
+}
+#channelName span:first-child { color:red; }
+#channelName span:last-child { color:white; }
+
+.text-watermark { position:absolute; top:10px; right:15px; background:#000; color:white; font-weight:bold; font-size:14px; padding:3px 6px; border-radius:8px; pointer-events:none; z-index:10; }
+
+#errorOverlay,#loadingOverlay {
+  position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); 
+  color:#ffcccc; font-size:18px; font-weight:bold; display:none; align-items:center; justify-content:center; text-align:center; padding:20px; z-index:20;
+}
 #loadingOverlay { display:flex; color:white; font-size:20px; }
+
 #controlBar { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; padding:6px 8px; gap:6px; z-index:15; opacity:1; transition:opacity 0.3s ease; }
 #controlBar.hidden { opacity:0; }
 #controlBar input[type="range"] { width:80px; }
@@ -24,9 +37,9 @@ video::-webkit-media-controls { display: none !important; }
 </style>
 </head>
 <body class="dark min-h-screen flex flex-col items-center justify-center">
-<header class="mb-4 text-center">
-<h1 class="text-lg font-semibold uppercase">RENDY CASUAL</h1>
-</header>
+
+<!-- Nama channel selalu terlihat -->
+<div id="channelName"><span>RENDY</span> <span>CASUAL</span></div>
 
 <main class="w-full max-w-4xl p-2 relative">
 <div id="player-container" class="relative rounded-lg overflow-hidden shadow-lg">
@@ -35,14 +48,13 @@ video::-webkit-media-controls { display: none !important; }
   <div id="loadingOverlay">⏳ Memuat stream...</div>
   <div id="errorOverlay">⚠️ Stream tidak tersedia</div>
 
+  <!-- Bar kontrol -->
   <div id="controlBar">
     <button id="btnSendTV" class="btn bg-white/20 hover:bg-white/30">📺 TV</button>
     <span id="userIP" class="text-white/80 text-sm">IP: ...</span>
     <span id="userLocation" class="text-white/80 text-sm ml-2">Lokasi: ...</span>
     <span id="viewerCount" class="text-white/80 text-sm ml-2">👥 0</span>
-    <div class="flex items-center gap-1">
-      🔊 <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
-    </div>
+    <div class="flex items-center gap-1">🔊 <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1"></div>
     <div id="qualityFullscreen">
       <div class="relative">
         <button id="btnQuality" class="btn bg-white/20 hover:bg-white/30">HD ▼</button>
@@ -53,36 +65,27 @@ video::-webkit-media-controls { display: none !important; }
   </div>
 </div>
 
-<div class="mt-4 space-y-4 text-center">
-  <div>
-    <h2 class="font-semibold mb-1">🔴 BRA vs FRA</h2>
-    <div class="flex flex-wrap justify-center gap-2">
-      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',0)">Link 1</button>
-      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',1)">Link 2</button>
-      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',2)">Link 3</button>
-    </div>
+<!-- Pilihan stream sejajar -->
+<div class="mt-4 space-y-2 text-center">
+  <div class="flex flex-wrap items-center justify-center gap-2">
+    <span class="font-semibold mr-2">🔴 BRA vs FRA:</span>
+    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',0)">Link 1</button>
+    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',1)">Link 2</button>
+    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',2)">Link 3</button>
   </div>
-  <div>
-    <h2 class="font-semibold mb-1">🔴 USA vs TUR</h2>
-    <div class="flex flex-wrap justify-center gap-2">
-      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',0)">Link 1</button>
-      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',1)">Link 2</button>
-      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',2)">Link 3</button>
-    </div>
+  <div class="flex flex-wrap items-center justify-center gap-2">
+    <span class="font-semibold mr-2">🔴 USA vs TUR:</span>
+    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',0)">Link 1</button>
+    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',1)">Link 2</button>
+    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',2)">Link 3</button>
   </div>
 </div>
 </main>
 
 <script>
 const STREAMS = {
-  stream1:{urls:[
-    "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/byhixyLh/live.isml/.m3u8",
-    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8"
-  ]},
-  stream2:{urls:[
-    "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/fZ91qpSi/live.isml/.m3u8",
-    "https://trt.daioncdn.net/trt-1/master.m3u8?app=web"
-  ]}
+  stream1:{urls:["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/byhixyLh/live.isml/.m3u8","https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8"]},
+  stream2:{urls:["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/fZ91qpSi/live.isml/.m3u8","https://trt.daioncdn.net/trt-1/master.m3u8?app=web"]}
 };
 
 const video=document.getElementById("video");
@@ -92,8 +95,7 @@ let hls=null;
 
 function playStream(streamKey,index=0){
   const urls=STREAMS[streamKey].urls;
-  errorOverlay.style.display="none";
-  loadingOverlay.style.display="flex";
+  errorOverlay.style.display="none"; loadingOverlay.style.display="flex";
   let urlIndex=index;
   function tryNext(){
     if(urlIndex>=urls.length){ loadingOverlay.style.display="none"; errorOverlay.style.display="flex"; return; }
@@ -101,17 +103,11 @@ function playStream(streamKey,index=0){
     if(hls){ hls.destroy(); hls=null; }
     if(Hls.isSupported()){
       hls=new Hls();
-      hls.loadSource(url);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED,()=>{
-        video.play().then(()=>{ video.muted=false; video.volume=1.0; });
-        setupQualityMenu(); loadingOverlay.style.display="none";
-      });
+      hls.loadSource(url); hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED,()=>{ video.play().then(()=>{ video.muted=false; video.volume=1; }); setupQualityMenu(); loadingOverlay.style.display="none"; });
       hls.on(Hls.Events.ERROR,(event,data)=>{ if(data.fatal){ urlIndex++; tryNext(); }});
     } else if(video.canPlayType("application/vnd.apple.mpegurl")){
-      video.src=url;
-      video.play().then(()=>{ video.muted=false; video.volume=1.0; loadingOverlay.style.display="none"; })
-      .catch(()=>{ urlIndex++; tryNext(); });
+      video.src=url; video.play().then(()=>{ video.muted=false; video.volume=1; loadingOverlay.style.display="none"; }).catch(()=>{ urlIndex++; tryNext(); });
       video.addEventListener("error",()=>{ urlIndex++; tryNext(); });
     }
   }
@@ -119,27 +115,18 @@ function playStream(streamKey,index=0){
 }
 
 function setupQualityMenu(){
-  const qualityOptions=document.getElementById("qualityOptions");
-  qualityOptions.innerHTML="";
+  const qualityOptions=document.getElementById("qualityOptions"); qualityOptions.innerHTML="";
   if(!hls||!hls.levels) return;
   const autoBtn=document.createElement("button"); autoBtn.textContent="Auto"; autoBtn.onclick=()=>{hls.currentLevel=-1; toggleQualityMenu(false);};
   qualityOptions.appendChild(autoBtn);
-  hls.levels.forEach((level,i)=>{
-    const btn=document.createElement("button"); btn.textContent=level.height?`${level.height}p`:`Level ${i}`;
-    btn.onclick=()=>{ hls.currentLevel=i; toggleQualityMenu(false);};
-    qualityOptions.appendChild(btn);
-  });
+  hls.levels.forEach((level,i)=>{ const btn=document.createElement("button"); btn.textContent=level.height?`${level.height}p`:`Level ${i}`; btn.onclick=()=>{hls.currentLevel=i; toggleQualityMenu(false);}; qualityOptions.appendChild(btn); });
 }
 
 function toggleQualityMenu(show){ document.getElementById("qualityOptions").style.display=show?"block":"none"; }
 document.getElementById("btnQuality").addEventListener("click",()=>{ toggleQualityMenu(document.getElementById("qualityOptions").style.display!=="block"); });
 document.getElementById("volumeControl").addEventListener("input", e=>{ video.muted=false; video.volume=e.target.value; });
 
-document.getElementById("btnFullscreen").addEventListener("click",()=>{
-  const container=document.getElementById("player-container");
-  if(document.fullscreenElement) document.exitFullscreen();
-  else container.requestFullscreen?.();
-});
+document.getElementById("btnFullscreen").addEventListener("click",()=>{ const container=document.getElementById("player-container"); if(document.fullscreenElement) document.exitFullscreen(); else container.requestFullscreen?.(); });
 video.addEventListener("dblclick",()=>{ const container=document.getElementById("player-container"); if(!document.fullscreenElement) container.requestFullscreen?.(); else document.exitFullscreen(); });
 
 fetch("https://ipapi.co/json/").then(res=>res.json()).then(data=>{
@@ -147,17 +134,11 @@ fetch("https://ipapi.co/json/").then(res=>res.json()).then(data=>{
   document.getElementById("userLocation").textContent=`Lokasi: ${data.city}, ${data.country_name}`;
 }).catch(()=>{ document.getElementById("userIP").textContent="IP: tidak tersedia"; document.getElementById("userLocation").textContent="Lokasi: tidak tersedia"; });
 
-// Simulasi jumlah penonton (update tiap 5 detik)
-function updateViewerCount(){
-  const count=document.getElementById("viewerCount");
-  // Random 100-999 untuk demo, bisa diganti ambil dari backend
-  count.textContent=`👥 ${Math.floor(Math.random()*900+100)}`;
-}
-setInterval(updateViewerCount,5000);
-updateViewerCount();
+// Simulasi viewer
+function updateViewerCount(){ const count=document.getElementById("viewerCount"); count.textContent=`👥 ${Math.floor(Math.random()*900+100)}`; }
+setInterval(updateViewerCount,5000); updateViewerCount();
 
-const controlBar=document.getElementById("controlBar");
-let hideTimeout;
+const controlBar=document.getElementById("controlBar"); let hideTimeout;
 function showControls(){ controlBar.classList.remove("hidden"); clearTimeout(hideTimeout); hideTimeout=setTimeout(()=>{ controlBar.classList.add("hidden"); },3000);}
 document.getElementById("player-container").addEventListener("mousemove", showControls);
 document.getElementById("player-container").addEventListener("touchstart", showControls);
