@@ -14,7 +14,7 @@ video::-webkit-media-controls { display:none !important; }
 
 #channelName {
   font-style: italic; font-weight:bold; text-align:center;
-  font-size:32px; margin-bottom:8px;
+  font-size:36px; margin-bottom:12px;
 }
 #channelName span:first-child { color:red; }
 #channelName span:last-child { color:white; }
@@ -27,13 +27,22 @@ video::-webkit-media-controls { display:none !important; }
 }
 #loadingOverlay { display:flex; color:white; font-size:20px; }
 
-#controlBar { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; padding:6px 8px; gap:6px; z-index:15; opacity:1; transition:opacity 0.3s ease; }
+#controlBar {
+  position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); display:flex;
+  justify-content:space-between; align-items:center; padding:6px 8px; gap:6px; z-index:15; opacity:1; transition:opacity 0.3s ease;
+}
 #controlBar.hidden { opacity:0; }
-#controlBar input[type="range"] { width:80px; }
+#controlLeft { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+#controlLeft span, #controlLeft button { white-space: nowrap; }
+#volumeControl { width:80px; }
+
 #qualityFullscreen { display:flex; gap:6px; position:relative; z-index:20; }
 #qualityOptions { display:none; position:absolute; bottom:36px; right:0; background:rgba(0,0,0,0.9); border-radius:6px; overflow:hidden; min-width:70px; }
 #qualityOptions button { display:block; width:100%; padding:4px 8px; text-align:left; background:transparent; color:white; border:none; cursor:pointer; font-size:13px; }
 #qualityOptions button:hover { background: rgba(255,255,255,0.2); }
+
+.stream-buttons { display:flex; flex-wrap:wrap; justify-content:center; gap:4px; font-size:14px; }
+.stream-buttons button { flex:0 1 auto; }
 </style>
 </head>
 <body class="dark min-h-screen flex flex-col items-center justify-center">
@@ -48,13 +57,15 @@ video::-webkit-media-controls { display:none !important; }
   <div id="loadingOverlay">⏳ Memuat stream...</div>
   <div id="errorOverlay">⚠️ Stream tidak tersedia</div>
 
-  <!-- Bar kontrol -->
+  <!-- Bar kontrol compact -->
   <div id="controlBar">
-    <button id="btnSendTV" class="btn bg-white/20 hover:bg-white/30">📺 TV</button>
-    <span id="userIP" class="text-white/80 text-sm">IP: ...</span>
-    <span id="userLocation" class="text-white/80 text-sm ml-2">Lokasi: ...</span>
-    <span id="viewerCount" class="text-white/80 text-sm ml-2">👥 0</span>
-    <div class="flex items-center gap-1">🔊 <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1"></div>
+    <div id="controlLeft">
+      <button id="btnSendTV" class="btn bg-white/20 hover:bg-white/30">📺 TV</button>
+      <span id="userIP" class="text-white/80 text-sm">IP: ...</span>
+      <span id="userLocation" class="text-white/80 text-sm">Lokasi: Depok, Indonesia</span>
+      <span id="viewerCount" class="text-white/80 text-sm">👥 828</span>
+      🔊 <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
+    </div>
     <div id="qualityFullscreen">
       <div class="relative">
         <button id="btnQuality" class="btn bg-white/20 hover:bg-white/30">HD ▼</button>
@@ -129,14 +140,9 @@ document.getElementById("volumeControl").addEventListener("input", e=>{ video.mu
 document.getElementById("btnFullscreen").addEventListener("click",()=>{ const container=document.getElementById("player-container"); if(document.fullscreenElement) document.exitFullscreen(); else container.requestFullscreen?.(); });
 video.addEventListener("dblclick",()=>{ const container=document.getElementById("player-container"); if(!document.fullscreenElement) container.requestFullscreen?.(); else document.exitFullscreen(); });
 
-fetch("https://ipapi.co/json/").then(res=>res.json()).then(data=>{
-  document.getElementById("userIP").textContent=`IP: ${data.ip}`;
-  document.getElementById("userLocation").textContent=`Lokasi: ${data.city}, ${data.country_name}`;
-}).catch(()=>{ document.getElementById("userIP").textContent="IP: tidak tersedia"; document.getElementById("userLocation").textContent="Lokasi: tidak tersedia"; });
-
-// Simulasi viewer
-function updateViewerCount(){ const count=document.getElementById("viewerCount"); count.textContent=`👥 ${Math.floor(Math.random()*900+100)}`; }
-setInterval(updateViewerCount,5000); updateViewerCount();
+// Data IP & lokasi (tetap Depok)
+document.getElementById("userIP").textContent="IP: ...";
+document.getElementById("userLocation").textContent="Lokasi: Depok, Indonesia";
 
 const controlBar=document.getElementById("controlBar"); let hideTimeout;
 function showControls(){ controlBar.classList.remove("hidden"); clearTimeout(hideTimeout); hideTimeout=setTimeout(()=>{ controlBar.classList.add("hidden"); },3000);}
