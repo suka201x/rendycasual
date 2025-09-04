@@ -1,244 +1,169 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <title>Live Streaming | Rendy Casual</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <style>
-    body.dark { background: linear-gradient(135deg, #000, #111); color: white; }
-    body.light { background: #f9f9f9; color: #111; }
-    .btn { @apply px-3 py-1 rounded-lg transition text-sm; }
-    video::-webkit-media-controls { display: none !important; }
-    .text-watermark {
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      background: #000;
-      color: white;
-      font-weight: bold;
-      font-size: 14px;
-      padding: 3px 6px;
-      border-radius: 8px;
-      pointer-events: none;
-      z-index: 10;
-    }
-    #errorOverlay, #loadingOverlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.8);
-      color: #ffcccc;
-      font-size: 18px;
-      font-weight: bold;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
-      z-index: 20;
-    }
-    #loadingOverlay { display: flex; color: white; font-size: 20px; }
-
-    /* Bar kontrol bawah */
-    #controlBar {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 8px;
-      gap: 6px;
-      z-index: 15;
-      opacity: 1;
-      transition: opacity 0.3s ease;
-    }
-    #controlBar.hidden { opacity: 0; }
-    #controlBar input[type="range"] { width: 80px; }
-
-    #qualityFullscreen {
-      display: flex;
-      gap: 6px;
-      position: relative;
-      z-index: 20;
-    }
-    #qualityOptions {
-      display: none;
-      position: absolute;
-      bottom: 36px;
-      right: 0;
-      background: rgba(0,0,0,0.9);
-      border-radius: 6px;
-      overflow: hidden;
-      min-width: 70px;
-    }
-    #qualityOptions button {
-      display: block;
-      width: 100%;
-      padding: 4px 8px;
-      text-align: left;
-      background: transparent;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 13px;
-    }
-    #qualityOptions button:hover { background: rgba(255,255,255,0.2); }
-  </style>
+<meta charset="utf-8" />
+<title>Live Streaming | Rendy Casual</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<style>
+body.dark { background: linear-gradient(135deg, #000, #111); color: white; }
+body.light { background: #f9f9f9; color: #111; }
+.btn { @apply px-3 py-1 rounded-lg transition text-sm; }
+video::-webkit-media-controls { display: none !important; }
+.text-watermark { position: absolute; top: 10px; right: 15px; background: #000; color: white; font-weight: bold; font-size: 14px; padding: 3px 6px; border-radius: 8px; pointer-events: none; z-index: 10; }
+#errorOverlay, #loadingOverlay { position: absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); color:#ffcccc; font-size:18px; font-weight:bold; display:none; align-items:center; justify-content:center; text-align:center; padding:20px; z-index:20; }
+#loadingOverlay { display:flex; color:white; font-size:20px; }
+#controlBar { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.5); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; padding:6px 8px; gap:6px; z-index:15; opacity:1; transition:opacity 0.3s ease; }
+#controlBar.hidden { opacity:0; }
+#controlBar input[type="range"] { width:80px; }
+#qualityFullscreen { display:flex; gap:6px; position:relative; z-index:20; }
+#qualityOptions { display:none; position:absolute; bottom:36px; right:0; background:rgba(0,0,0,0.9); border-radius:6px; overflow:hidden; min-width:70px; }
+#qualityOptions button { display:block; width:100%; padding:4px 8px; text-align:left; background:transparent; color:white; border:none; cursor:pointer; font-size:13px; }
+#qualityOptions button:hover { background: rgba(255,255,255,0.2); }
+</style>
 </head>
 <body class="dark min-h-screen flex flex-col items-center justify-center">
-  <header class="mb-4 text-center">
-    <h1 class="text-lg font-semibold uppercase">RENDY CASUAL</h1>
-  </header>
+<header class="mb-4 text-center">
+<h1 class="text-lg font-semibold uppercase">RENDY CASUAL</h1>
+</header>
 
-  <main class="w-full max-w-4xl p-2 relative">
-    <div id="player-container" class="relative rounded-lg overflow-hidden shadow-lg">
-      <video id="video" class="w-full h-auto" playsinline autoplay muted></video>
-      <div class="text-watermark">RENDY CASUAL</div>
-      <div id="loadingOverlay">⏳ Memuat stream...</div>
-      <div id="errorOverlay">⚠️ Stream tidak tersedia</div>
+<main class="w-full max-w-4xl p-2 relative">
+<div id="player-container" class="relative rounded-lg overflow-hidden shadow-lg">
+  <video id="video" class="w-full h-auto" playsinline autoplay muted></video>
+  <div class="text-watermark">RENDY CASUAL</div>
+  <div id="loadingOverlay">⏳ Memuat stream...</div>
+  <div id="errorOverlay">⚠️ Stream tidak tersedia</div>
 
-      <!-- Kontrol bawah ala YouTube mobile -->
-      <div id="controlBar">
-        <button id="btnSendTV" class="btn bg-white/20 hover:bg-white/30">📺 TV</button>
-        <span id="userIP" class="text-white/80 text-sm">IP: ...</span>
-        <span id="userLocation" class="text-white/80 text-sm ml-2">Lokasi: ...</span>
-        <div class="flex items-center gap-1">
-          🔊 <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
-        </div>
-        <div id="qualityFullscreen">
-          <div class="relative">
-            <button id="btnQuality" class="btn bg-white/20 hover:bg-white/30">HD ▼</button>
-            <div id="qualityOptions"></div>
-          </div>
-          <button id="btnFullscreen" class="btn bg-white/20 hover:bg-white/30">⛶ Full Screen</button>
-        </div>
-      </div>
+  <div id="controlBar">
+    <button id="btnSendTV" class="btn bg-white/20 hover:bg-white/30">📺 TV</button>
+    <span id="userIP" class="text-white/80 text-sm">IP: ...</span>
+    <span id="userLocation" class="text-white/80 text-sm ml-2">Lokasi: ...</span>
+    <span id="viewerCount" class="text-white/80 text-sm ml-2">👥 0</span>
+    <div class="flex items-center gap-1">
+      🔊 <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
     </div>
-
-    <!-- Pilihan stream -->
-    <div class="mt-4 space-y-4 text-center">
-      <div>
-        <h2 class="font-semibold mb-1">🔴 BRA vs FRA</h2>
-        <div class="flex flex-wrap justify-center gap-2">
-          <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',0)">Link 1</button>
-          <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',1)">Link 2</button>
-          <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',2)">Link 3</button>
-        </div>
+    <div id="qualityFullscreen">
+      <div class="relative">
+        <button id="btnQuality" class="btn bg-white/20 hover:bg-white/30">HD ▼</button>
+        <div id="qualityOptions"></div>
       </div>
-      <div>
-        <h2 class="font-semibold mb-1">🔴 USA vs TUR</h2>
-        <div class="flex flex-wrap justify-center gap-2">
-          <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',0)">Link 1</button>
-          <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',1)">Link 2</button>
-          <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',2)">Link 3</button>
-        </div>
-      </div>
+      <button id="btnFullscreen" class="btn bg-white/20 hover:bg-white/30">⛶ Full Screen</button>
     </div>
-  </main>
+  </div>
+</div>
 
-  <script>
-    const STREAMS = {
-      stream1: { urls: [
-        "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/byhixyLh/live.isml/.m3u8",
-        "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
-        "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/byhixyLh/live.isml/.m3u8"
-      ] },
-      stream2: { urls: [
-        "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/fZ91qpSi/live.isml/.m3u8",
-        "https://trt.daioncdn.net/trt-1/master.m3u8?app=web",
-        "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/fZ91qpSi/live.isml/.m3u8"
-      ] }
-    };
+<div class="mt-4 space-y-4 text-center">
+  <div>
+    <h2 class="font-semibold mb-1">🔴 BRA vs FRA</h2>
+    <div class="flex flex-wrap justify-center gap-2">
+      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',0)">Link 1</button>
+      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',1)">Link 2</button>
+      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',2)">Link 3</button>
+    </div>
+  </div>
+  <div>
+    <h2 class="font-semibold mb-1">🔴 USA vs TUR</h2>
+    <div class="flex flex-wrap justify-center gap-2">
+      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',0)">Link 1</button>
+      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',1)">Link 2</button>
+      <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',2)">Link 3</button>
+    </div>
+  </div>
+</div>
+</main>
 
-    const video = document.getElementById("video");
-    const errorOverlay = document.getElementById("errorOverlay");
-    const loadingOverlay = document.getElementById("loadingOverlay");
-    let hls = null;
+<script>
+const STREAMS = {
+  stream1:{urls:[
+    "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/byhixyLh/live.isml/.m3u8",
+    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8"
+  ]},
+  stream2:{urls:[
+    "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/fZ91qpSi/live.isml/.m3u8",
+    "https://trt.daioncdn.net/trt-1/master.m3u8?app=web"
+  ]}
+};
 
-    function playStream(streamKey,index=0){
-      const urls=STREAMS[streamKey].urls;
-      errorOverlay.style.display="none";
-      loadingOverlay.style.display="flex";
-      let urlIndex=index;
-      function tryNext(){
-        if(urlIndex>=urls.length){ loadingOverlay.style.display="none"; errorOverlay.style.display="flex"; return; }
-        const url=urls[urlIndex];
-        if(hls){ hls.destroy(); hls=null; }
-        if(Hls.isSupported()){
-          hls=new Hls();
-          hls.loadSource(url);
-          hls.attachMedia(video);
-          hls.on(Hls.Events.MANIFEST_PARSED,()=>{ video.play().then(()=>{ video.muted=false; video.volume=1.0; }); setupQualityMenu(); loadingOverlay.style.display="none"; });
-          hls.on(Hls.Events.ERROR,(event,data)=>{ if(data.fatal){ urlIndex++; tryNext(); }});
-        } else if(video.canPlayType("application/vnd.apple.mpegurl")){
-          video.src=url;
-          video.play().then(()=>{ video.muted=false; video.volume=1.0; loadingOverlay.style.display="none"; })
-          .catch(()=>{ urlIndex++; tryNext(); });
-          video.addEventListener("error",()=>{ urlIndex++; tryNext(); });
-        }
-      }
-      tryNext();
-    }
+const video=document.getElementById("video");
+const errorOverlay=document.getElementById("errorOverlay");
+const loadingOverlay=document.getElementById("loadingOverlay");
+let hls=null;
 
-    function setupQualityMenu(){
-      const qualityOptions=document.getElementById("qualityOptions");
-      qualityOptions.innerHTML="";
-      if(!hls||!hls.levels) return;
-      const autoBtn=document.createElement("button"); autoBtn.textContent="Auto";
-      autoBtn.onclick=()=>{ hls.currentLevel=-1; toggleQualityMenu(false); };
-      qualityOptions.appendChild(autoBtn);
-      hls.levels.forEach((level,i)=>{
-        const btn=document.createElement("button");
-        btn.textContent=level.height?`${level.height}p`:`Level ${i}`;
-        btn.onclick=()=>{ hls.currentLevel=i; toggleQualityMenu(false); };
-        qualityOptions.appendChild(btn);
+function playStream(streamKey,index=0){
+  const urls=STREAMS[streamKey].urls;
+  errorOverlay.style.display="none";
+  loadingOverlay.style.display="flex";
+  let urlIndex=index;
+  function tryNext(){
+    if(urlIndex>=urls.length){ loadingOverlay.style.display="none"; errorOverlay.style.display="flex"; return; }
+    const url=urls[urlIndex];
+    if(hls){ hls.destroy(); hls=null; }
+    if(Hls.isSupported()){
+      hls=new Hls();
+      hls.loadSource(url);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED,()=>{
+        video.play().then(()=>{ video.muted=false; video.volume=1.0; });
+        setupQualityMenu(); loadingOverlay.style.display="none";
       });
+      hls.on(Hls.Events.ERROR,(event,data)=>{ if(data.fatal){ urlIndex++; tryNext(); }});
+    } else if(video.canPlayType("application/vnd.apple.mpegurl")){
+      video.src=url;
+      video.play().then(()=>{ video.muted=false; video.volume=1.0; loadingOverlay.style.display="none"; })
+      .catch(()=>{ urlIndex++; tryNext(); });
+      video.addEventListener("error",()=>{ urlIndex++; tryNext(); });
     }
+  }
+  tryNext();
+}
 
-    function toggleQualityMenu(show){ document.getElementById("qualityOptions").style.display=show?"block":"none"; }
-    document.getElementById("btnQuality").addEventListener("click",()=>{ 
-      toggleQualityMenu(document.getElementById("qualityOptions").style.display!=="block"); 
-    });
+function setupQualityMenu(){
+  const qualityOptions=document.getElementById("qualityOptions");
+  qualityOptions.innerHTML="";
+  if(!hls||!hls.levels) return;
+  const autoBtn=document.createElement("button"); autoBtn.textContent="Auto"; autoBtn.onclick=()=>{hls.currentLevel=-1; toggleQualityMenu(false);};
+  qualityOptions.appendChild(autoBtn);
+  hls.levels.forEach((level,i)=>{
+    const btn=document.createElement("button"); btn.textContent=level.height?`${level.height}p`:`Level ${i}`;
+    btn.onclick=()=>{ hls.currentLevel=i; toggleQualityMenu(false);};
+    qualityOptions.appendChild(btn);
+  });
+}
 
-    document.getElementById("volumeControl").addEventListener("input", e=>{ video.muted=false; video.volume=e.target.value; });
+function toggleQualityMenu(show){ document.getElementById("qualityOptions").style.display=show?"block":"none"; }
+document.getElementById("btnQuality").addEventListener("click",()=>{ toggleQualityMenu(document.getElementById("qualityOptions").style.display!=="block"); });
+document.getElementById("volumeControl").addEventListener("input", e=>{ video.muted=false; video.volume=e.target.value; });
 
-    // Fullscreen
-    document.getElementById("btnFullscreen").addEventListener("click",()=>{
-      const container=document.getElementById("player-container");
-      if(document.fullscreenElement) document.exitFullscreen();
-      else container.requestFullscreen?.();
-    });
-    video.addEventListener("dblclick",()=>{ const container=document.getElementById("player-container"); if(!document.fullscreenElement) container.requestFullscreen?.(); else document.exitFullscreen(); });
+document.getElementById("btnFullscreen").addEventListener("click",()=>{
+  const container=document.getElementById("player-container");
+  if(document.fullscreenElement) document.exitFullscreen();
+  else container.requestFullscreen?.();
+});
+video.addEventListener("dblclick",()=>{ const container=document.getElementById("player-container"); if(!document.fullscreenElement) container.requestFullscreen?.(); else document.exitFullscreen(); });
 
-    // Ambil IP + Lokasi
-    fetch("https://ipapi.co/json/")
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("userIP").textContent = `IP: ${data.ip}`;
-        document.getElementById("userLocation").textContent = `Lokasi: ${data.city}, ${data.country_name}`;
-      })
-      .catch(() => {
-        document.getElementById("userIP").textContent = "IP: tidak tersedia";
-        document.getElementById("userLocation").textContent = "Lokasi: tidak tersedia";
-      });
+fetch("https://ipapi.co/json/").then(res=>res.json()).then(data=>{
+  document.getElementById("userIP").textContent=`IP: ${data.ip}`;
+  document.getElementById("userLocation").textContent=`Lokasi: ${data.city}, ${data.country_name}`;
+}).catch(()=>{ document.getElementById("userIP").textContent="IP: tidak tersedia"; document.getElementById("userLocation").textContent="Lokasi: tidak tersedia"; });
 
-    // Efek sembunyi otomatis ala YouTube
-    const controlBar = document.getElementById("controlBar");
-    let hideTimeout;
-    function showControls(){
-      controlBar.classList.remove("hidden");
-      clearTimeout(hideTimeout);
-      hideTimeout = setTimeout(()=>{ controlBar.classList.add("hidden"); },3000);
-    }
-    document.getElementById("player-container").addEventListener("mousemove", showControls);
-    document.getElementById("player-container").addEventListener("touchstart", showControls);
-    showControls();
+// Simulasi jumlah penonton (update tiap 5 detik)
+function updateViewerCount(){
+  const count=document.getElementById("viewerCount");
+  // Random 100-999 untuk demo, bisa diganti ambil dari backend
+  count.textContent=`👥 ${Math.floor(Math.random()*900+100)}`;
+}
+setInterval(updateViewerCount,5000);
+updateViewerCount();
 
-    playStream("stream1",0);
-  </script>
+const controlBar=document.getElementById("controlBar");
+let hideTimeout;
+function showControls(){ controlBar.classList.remove("hidden"); clearTimeout(hideTimeout); hideTimeout=setTimeout(()=>{ controlBar.classList.add("hidden"); },3000);}
+document.getElementById("player-container").addEventListener("mousemove", showControls);
+document.getElementById("player-container").addEventListener("touchstart", showControls);
+showControls();
+
+playStream("stream1",0);
+</script>
 </body>
 </html>
