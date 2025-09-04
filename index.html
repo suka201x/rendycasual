@@ -10,13 +10,67 @@
 body.dark { background: #111; color:white; margin:0; font-family:sans-serif; }
 body.light { background:#f9f9f9; color:#111; }
 
+/* Judul full width tetap di atas */
 #channelName {
-  font-style: italic; font-weight:bold; text-align:center;
-  font-size:2rem; margin:15px 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  font-style: italic;
+  font-weight:bold;
+  text-align:center;
+  font-size:2rem;
+  padding:10px 0;
+  background: #000; /* layar hitam */
 }
 #channelName span:first-child { color:red; }
 #channelName span:last-child { color:white; }
 
+/* Konten utama */
+#mainContent {
+  margin-top:60px; /* jarak dari judul */
+  width: 100%;
+}
+
+/* Bagian tengah: video + stream buttons */
+#middleSection {
+  background-color: #a89f91; /* abu abu coklat */
+  padding: 15px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:15px;
+}
+
+/* Label & tombol stream hitam */
+.stream-buttons .stream-row span,
+.stream-buttons .stream-row button {
+  color: #000; 
+  font-weight: bold;
+  background-color: #fff; /* tombol putih agar kontras */
+  border: 1px solid #000;
+  padding: 5px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.stream-buttons .stream-row button:hover {
+  background-color: #ddd;
+}
+
+/* Bagian bawah */
+#bottomSection {
+  background-color: #e5e5e5; /* putih silver */
+  padding:15px;
+  width:100%;
+  text-align:center;
+}
+#bottomSection p {
+  color: #000; /* hitam */
+  font-weight: bold;
+}
+
+/* Video container */
 #player-container {
   position: relative;
   width: 100%;
@@ -60,7 +114,7 @@ body.light { background:#f9f9f9; color:#111; }
   background: rgba(0,0,0,0.6);
   color: white;
   font-weight: bold;
-  font-size: 1.2vw;  /* responsive */
+  font-size: 1.2vw;
   padding: 0.3vw 0.6vw;
   border-radius: 0.5vw;
   pointer-events: none;
@@ -81,8 +135,7 @@ body.light { background:#f9f9f9; color:#111; }
 #volumeControl { width:50px; height:5px; vertical-align: middle; cursor:pointer; }
 
 .stream-buttons { display:flex; flex-direction:column; gap:5px; font-size:16px; margin-top:12px; }
-.stream-buttons .stream-row { display:flex; flex-wrap:wrap; align-items:center; gap:6px; justify-content:flex-end; }
-.stream-buttons .stream-row span { font-weight:bold; margin-right:6px; }
+.stream-buttons .stream-row { display:flex; flex-wrap:wrap; align-items:center; gap:6px; justify-content:flex-start; }
 
 /* Responsive Watermark & kontrol */
 @media (max-width:768px){
@@ -104,42 +157,49 @@ body.light { background:#f9f9f9; color:#111; }
 </head>
 <body class="dark flex flex-col items-center justify-start min-h-screen">
 
+<!-- Judul tetap atas -->
 <div id="channelName"><span>RENDY</span> <span>CASUAL</span></div>
 
-<main class="w-full max-w-5xl p-2 relative">
-<div id="player-container" class="relative">
-  <video id="video" playsinline autoplay muted></video>
-  <div class="text-watermark">RENDY CASUAL</div>
+<main id="mainContent">
 
-  <!-- Overlay -->
-  <div id="overlay">⏳ Memuat stream...</div>
+  <!-- Bagian tengah -->
+  <div id="middleSection">
+    <div id="player-container" class="relative">
+      <video id="video" playsinline autoplay muted></video>
+      <div class="text-watermark">RENDY CASUAL</div>
+      <div id="overlay">⏳ Memuat stream...</div>
 
-  <!-- Kontrol HD, Fullscreen, Volume -->
-  <div id="qualityFullscreen">
-    🔊 <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
-    <div class="relative">
-      <button id="btnQuality" class="btn bg-white/20 hover:bg-white/30">HD ▼</button>
-      <div id="qualityOptions"></div>
+      <div id="qualityFullscreen">
+        🔊 <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
+        <div class="relative">
+          <button id="btnQuality" class="btn bg-white/20 hover:bg-white/30">HD ▼</button>
+          <div id="qualityOptions"></div>
+        </div>
+        <button id="btnFullscreen" class="btn bg-white/20 hover:bg-white/30">⛶</button>
+      </div>
     </div>
-    <button id="btnFullscreen" class="btn bg-white/20 hover:bg-white/30">⛶</button>
-  </div>
-</div>
 
-<!-- Pilihan stream -->
-<div class="stream-buttons">
-  <div class="stream-row">
-    <span>🔴 BRA vs FRA:</span>
-    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',0)">Link 1</button>
-    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',1)">Link 2</button>
-    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream1',2)">Link 3</button>
+    <div class="stream-buttons">
+      <div class="stream-row">
+        <span>🔴 BRA vs FRA:</span>
+        <button onclick="playStream('stream1',0)">Link 1</button>
+        <button onclick="playStream('stream1',1)">Link 2</button>
+        <button onclick="playStream('stream1',2)">Link 3</button>
+      </div>
+      <div class="stream-row">
+        <span>🔴 USA vs TUR:</span>
+        <button onclick="playStream('stream2',0)">Link 1</button>
+        <button onclick="playStream('stream2',1)">Link 2</button>
+        <button onclick="playStream('stream2',2)">Link 3</button>
+      </div>
+    </div>
   </div>
-  <div class="stream-row">
-    <span>🔴 USA vs TUR:</span>
-    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',0)">Link 1</button>
-    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',1)">Link 2</button>
-    <button class="btn bg-white/20 hover:bg-white/30" onclick="playStream('stream2',2)">Link 3</button>
+
+  <!-- Bagian bawah -->
+  <div id="bottomSection">
+    <p>© 2025 RENDY CASUAL - All rights reserved</p>
   </div>
-</div>
+
 </main>
 
 <script>
