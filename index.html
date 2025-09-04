@@ -90,6 +90,7 @@
           <button id="btnQuality" class="btn bg-white/10 hover:bg-white/20">HD ▼</button>
           <div id="qualityOptions"></div>
         </div>
+        <button id="btnFullscreen" class="btn bg-white/10 hover:bg-white/20">⛶ Fullscreen</button>
       </div>
     </div>
 
@@ -191,13 +192,25 @@
       video.volume = e.target.value;
     });
 
-    // --- Blok fullscreen ---
-    video.addEventListener("dblclick", e => e.preventDefault());
-    HTMLVideoElement.prototype.requestFullscreen = function() {
-      alert("⚠️ Mode fullscreen dinonaktifkan.");
-      return false;
-    };
-    document.addEventListener("keydown", e => { if (e.key === "F11") { e.preventDefault(); alert("⚠️ Fullscreen dinonaktifkan."); } });
+    // --- Fullscreen tombol ---
+    const btnFullscreen = document.getElementById("btnFullscreen");
+    btnFullscreen.addEventListener("click", () => {
+      const container = document.getElementById("player-container");
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        if (container.requestFullscreen) container.requestFullscreen();
+        else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+        else if (container.msRequestFullscreen) container.msRequestFullscreen();
+      }
+    });
+
+    // --- Double-click fullscreen ---
+    video.addEventListener("dblclick", () => {
+      const container = document.getElementById("player-container");
+      if (!document.fullscreenElement) container.requestFullscreen?.();
+      else document.exitFullscreen();
+    });
 
     // --- Blok klik kanan ---
     document.addEventListener("contextmenu", e => { e.preventDefault(); alert("⚠️ Klik kanan dinonaktifkan."); });
@@ -205,15 +218,12 @@
     // --- Blok shortcut Developer Tools / View Source ---
     document.addEventListener("keydown", e => {
       if (
-        (e.ctrlKey && e.key.toLowerCase() === "u") ||         // Ctrl+U
-        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") || // Ctrl+Shift+I
-        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") || // Ctrl+Shift+J
-        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "c") || // Ctrl+Shift+C
+        (e.ctrlKey && e.key.toLowerCase() === "u") ||
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "i") ||
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "j") ||
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "c") ||
         e.key === "F12"
-      ) {
-        e.preventDefault();
-        alert("⚠️ Shortcut diblokir.");
-      }
+      ) { e.preventDefault(); alert("⚠️ Shortcut diblokir."); }
     });
 
     // Theme toggle
@@ -228,7 +238,7 @@
     });
     setTheme(localStorage.getItem("theme") || "dark");
 
-    // Auto play
+    // Auto play default
     playStream("stream1",0);
   </script>
 </body>
