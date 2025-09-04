@@ -7,80 +7,88 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <style>
-body.dark { background: linear-gradient(135deg,#000,#111); color:white; }
+body.dark { background: #111; color:white; margin:0; font-family:sans-serif; }
 body.light { background:#f9f9f9; color:#111; }
-.btn { @apply px-2 py-1 rounded-md transition text-sm md:text-base; }
 
 #channelName {
   font-style: italic; font-weight:bold; text-align:center;
-  font-size:2rem; margin-bottom:12px;
+  font-size:1.8rem; margin:10px 0;
 }
 #channelName span:first-child { color:red; }
 #channelName span:last-child { color:white; }
-
-.text-watermark { position:absolute; top:10px; right:15px; background:#000; color:white; font-weight:bold; font-size:14px; padding:2px 6px; border-radius:6px; pointer-events:none; z-index:10; }
 
 #player-container {
   position: relative;
   width: 100%;
   max-width: 100%;
   aspect-ratio: 16/9;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,0.5);
 }
 
-/* Overlay menutupi video tapi ukuran video tetap besar */
-#errorOverlay,#loadingOverlay {
+/* Overlay awal & error */
+#overlay {
   position:absolute; top:0; left:0; width:100%; height:100%;
-  background:rgba(0,0,0,0.8);
-  color:#ffcccc; font-size:18px; font-weight:bold;
+  background:rgba(240,240,240,0.85);
+  color:#ff0000; font-size:20px; font-weight:bold;
   display:flex; align-items:center; justify-content:center; text-align:center;
-  padding:20px; z-index:20;
+  padding:10px; z-index:20;
 }
-#loadingOverlay { color:white; font-size:20px; }
 
+.text-watermark { position:absolute; top:6px; right:6px; background:#000; color:white; font-weight:bold; font-size:12px; padding:2px 5px; border-radius:6px; pointer-events:none; z-index:10; }
+
+/* Kontrol HD, Fullscreen, Volume */
 #qualityFullscreen {
-  display:flex; gap:4px;
-  position:absolute; bottom:10px; right:10px;
-  z-index:15; background:rgba(0,0,0,0.2); padding:4px; border-radius:6px;
-  align-items:center;
+  display:flex; gap:4px; position:absolute; bottom:8px; right:8px;
+  z-index:15; background:rgba(0,0,0,0.25); padding:4px 6px; border-radius:8px;
+  align-items:center; font-size:14px;
 }
-
-#qualityOptions { display:none; position:absolute; bottom:30px; right:0; background:rgba(0,0,0,0.9); border-radius:6px; overflow:hidden; min-width:70px; }
-#qualityOptions button { display:block; width:100%; padding:4px 8px; text-align:left; background:transparent; color:white; border:none; cursor:pointer; font-size:13px; }
+#qualityOptions { display:none; position:absolute; bottom:28px; right:0; background:rgba(0,0,0,0.85); border-radius:6px; overflow:hidden; min-width:60px; }
+#qualityOptions button { display:block; width:100%; padding:4px 6px; text-align:left; background:transparent; color:white; border:none; cursor:pointer; font-size:13px; }
 #qualityOptions button:hover { background: rgba(255,255,255,0.2); }
 
-.stream-buttons { display:flex; flex-direction:column; gap:4px; font-size:14px; margin-top:12px; }
+/* Tombol volume lebih kecil */
+#volumeControl { width:40px; height:4px; vertical-align: middle; }
+
+.stream-buttons { display:flex; flex-direction:column; gap:4px; font-size:14px; margin-top:10px; }
 .stream-buttons .stream-row { display:flex; flex-wrap:wrap; align-items:center; gap:4px; justify-content:flex-end; }
 .stream-buttons .stream-row span { font-weight:bold; margin-right:4px; }
 
 @media (max-width:640px) {
-  #channelName { font-size:1.5rem; }
-  .btn { font-size:12px; padding:2px 4px; }
+  #channelName { font-size:1.4rem; }
+  #qualityFullscreen { font-size:12px; padding:3px 4px; gap:2px; }
+  #qualityOptions button { font-size:12px; padding:3px 4px; }
+  .stream-buttons { font-size:12px; margin-top:6px; }
+  .stream-buttons .stream-row span { margin-right:2px; }
+  #volumeControl { width:35px; height:3px; }
 }
 </style>
 </head>
-<body class="dark min-h-screen flex flex-col items-center justify-center">
+<body class="dark flex flex-col items-center justify-start min-h-screen">
 
 <div id="channelName"><span>RENDY</span> <span>CASUAL</span></div>
 
 <main class="w-full max-w-4xl p-2 relative">
-<div id="player-container" class="relative rounded-lg overflow-hidden shadow-lg">
+<div id="player-container" class="relative">
   <video id="video" class="w-full h-auto" playsinline autoplay muted></video>
   <div class="text-watermark">RENDY CASUAL</div>
-  <div id="loadingOverlay">⏳ Memuat stream...</div>
-  <div id="errorOverlay">⚠️ Stream tidak tersedia</div>
 
-  <!-- Volume, HD, Fullscreen di atas video kanan bawah -->
+  <!-- Overlay -->
+  <div id="overlay">⏳ Memuat stream...</div>
+
+  <!-- Kontrol HD, Fullscreen, Volume -->
   <div id="qualityFullscreen">
     🔊 <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
     <div class="relative">
       <button id="btnQuality" class="btn bg-white/20 hover:bg-white/30">HD ▼</button>
       <div id="qualityOptions"></div>
     </div>
-    <button id="btnFullscreen" class="btn bg-white/20 hover:bg-white/30">⛶ Full Screen</button>
+    <button id="btnFullscreen" class="btn bg-white/20 hover:bg-white/30">⛶</button>
   </div>
 </div>
 
-<!-- Pilihan stream sejajar kanan per baris -->
+<!-- Pilihan stream sejajar kanan -->
 <div class="stream-buttons">
   <div class="stream-row">
     <span>🔴 BRA vs FRA:</span>
@@ -104,29 +112,34 @@ const STREAMS = {
 };
 
 const video=document.getElementById("video");
-const errorOverlay=document.getElementById("errorOverlay");
-const loadingOverlay=document.getElementById("loadingOverlay");
+const overlay=document.getElementById("overlay");
 let hls=null;
 
 function playStream(streamKey,index=0){
   const urls=STREAMS[streamKey].urls;
-  errorOverlay.style.display="none"; loadingOverlay.style.display="flex";
+  overlay.textContent="⏳ Memuat stream...";
+  overlay.style.display="flex";
   let urlIndex=index;
+
   function tryNext(){
-    if(urlIndex>=urls.length){ loadingOverlay.style.display="none"; errorOverlay.style.display="flex"; return; }
+    if(urlIndex>=urls.length){
+      overlay.textContent="⚠️ Stream tidak tersedia";
+      overlay.style.display="flex";
+      return;
+    }
     const url=urls[urlIndex];
     if(hls){ hls.destroy(); hls=null; }
     if(Hls.isSupported()){
       hls=new Hls();
       hls.loadSource(url); hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED,()=>{ 
-        video.play().then(()=>{ video.muted=false; video.volume=1; }); 
-        setupQualityMenu(); loadingOverlay.style.display="none"; 
+        video.play().then(()=>{ overlay.style.display="none"; video.muted=false; video.volume=1; });
+        setupQualityMenu();
       });
       hls.on(Hls.Events.ERROR,(event,data)=>{ if(data.fatal){ urlIndex++; tryNext(); }});
     } else if(video.canPlayType("application/vnd.apple.mpegurl")){
       video.src=url; 
-      video.play().then(()=>{ video.muted=false; video.volume=1; loadingOverlay.style.display="none"; }).catch(()=>{ urlIndex++; tryNext(); });
+      video.play().then(()=>{ overlay.style.display="none"; }).catch(()=>{ urlIndex++; tryNext(); });
       video.addEventListener("error",()=>{ urlIndex++; tryNext(); });
     }
   }
