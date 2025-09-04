@@ -22,20 +22,17 @@ body.light { background:#f9f9f9; color:#111; }
   text-align:center;
   font-size:2rem;
   padding:10px 0;
-  background: #000; /* layar hitam */
+  background: #000;
 }
 #channelName span:first-child { color:red; }
 #channelName span:last-child { color:white; }
 
 /* Konten utama */
-#mainContent {
-  margin-top:60px; /* jarak dari judul */
-  width: 100%;
-}
+#mainContent { margin-top:60px; width:100%; }
 
 /* Bagian tengah: video + stream buttons */
 #middleSection {
-  background-color: #a89f91; /* abu abu coklat */
+  background-color: #a89f91;
   padding: 15px;
   display:flex;
   flex-direction:column;
@@ -48,27 +45,28 @@ body.light { background:#f9f9f9; color:#111; }
 .stream-buttons .stream-row button {
   color: #000; 
   font-weight: bold;
-  background-color: #fff; /* tombol putih agar kontras */
+  background-color: #fff;
   border: 1px solid #000;
   padding: 5px 8px;
   border-radius: 6px;
   cursor: pointer;
 }
-.stream-buttons .stream-row button:hover {
-  background-color: #ddd;
+.stream-buttons .stream-row button:hover { background-color:#ddd; }
+
+/* Highlight tombol aktif */
+.stream-buttons .stream-row button.active {
+  background-color:red !important;
+  color:white !important;
 }
 
 /* Bagian bawah */
 #bottomSection {
-  background-color: #e5e5e5; /* putih silver */
+  background-color: #e5e5e5;
   padding:15px;
   width:100%;
   text-align:center;
 }
-#bottomSection p {
-  color: #000; /* hitam */
-  font-weight: bold;
-}
+#bottomSection p { color:#000; font-weight:bold; }
 
 /* Video container */
 #player-container {
@@ -80,23 +78,17 @@ body.light { background:#f9f9f9; color:#111; }
   overflow:hidden;
   box-shadow:0 6px 16px rgba(0,0,0,0.6);
 }
-
-/* Fullscreen container */
 #player-container.fullscreen {
-  width: 100vw;
-  height: 100vh;
-  aspect-ratio: auto;
+  width:100vw;
+  height:100vh;
+  aspect-ratio:auto;
   border-radius:0;
   max-width:none;
   max-height:none;
 }
 
 /* Video */
-#video {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
+#video { width:100%; height:100%; object-fit:contain; }
 
 /* Overlay awal & error */
 #overlay {
@@ -105,20 +97,20 @@ body.light { background:#f9f9f9; color:#111; }
   color:#ff0000; font-size:22px; font-weight:bold;
   display:flex; align-items:center; justify-content:center; text-align:center;
   padding:10px; z-index:20;
+  opacity:1; transition: opacity 0.3s ease;
 }
 
-/* Watermark responsive & mengikuti video */
+/* Watermark responsive */
 .text-watermark {
-  position: absolute;
-  top: 1%; right: 1%;
+  position: absolute; top:1%; right:1%;
   background: rgba(0,0,0,0.6);
-  color: white;
-  font-weight: bold;
-  font-size: 1.2vw;
-  padding: 0.3vw 0.6vw;
-  border-radius: 0.5vw;
-  pointer-events: none;
-  z-index: 10;
+  color:white;
+  font-weight:bold;
+  font-size:1.2vw;
+  padding:0.3vw 0.6vw;
+  border-radius:0.5vw;
+  pointer-events:none;
+  z-index:10;
 }
 
 /* Kontrol HD, Fullscreen, Volume */
@@ -127,15 +119,26 @@ body.light { background:#f9f9f9; color:#111; }
   z-index:15; background:rgba(0,0,0,0.3); padding:6px 8px; border-radius:10px;
   align-items:center; font-size:15px;
 }
-#qualityOptions { display:none; position:absolute; bottom:36px; right:0; background:rgba(0,0,0,0.9); border-radius:6px; overflow:hidden; min-width:70px; }
-#qualityOptions button { display:block; width:100%; padding:5px 8px; text-align:left; background:transparent; color:white; border:none; cursor:pointer; font-size:14px; }
+#qualityOptions {
+  display:none;
+  position:absolute; bottom:36px; right:0;
+  background:rgba(0,0,0,0.9); border-radius:6px; overflow:hidden; min-width:70px;
+}
+#qualityOptions button {
+  display:block;
+  width:100%;
+  padding:5px 8px;
+  text-align:left;
+  background:transparent;
+  color:white;
+  border:none;
+  cursor:pointer;
+  font-size:14px;
+}
 #qualityOptions button:hover { background: rgba(255,255,255,0.2); }
 
-/* Tombol volume lebih kecil & ramping */
+/* Volume slider */
 #volumeControl { width:50px; height:5px; vertical-align: middle; cursor:pointer; }
-
-.stream-buttons { display:flex; flex-direction:column; gap:5px; font-size:16px; margin-top:12px; }
-.stream-buttons .stream-row { display:flex; flex-wrap:wrap; align-items:center; gap:6px; justify-content:flex-start; }
 
 /* Responsive Watermark & kontrol */
 @media (max-width:768px){
@@ -143,7 +146,6 @@ body.light { background:#f9f9f9; color:#111; }
   #qualityFullscreen { font-size:13px; padding:4px 6px; gap:4px; }
   #qualityOptions button { font-size:12px; padding:3px 5px; }
   .stream-buttons { font-size:14px; margin-top:8px; }
-  .stream-buttons .stream-row span { margin-right:4px; }
   #volumeControl { width:40px; height:4px; }
   .text-watermark { font-size:2.5vw; padding:0.5vw 1vw; border-radius:1vw; }
 }
@@ -153,22 +155,14 @@ body.light { background:#f9f9f9; color:#111; }
   #volumeControl { width:35px; height:3px; }
   .text-watermark { font-size:3.5vw; padding:0.7vw 1.2vw; border-radius:1.2vw; }
 }
-
-/* Highlight tombol aktif */
-.stream-buttons .stream-row button.active {
-  background-color: red !important;
-  color: white !important;
-}
 </style>
 </head>
 <body class="dark flex flex-col items-center justify-start min-h-screen">
 
-<!-- Judul tetap atas -->
+<!-- Judul -->
 <div id="channelName"><span>RENDY</span> <span>CASUAL</span></div>
 
 <main id="mainContent">
-
-  <!-- Bagian tengah -->
   <div id="middleSection">
     <div id="player-container" class="relative">
       <video id="video" playsinline autoplay muted></video>
@@ -201,11 +195,9 @@ body.light { background:#f9f9f9; color:#111; }
     </div>
   </div>
 
-  <!-- Bagian bawah -->
   <div id="bottomSection">
     <p>© 2025 RENDY CASUAL - All rights reserved</p>
   </div>
-
 </main>
 
 <script>
@@ -223,64 +215,100 @@ const STREAMS = {
 const video=document.getElementById("video");
 const overlay=document.getElementById("overlay");
 const container=document.getElementById("player-container");
+const qualityBtn=document.getElementById("btnQuality");
+const qualityOptions=document.getElementById("qualityOptions");
 let hls=null;
 let lastActiveButton = null;
 
-function playStream(streamKey,index=0, btn=null){
+function playStream(streamKey, index=0, btn=null){
   const urls = STREAMS[streamKey].urls;
-  overlay.textContent="⏳ Memuat stream...";
-  overlay.style.display="flex";
-  
-  // Highlight tombol
+
   if(lastActiveButton) lastActiveButton.classList.remove("active");
-  if(btn) { btn.classList.add("active"); lastActiveButton = btn; }
+  if(btn){ btn.classList.add("active"); lastActiveButton=btn; }
 
   let urlIndex=index;
+
   function tryNext(){
-    if(urlIndex >= urls.length){
+    if(urlIndex>=urls.length){
       overlay.textContent="⚠️ Stream tidak tersedia";
+      overlay.style.opacity="1";
       overlay.style.display="flex";
       return;
     }
-    const url = urls[urlIndex];
+
+    const url = urls[urlIndex] + "?token=" + Math.random().toString(36).substr(2,6);
+
     if(hls){ hls.destroy(); hls=null; }
+
+    overlay.textContent="⏳ Memuat stream...";
+    overlay.style.display="flex";
+    overlay.style.opacity="1";
+    overlay.style.transition="opacity 0.3s ease";
+
     if(Hls.isSupported()){
       hls=new Hls();
-      hls.loadSource(url); hls.attachMedia(video);
+      hls.loadSource(url);
+      hls.attachMedia(video);
+
       hls.on(Hls.Events.MANIFEST_PARSED,()=>{
-        video.play().then(()=>{ overlay.style.display="none"; video.muted=false; video.volume=1; });
+        video.play().then(()=>{
+          overlay.style.opacity="0";
+          setTimeout(()=>{overlay.style.display="none";},300);
+
+          video.muted=false; video.volume=1;
+
+          // Setup kualitas HD
+          qualityOptions.innerHTML="";
+          hls.levels.forEach((level,i)=>{
+            const b=document.createElement("button");
+            b.textContent=level.height+"p";
+            b.onclick=()=>{ hls.currentLevel=i; qualityOptions.style.display="none"; qualityBtn.textContent=level.height+"p ▼"; };
+            qualityOptions.appendChild(b);
+          });
+        });
       });
-      hls.on(Hls.Events.ERROR,(event,data)=>{ if(data.fatal){ urlIndex++; tryNext(); }});
+
+      hls.on(Hls.Events.ERROR,(event,data)=>{ if(data.fatal){ urlIndex++; tryNext(); } });
+
     } else if(video.canPlayType("application/vnd.apple.mpegurl")){
       video.src=url;
-      video.play().then(()=>{ overlay.style.display="none"; }).catch(()=>{ urlIndex++; tryNext(); });
+      video.play().then(()=>{ overlay.style.opacity="0"; setTimeout(()=>{overlay.style.display="none";},300); }).catch(()=>{ urlIndex++; tryNext(); });
       video.addEventListener("error",()=>{ urlIndex++; tryNext(); });
     }
   }
+
   tryNext();
 }
 
 // Pasang onclick tombol otomatis
 document.querySelectorAll(".stream-row").forEach((row,rowIndex)=>{
-  const streamKey = rowIndex === 0 ? "stream1" : "stream2";
-  row.querySelectorAll("button").forEach((btn, btnIndex)=>{
-    btn.onclick = ()=> playStream(streamKey, btnIndex, btn);
+  const streamKey=rowIndex===0?"stream1":"stream2";
+  row.querySelectorAll("button").forEach((btn,btnIndex)=>{
+    btn.onclick=()=>playStream(streamKey,btnIndex,btn);
   });
 });
 
-// Kontrol fullscreen & volume
+// Fullscreen & volume
 document.getElementById("btnFullscreen").addEventListener("click",()=>{
   if(!document.fullscreenElement){ container.requestFullscreen?.(); container.classList.add("fullscreen"); }
-  else { document.exitFullscreen(); container.classList.remove("fullscreen"); }
+  else{ document.exitFullscreen(); container.classList.remove("fullscreen"); }
 });
 video.addEventListener("dblclick",()=>{
   if(!document.fullscreenElement){ container.requestFullscreen?.(); container.classList.add("fullscreen"); }
-  else { document.exitFullscreen(); container.classList.remove("fullscreen"); }
+  else{ document.exitFullscreen(); container.classList.remove("fullscreen"); }
 });
-document.getElementById("volumeControl").addEventListener("input", e=>{ video.muted=false; video.volume=e.target.value; });
+document.getElementById("volumeControl").addEventListener("input",e=>{ video.muted=false; video.volume=e.target.value; });
 
 // Jalankan stream pertama otomatis
-playStream("stream1",0, document.querySelectorAll(".stream-row")[0].querySelector("button"));
+playStream("stream1",0,document.querySelectorAll(".stream-row")[0].querySelector("button"));
+
+// Toggle kualitas
+qualityBtn.addEventListener("click",()=>{ qualityOptions.style.display = qualityOptions.style.display==="block"?"none":"block"; });
+
+// Proteksi klik kanan / long press / F12
+document.addEventListener("contextmenu", e=>e.preventDefault());
+document.addEventListener("keydown", e=>{ if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I")) e.preventDefault(); });
+document.addEventListener("touchstart", e=>{ if(e.touches.length>1) e.preventDefault(); });
 </script>
 </body>
 </html>
