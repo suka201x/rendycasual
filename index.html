@@ -12,7 +12,7 @@ body.light { background:#f9f9f9; color:#111; }
 
 #channelName {
   font-style: italic; font-weight:bold; text-align:center;
-  font-size:1.8rem; margin:10px 0;
+  font-size:2rem; margin:15px 0;
 }
 #channelName span:first-child { color:red; }
 #channelName span:last-child { color:white; }
@@ -24,43 +24,48 @@ body.light { background:#f9f9f9; color:#111; }
   aspect-ratio: 16/9;
   border-radius:12px;
   overflow:hidden;
-  box-shadow:0 4px 12px rgba(0,0,0,0.5);
+  box-shadow:0 6px 16px rgba(0,0,0,0.6);
 }
 
 /* Overlay awal & error */
 #overlay {
   position:absolute; top:0; left:0; width:100%; height:100%;
   background:rgba(240,240,240,0.85);
-  color:#ff0000; font-size:20px; font-weight:bold;
+  color:#ff0000; font-size:22px; font-weight:bold;
   display:flex; align-items:center; justify-content:center; text-align:center;
   padding:10px; z-index:20;
 }
 
-.text-watermark { position:absolute; top:6px; right:6px; background:#000; color:white; font-weight:bold; font-size:12px; padding:2px 5px; border-radius:6px; pointer-events:none; z-index:10; }
+.text-watermark { position:absolute; top:8px; right:8px; background:#000; color:white; font-weight:bold; font-size:14px; padding:3px 6px; border-radius:6px; pointer-events:none; z-index:10; }
 
 /* Kontrol HD, Fullscreen, Volume */
 #qualityFullscreen {
-  display:flex; gap:4px; position:absolute; bottom:8px; right:8px;
-  z-index:15; background:rgba(0,0,0,0.25); padding:4px 6px; border-radius:8px;
-  align-items:center; font-size:14px;
+  display:flex; gap:6px; position:absolute; bottom:10px; right:10px;
+  z-index:15; background:rgba(0,0,0,0.3); padding:6px 8px; border-radius:10px;
+  align-items:center; font-size:15px;
 }
-#qualityOptions { display:none; position:absolute; bottom:28px; right:0; background:rgba(0,0,0,0.85); border-radius:6px; overflow:hidden; min-width:60px; }
-#qualityOptions button { display:block; width:100%; padding:4px 6px; text-align:left; background:transparent; color:white; border:none; cursor:pointer; font-size:13px; }
+#qualityOptions { display:none; position:absolute; bottom:36px; right:0; background:rgba(0,0,0,0.9); border-radius:6px; overflow:hidden; min-width:70px; }
+#qualityOptions button { display:block; width:100%; padding:5px 8px; text-align:left; background:transparent; color:white; border:none; cursor:pointer; font-size:14px; }
 #qualityOptions button:hover { background: rgba(255,255,255,0.2); }
 
-/* Tombol volume lebih kecil */
-#volumeControl { width:40px; height:4px; vertical-align: middle; }
+/* Tombol volume lebih kecil & ramping */
+#volumeControl { width:50px; height:5px; vertical-align: middle; cursor:pointer; }
 
-.stream-buttons { display:flex; flex-direction:column; gap:4px; font-size:14px; margin-top:10px; }
-.stream-buttons .stream-row { display:flex; flex-wrap:wrap; align-items:center; gap:4px; justify-content:flex-end; }
-.stream-buttons .stream-row span { font-weight:bold; margin-right:4px; }
+.stream-buttons { display:flex; flex-direction:column; gap:5px; font-size:16px; margin-top:12px; }
+.stream-buttons .stream-row { display:flex; flex-wrap:wrap; align-items:center; gap:6px; justify-content:flex-end; }
+.stream-buttons .stream-row span { font-weight:bold; margin-right:6px; }
 
-@media (max-width:640px) {
+@media (max-width:768px) {
+  #channelName { font-size:1.6rem; }
+  #qualityFullscreen { font-size:13px; padding:4px 6px; gap:4px; }
+  #qualityOptions button { font-size:12px; padding:3px 5px; }
+  .stream-buttons { font-size:14px; margin-top:8px; }
+  .stream-buttons .stream-row span { margin-right:4px; }
+  #volumeControl { width:40px; height:4px; }
+}
+@media (max-width:480px) {
   #channelName { font-size:1.4rem; }
-  #qualityFullscreen { font-size:12px; padding:3px 4px; gap:2px; }
-  #qualityOptions button { font-size:12px; padding:3px 4px; }
-  .stream-buttons { font-size:12px; margin-top:6px; }
-  .stream-buttons .stream-row span { margin-right:2px; }
+  #qualityFullscreen { font-size:12px; padding:3px 4px; gap:3px; }
   #volumeControl { width:35px; height:3px; }
 }
 </style>
@@ -69,7 +74,7 @@ body.light { background:#f9f9f9; color:#111; }
 
 <div id="channelName"><span>RENDY</span> <span>CASUAL</span></div>
 
-<main class="w-full max-w-4xl p-2 relative">
+<main class="w-full max-w-5xl p-2 relative">
 <div id="player-container" class="relative">
   <video id="video" class="w-full h-auto" playsinline autoplay muted></video>
   <div class="text-watermark">RENDY CASUAL</div>
