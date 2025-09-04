@@ -27,12 +27,14 @@ body.light { background:#f9f9f9; color:#111; }
   box-shadow:0 6px 16px rgba(0,0,0,0.6);
 }
 
-/* Fullscreen support */
+/* Fullscreen container */
 #player-container.fullscreen {
   width: 100vw;
   height: 100vh;
   aspect-ratio: auto;
   border-radius:0;
+  max-width:none;
+  max-height:none;
 }
 
 /* Video */
@@ -51,7 +53,19 @@ body.light { background:#f9f9f9; color:#111; }
   padding:10px; z-index:20;
 }
 
-.text-watermark { position:absolute; top:8px; right:8px; background:#000; color:white; font-weight:bold; font-size:14px; padding:3px 6px; border-radius:6px; pointer-events:none; z-index:10; }
+/* Watermark responsive & mengikuti video */
+.text-watermark {
+  position: absolute;
+  top: 1%; right: 1%;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  font-weight: bold;
+  font-size: 1.2vw;  /* responsive */
+  padding: 0.3vw 0.6vw;
+  border-radius: 0.5vw;
+  pointer-events: none;
+  z-index: 10;
+}
 
 /* Kontrol HD, Fullscreen, Volume */
 #qualityFullscreen {
@@ -70,18 +84,21 @@ body.light { background:#f9f9f9; color:#111; }
 .stream-buttons .stream-row { display:flex; flex-wrap:wrap; align-items:center; gap:6px; justify-content:flex-end; }
 .stream-buttons .stream-row span { font-weight:bold; margin-right:6px; }
 
-@media (max-width:768px) {
+/* Responsive Watermark & kontrol */
+@media (max-width:768px){
   #channelName { font-size:1.6rem; }
   #qualityFullscreen { font-size:13px; padding:4px 6px; gap:4px; }
   #qualityOptions button { font-size:12px; padding:3px 5px; }
   .stream-buttons { font-size:14px; margin-top:8px; }
   .stream-buttons .stream-row span { margin-right:4px; }
   #volumeControl { width:40px; height:4px; }
+  .text-watermark { font-size:2.5vw; padding:0.5vw 1vw; border-radius:1vw; }
 }
-@media (max-width:480px) {
+@media (max-width:480px){
   #channelName { font-size:1.4rem; }
   #qualityFullscreen { font-size:12px; padding:3px 4px; gap:3px; }
   #volumeControl { width:35px; height:3px; }
+  .text-watermark { font-size:3.5vw; padding:0.7vw 1.2vw; border-radius:1.2vw; }
 }
 </style>
 </head>
@@ -127,8 +144,14 @@ body.light { background:#f9f9f9; color:#111; }
 
 <script>
 const STREAMS = {
-  stream1:{urls:["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/byhixyLh/live.isml/.m3u8","https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8"]},
-  stream2:{urls:["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/fZ91qpSi/live.isml/.m3u8","https://trt.daioncdn.net/trt-1/master.m3u8?app=web"]}
+  stream1:{urls:[
+    "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/byhixyLh/live.isml/.m3u8",
+    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8"
+  ]},
+  stream2:{urls:[
+    "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/fZ91qpSi/live.isml/.m3u8",
+    "https://trt.daioncdn.net/trt-1/master.m3u8?app=web"
+  ]}
 };
 
 const video=document.getElementById("video");
