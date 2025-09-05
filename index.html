@@ -6,311 +6,302 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- Google Font sporty/techno -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
 <style>
-body.dark { background: #111; color:white; margin:0; font-family:sans-serif; }
-body.light { background:#f9f9f9; color:#111; }
+body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 
-/* Judul full width tetap di atas */
+/* Logo Header */
 #channelName {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 100;
-  font-style: italic;
-  font-weight:bold;
-  text-align:center;
-  font-size:2rem;
-  padding:10px 0;
-  background: #000;
+  position:fixed; top:0; left:0; width:100%; z-index:100;
+  font-weight:900; text-align:center; font-size:3.5rem;
+  padding:16px 0; background:#000; letter-spacing:3px;
+  font-family: 'Orbitron', sans-serif;
+  color:#fff;
+  text-shadow: 0 0 6px rgba(255,0,0,0.4),
+               0 0 12px rgba(255,255,255,0.3),
+               0 0 18px rgba(255,0,0,0.25);
+  animation: glow 2.5s infinite alternate;
 }
-#channelName span:first-child { color:red; }
-#channelName span:last-child { color:white; }
+@keyframes glow {
+  from {
+    text-shadow: 0 0 4px rgba(255,0,0,0.3),
+                 0 0 10px rgba(255,255,255,0.2);
+  }
+  to {
+    text-shadow: 0 0 8px rgba(255,0,0,0.5),
+                 0 0 16px rgba(255,255,255,0.4);
+  }
+}
 
-/* Konten utama */
-#mainContent { margin-top:60px; width:100%; }
-
-/* Bagian tengah: video + stream buttons */
+/* Konten */
+#mainContent { margin-top:90px; width:100%; }
 #middleSection {
-  background-color: #a89f91;
-  padding: 15px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:15px;
+  background:#000; padding:15px; display:flex;
+  flex-direction:column; align-items:center; gap:15px;
 }
-
-/* Label & tombol stream hitam */
 .stream-buttons .stream-row span,
-.stream-buttons .stream-row button {
-  color: #000; 
-  font-weight: bold;
-  background-color: #fff;
-  border: 1px solid #000;
-  padding: 5px 8px;
-  border-radius: 6px;
-  cursor: pointer;
+.stream-buttons .stream-row button{
+  color:#000; font-weight:bold; background:#fff;
+  border:1px solid #000; padding:5px 8px; border-radius:6px; cursor:pointer;
 }
-.stream-buttons .stream-row button:hover { background-color:#ddd; }
-
-/* Highlight tombol aktif */
-.stream-buttons .stream-row button.active {
-  background-color:red !important;
-  color:white !important;
+.stream-buttons .stream-row button:hover{ background:#ddd; }
+.stream-buttons .stream-row button.active{
+  background:red !important; color:white !important;
 }
-
-/* Bagian bawah */
-#bottomSection {
-  background-color: #e5e5e5;
-  padding:15px;
-  width:100%;
-  text-align:center;
-}
-#bottomSection p { color:#000; font-weight:bold; }
+#bottomSection{ background:#e5e5e5; padding:15px; width:100%; text-align:center; }
+#bottomSection p{ color:#000; font-weight:bold; }
 
 /* Video container */
 #player-container {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  aspect-ratio: 16/9;
-  border-radius:12px;
-  overflow:hidden;
-  box-shadow:0 6px 16px rgba(0,0,0,0.6);
+  position:relative; width:100%; max-width:100%; aspect-ratio:16/9;
+  border-radius:12px; overflow:hidden; box-shadow:0 6px 16px rgba(0,0,0,0.6);
 }
-#player-container.fullscreen {
-  width:100vw;
-  height:100vh;
-  aspect-ratio:auto;
-  border-radius:0;
-  max-width:none;
-  max-height:none;
+#player-container.fullscreen{
+  width:100vw; height:100vh; aspect-ratio:auto;
+  border-radius:0; max-width:none; max-height:none;
 }
-
-/* Video */
-#video { width:100%; height:100%; object-fit:contain; }
-
-/* Overlay awal & error */
-#overlay {
+#video{ width:100%; height:100%; object-fit:contain; }
+#overlay{
   position:absolute; top:0; left:0; width:100%; height:100%;
-  background:rgba(240,240,240,0.85);
-  color:#ff0000; font-size:22px; font-weight:bold;
-  display:flex; align-items:center; justify-content:center; text-align:center;
-  padding:10px; z-index:20;
-  opacity:1; transition: opacity 0.3s ease;
+  background:rgba(240,240,240,0.85); color:#ff0000;
+  font-size:22px; font-weight:bold; display:flex;
+  align-items:center; justify-content:center;
+  text-align:center; padding:10px; z-index:20;
+  opacity:1; transition:opacity 0.3s ease;
 }
 
-/* Watermark responsive */
-.text-watermark {
-  position: absolute; top:1%; right:1%;
-  background: rgba(0,0,0,0.6);
-  color:white;
-  font-weight:bold;
-  font-size:1.2vw;
-  padding:0.3vw 0.6vw;
-  border-radius:0.5vw;
+/* Kontrol */
+#controls{
+  display:flex; gap:10px; align-items:center;
+  position:absolute; bottom:10px; right:10px; z-index:15;
+  background:rgba(0,0,0,0.35); padding:8px 12px; border-radius:12px;
+  font-size:15px; opacity:1; transition:opacity 0.6s ease-in-out;
+}
+#controls.hidden{ opacity:0; pointer-events:none; }
+
+/* Volume slider fade in/out */
+#volumeWrapper { position:relative; }
+#volumeControl{
+  -webkit-appearance:none; width:60px; height:5px; background:#666;
+  border-radius:3px; outline:none; cursor:pointer;
+  opacity:0; transform:scaleX(0.5);
+  transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events:none;
-  z-index:10;
 }
+#volumeWrapper.show #volumeControl{
+  opacity:1; transform:scaleX(1);
+  pointer-events:auto;
+}
+#volumeControl::-webkit-slider-thumb{ -webkit-appearance:none; width:12px; height:12px; border-radius:50%; background:#fff; cursor:pointer; }
+#volumeControl::-moz-range-thumb{ width:12px; height:12px; border-radius:50%; background:#fff; cursor:pointer; }
 
-/* Kontrol HD, Fullscreen, Volume */
-#qualityFullscreen {
-  display:flex; gap:6px; position:absolute; bottom:10px; right:10px;
-  z-index:15; background:rgba(0,0,0,0.3); padding:6px 8px; border-radius:10px;
-  align-items:center; font-size:15px;
-}
-#qualityOptions {
-  display:none;
-  position:absolute; bottom:36px; right:0;
+/* Quality dropdown */
+#qualityOptions{
+  display:none; position:absolute; bottom:42px; right:0;
   background:rgba(0,0,0,0.9); border-radius:6px; overflow:hidden; min-width:70px;
 }
-#qualityOptions button {
-  display:block;
-  width:100%;
-  padding:5px 8px;
-  text-align:left;
-  background:transparent;
-  color:white;
-  border:none;
-  cursor:pointer;
-  font-size:14px;
+#qualityOptions button{
+  display:block; width:100%; padding:5px 8px; text-align:left;
+  background:transparent; color:white; border:none; cursor:pointer; font-size:14px;
 }
-#qualityOptions button:hover { background: rgba(255,255,255,0.2); }
+#qualityOptions button:hover{ background:rgba(255,255,255,0.2); }
 
-/* Volume slider */
-#volumeControl { width:50px; height:5px; vertical-align: middle; cursor:pointer; }
-
-/* Responsive Watermark & kontrol */
-@media (max-width:768px){
-  #channelName { font-size:1.6rem; }
-  #qualityFullscreen { font-size:13px; padding:4px 6px; gap:4px; }
-  #qualityOptions button { font-size:12px; padding:3px 5px; }
-  .stream-buttons { font-size:14px; margin-top:8px; }
-  #volumeControl { width:40px; height:4px; }
-  .text-watermark { font-size:2.5vw; padding:0.5vw 1vw; border-radius:1vw; }
+/* Responsif */
+@media(max-width:768px){
+  #channelName{ font-size:2.4rem; }
+  #controls{ font-size:13px; padding:6px 8px; gap:6px; }
+  #volumeControl{ width:50px; height:4px; }
+  #qualityOptions button{ font-size:12px; padding:3px 5px; }
 }
-@media (max-width:480px){
-  #channelName { font-size:1.4rem; }
-  #qualityFullscreen { font-size:12px; padding:3px 4px; gap:3px; }
-  #volumeControl { width:35px; height:3px; }
-  .text-watermark { font-size:3.5vw; padding:0.7vw 1.2vw; border-radius:1.2vw; }
+@media(max-width:480px){
+  #channelName{ font-size:2rem; }
+  #controls{ font-size:12px; padding:5px 6px; gap:4px; }
+  #volumeControl{ width:40px; height:3px; }
 }
 </style>
 </head>
 <body class="dark flex flex-col items-center justify-start min-h-screen">
 
-<!-- Judul -->
-<div id="channelName"><span>RENDY</span> <span>CASUAL</span></div>
+<!-- Logo -->
+<div id="channelName">RENDY CASUAL</div>
 
 <main id="mainContent">
   <div id="middleSection">
     <div id="player-container" class="relative">
       <video id="video" playsinline autoplay muted></video>
-      <div class="text-watermark">RENDY CASUAL</div>
       <div id="overlay">⏳ Memuat stream...</div>
 
-      <div id="qualityFullscreen">
-        🔊 <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
+      <!-- Kontrol -->
+      <div id="controls">
+        <div id="volumeWrapper" class="flex items-center gap-2">
+          <button id="btnMute" class="p-1 text-white">
+            <i data-lucide="volume-2" class="w-5 h-5"></i>
+          </button>
+          <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
+        </div>
+
         <div class="relative">
-          <button id="btnQuality" class="btn bg-white/20 hover:bg-white/30">HD ▼</button>
+          <button id="btnQuality" class="p-1 text-white flex items-center gap-1">
+            <i data-lucide="settings" class="w-5 h-5"></i> HD
+          </button>
           <div id="qualityOptions"></div>
         </div>
-        <button id="btnFullscreen" class="btn bg-white/20 hover:bg-white/30">⛶</button>
+
+        <button id="btnFullscreen" class="p-1 text-white">
+          <i data-lucide="maximize" class="w-5 h-5"></i>
+        </button>
       </div>
     </div>
 
+    <!-- Tombol stream -->
     <div class="stream-buttons">
       <div class="stream-row">
         <span>🔴 JAPAN vs TURKY:</span>
-        <button>Link 1</button>
-        <button>Link 2</button>
-        <button>Link 3</button>
+        <button>Link 1</button><button>Link 2</button><button>Link 3</button>
       </div>
       <div class="stream-row">
         <span>🔴 ITALIA vs BRASIL:</span>
-        <button>Link 1</button>
-        <button>Link 2</button>
-        <button>Link 3</button>
+        <button>Link 1</button><button>Link 2</button><button>Link 3</button>
       </div>
     </div>
   </div>
 
+  <!-- Footer -->
   <div id="bottomSection">
     <p>© 2025 RENDY CASUAL - All rights reserved</p>
+    <div class="flex flex-col items-center gap-1 mt-2">
+      <div class="flex gap-4">
+        <a href="https://youtube.com" target="_blank" class="text-black hover:text-red-600">
+          <i data-lucide="youtube" class="w-5 h-5"></i>
+        </a>
+        <a href="https://instagram.com" target="_blank" class="text-black hover:text-pink-600">
+          <i data-lucide="instagram" class="w-5 h-5"></i>
+        </a>
+        <a href="https://twitter.com" target="_blank" class="text-black hover:text-blue-600">
+          <i data-lucide="twitter" class="w-5 h-5"></i>
+        </a>
+      </div>
+      <p class="text-xs text-black">Follow for more live matches</p>
+    </div>
   </div>
 </main>
 
 <script>
-const STREAMS = {
-  stream1:{urls:[
-    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
-    "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/VCmSijxm/live.isml/.m3u8",
-    "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/OIrpidmf/live.isml/.m3u8"
-  ]},
-  stream2:{urls:[
-    "https://bcovlive-a.akamaihd.net/b6603a14ea59440a95e9235e14bc9332/ap-southeast-1/6415628290001/9c3d7fc7d10840a69e48b5939ae886e0/playlist_ssaiM.m3u8",
-    "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/ZHIHwljH/live.isml/.m3u8",
-    "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/SYy7CaBm/live.isml/.m3u8"
-  ]}
-};
+lucide.createIcons();
+const STREAMS={stream1:{urls:[
+  "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+  "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/VCmSijxm/live.isml/.m3u8",
+  "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/OIrpidmf/live.isml/.m3u8"
+]},stream2:{urls:[
+  "https://bcovlive-a.akamaihd.net/b6603a14ea59440a95e9235e14bc9332/ap-southeast-1/6415628290001/9c3d7fc7d10840a69e48b5939ae886e0/playlist_ssaiM.m3u8",
+  "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/ZHIHwljH/live.isml/.m3u8",
+  "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/SYy7CaBm/live.isml/.m3u8"
+]}};
+const video=document.getElementById("video"),
+overlay=document.getElementById("overlay"),
+container=document.getElementById("player-container"),
+qualityBtn=document.getElementById("btnQuality"),
+qualityOptions=document.getElementById("qualityOptions"),
+btnFullscreen=document.getElementById("btnFullscreen"),
+btnMute=document.getElementById("btnMute"),
+volumeWrapper=document.getElementById("volumeWrapper"),
+volumeControl=document.getElementById("volumeControl"),
+controls=document.getElementById("controls");
+let hls=null,lastActiveButton=null,hideControlsTimeout=null;
 
-const video=document.getElementById("video");
-const overlay=document.getElementById("overlay");
-const container=document.getElementById("player-container");
-const qualityBtn=document.getElementById("btnQuality");
-const qualityOptions=document.getElementById("qualityOptions");
-let hls=null;
-let lastActiveButton = null;
-
-function playStream(streamKey, index=0, btn=null){
-  const urls = STREAMS[streamKey].urls;
-
-  if(lastActiveButton) lastActiveButton.classList.remove("active");
-  if(btn){ btn.classList.add("active"); lastActiveButton=btn; }
-
-  let urlIndex=index;
-
-  function tryNext(){
-    if(urlIndex>=urls.length){
-      overlay.textContent="⚠️ Stream tidak tersedia";
-      overlay.style.opacity="1";
-      overlay.style.display="flex";
-      return;
-    }
-
-    const url = urls[urlIndex] + "?token=" + Math.random().toString(36).substr(2,6);
-
-    if(hls){ hls.destroy(); hls=null; }
-
-    overlay.textContent="⏳ Memuat stream...";
-    overlay.style.display="flex";
-    overlay.style.opacity="1";
-    overlay.style.transition="opacity 0.3s ease";
-
+function playStream(k,i=0,btn=null){
+  const u=STREAMS[k].urls;
+  if(lastActiveButton)lastActiveButton.classList.remove("active");
+  if(btn){btn.classList.add("active"); lastActiveButton=btn;}
+  let x=i;
+  function n(){
+    if(x>=u.length){overlay.textContent="⚠️ Stream tidak tersedia";overlay.style.opacity="1";overlay.style.display="flex";return;}
+    const url=u[x];
+    if(hls){hls.destroy();hls=null;}
+    overlay.textContent="⏳ Memuat stream...";overlay.style.display="flex";overlay.style.opacity="1";
     if(Hls.isSupported()){
-      hls=new Hls();
-      hls.loadSource(url);
-      hls.attachMedia(video);
-
+      hls=new Hls();hls.loadSource(url);hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED,()=>{
         video.play().then(()=>{
-          overlay.style.opacity="0";
-          setTimeout(()=>{overlay.style.display="none";},300);
-
-          video.muted=false; video.volume=1;
-
-          // Setup kualitas HD
+          overlay.style.opacity="0";setTimeout(()=>{overlay.style.display="none";},300);
+          video.muted=false;video.volume=1;updateVolumeIcon();
           qualityOptions.innerHTML="";
-          hls.levels.forEach((level,i)=>{
+          hls.levels.forEach((l,j)=>{
             const b=document.createElement("button");
-            b.textContent=level.height+"p";
-            b.onclick=()=>{ hls.currentLevel=i; qualityOptions.style.display="none"; qualityBtn.textContent=level.height+"p ▼"; };
+            b.textContent=l.height+"p";
+            b.onclick=()=>{hls.currentLevel=j;qualityOptions.style.display="none";qualityBtn.innerHTML='<i data-lucide="settings" class="w-4 h-4"></i> '+l.height+"p";lucide.createIcons();};
             qualityOptions.appendChild(b);
           });
         });
       });
-
-      hls.on(Hls.Events.ERROR,(event,data)=>{ if(data.fatal){ urlIndex++; tryNext(); } });
-
+      hls.on(Hls.Events.ERROR,(e,d)=>{if(d.fatal){x++;n();}});
     } else if(video.canPlayType("application/vnd.apple.mpegurl")){
       video.src=url;
-      video.play().then(()=>{ overlay.style.opacity="0"; setTimeout(()=>{overlay.style.display="none";},300); }).catch(()=>{ urlIndex++; tryNext(); });
-      video.addEventListener("error",()=>{ urlIndex++; tryNext(); });
+      video.play().then(()=>{overlay.style.opacity="0";setTimeout(()=>{overlay.style.display="none";},300);}).catch(()=>{x++;n();});
+      video.addEventListener("error",()=>{x++;n();});
     }
   }
-
-  tryNext();
+  n();
 }
 
-// Pasang onclick tombol otomatis
-document.querySelectorAll(".stream-row").forEach((row,rowIndex)=>{
-  const streamKey=rowIndex===0?"stream1":"stream2";
-  row.querySelectorAll("button").forEach((btn,btnIndex)=>{
-    btn.onclick=()=>playStream(streamKey,btnIndex,btn);
-  });
+document.querySelectorAll(".stream-row").forEach((r,ri)=>{
+  const k=ri===0?"stream1":"stream2";
+  r.querySelectorAll("button").forEach((b,bi)=>{b.onclick=()=>playStream(k,bi,b);});
 });
 
-// Fullscreen & volume
-document.getElementById("btnFullscreen").addEventListener("click",()=>{
-  if(!document.fullscreenElement){ container.requestFullscreen?.(); container.classList.add("fullscreen"); }
-  else{ document.exitFullscreen(); container.classList.remove("fullscreen"); }
-});
-video.addEventListener("dblclick",()=>{
-  if(!document.fullscreenElement){ container.requestFullscreen?.(); container.classList.add("fullscreen"); }
-  else{ document.exitFullscreen(); container.classList.remove("fullscreen"); }
-});
-document.getElementById("volumeControl").addEventListener("input",e=>{ video.muted=false; video.volume=e.target.value; });
+// Fullscreen
+function enterFullscreen(){
+  if(container.requestFullscreen)container.requestFullscreen();
+  container.classList.add("fullscreen");
+  if(screen.orientation&&screen.orientation.lock){screen.orientation.lock("landscape").catch(()=>{});}
+  btnFullscreen.innerHTML='<i data-lucide="minimize" class="w-5 h-5"></i>'; lucide.createIcons();
+}
+function exitFullscreen(){
+  document.exitFullscreen?.(); container.classList.remove("fullscreen");
+  btnFullscreen.innerHTML='<i data-lucide="maximize" class="w-5 h-5"></i>'; lucide.createIcons();
+}
+btnFullscreen.addEventListener("click",()=>{!document.fullscreenElement?enterFullscreen():exitFullscreen();});
+video.addEventListener("dblclick",()=>{!document.fullscreenElement?enterFullscreen():exitFullscreen();});
+document.addEventListener("fullscreenchange",()=>{if(document.fullscreenElement){btnFullscreen.innerHTML='<i data-lucide="minimize" class="w-5 h-5"></i>';}else{btnFullscreen.innerHTML='<i data-lucide="maximize" class="w-5 h-5"></i>';}lucide.createIcons();});
 
-// Jalankan stream pertama otomatis
+// Volume toggle + slider show/hide
+function updateVolumeIcon(){
+  if(video.muted||video.volume===0){
+    btnMute.innerHTML='<i data-lucide="volume-x" class="w-5 h-5"></i>';
+  }else{
+    btnMute.innerHTML='<i data-lucide="volume-2" class="w-5 h-5"></i>';
+  }
+  lucide.createIcons();
+}
+btnMute.addEventListener("click",()=>{
+  volumeWrapper.classList.toggle("show");
+  if(volumeWrapper.classList.contains("show")){
+    video.muted=false;
+  }else{
+    video.muted=true;
+  }
+  updateVolumeIcon();
+});
+volumeControl.addEventListener("input",e=>{video.muted=false; video.volume=e.target.value; updateVolumeIcon();});
+
+// Quality toggle
+qualityBtn.addEventListener("click",()=>{qualityOptions.style.display=qualityOptions.style.display==="block"?"none":"block";});
+
+// Kontrol auto-hide
+function showControls(){controls.classList.remove("hidden");clearTimeout(hideControlsTimeout);hideControlsTimeout=setTimeout(()=>controls.classList.add("hidden"),2500);}
+container.addEventListener("mousemove",showControls);container.addEventListener("click",showControls);showControls();
+
+// Proteksi
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("keydown",e=>{if(e.key==="F12"||(e.ctrlKey&&e.shiftKey&&e.key==="I"))e.preventDefault();});
+document.addEventListener("touchstart",e=>{if(e.touches.length>1)e.preventDefault();});
+
+// Start otomatis
 playStream("stream1",0,document.querySelectorAll(".stream-row")[0].querySelector("button"));
-
-// Toggle kualitas
-qualityBtn.addEventListener("click",()=>{ qualityOptions.style.display = qualityOptions.style.display==="block"?"none":"block"; });
-
-// Proteksi klik kanan / long press / F12
-document.addEventListener("contextmenu", e=>e.preventDefault());
-document.addEventListener("keydown", e=>{ if(e.key==="F12" || (e.ctrlKey && e.shiftKey && e.key==="I")) e.preventDefault(); });
-document.addEventListener("touchstart", e=>{ if(e.touches.length>1) e.preventDefault(); });
 </script>
 </body>
 </html>
