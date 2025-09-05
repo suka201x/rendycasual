@@ -180,6 +180,16 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
         <span>🔴 ITALIA vs BRASIL:</span>
         <button>Link 1</button><button>Link 2</button><button>Link 3</button>
       </div>
+      <div class="stream-row">
+        <span>🔴 INDONESIA vs CHINA:</span>
+        <button>Link 1</button><button>Link 2</button><button>Link 3</button>
+      </div>
+      <!-- Tambahan Sawer -->
+      <div class="stream-row">
+      </div>
+   </div>
+        <span> 💸 SAWER MIMIN AGAR LIVE UPDATE TERUS : GOPAY/DANA 081353754185</span>
+      </div>
     </div>
   </div>
 
@@ -215,6 +225,11 @@ const STREAMS={
     "https://bcovlive-a.akamaihd.net/b6603a14ea59440a95e9235e14bc9332/ap-southeast-1/6415628290001/9c3d7fc7d10840a69e48b5939ae886e0/playlist_ssaiM.m3u8",
     "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/ZHIHwljH/live.isml/.m3u8",
     "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/SYy7CaBm/live.isml/.m3u8"
+  ]},
+  stream3:{urls:[
+    "https://live.alilicloud.com/live/f05715bc7fb561357d0abcc5b910f0f0/playlist.m3u8",
+    "https://example.com/indo2.m3u8",
+    "https://example.com/indo3.m3u8"
   ]}
 };
 const video=document.getElementById("video"),
@@ -265,7 +280,8 @@ function playStream(k,i=0,btn=null){
 }
 
 document.querySelectorAll(".stream-row").forEach((r,ri)=>{
-  const k=ri===0?"stream1":"stream2";
+  const k=ri===0?"stream1":ri===1?"stream2":ri===2?"stream3":null;
+  if(!k)return;
   r.querySelectorAll("button").forEach((b,bi)=>{b.onclick=()=>playStream(k,bi,b);});
 });
 
