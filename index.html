@@ -1,41 +1,33 @@
 <!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
+<meta charset="utf-8" />
 <title>RENDY CASUAL</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
-body.dark { background:#111;color:white;margin:0;font-family:sans-serif; }
-
-/* HEADER */
-#channelHeader{position:fixed;top:0;left:0;width:100%;z-index:100;display:flex;justify-content:center;align-items:center;padding:16px 24px;background:#000;}
-#channelName{font-weight:900;font-size:3rem;color:#fff;font-family:'Orbitron',sans-serif;text-shadow:0 0 6px rgba(255,0,0,0.3),0 0 12px rgba(255,255,255,0.25);animation:glow 2.5s infinite alternate; text-align:center;}
+body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
+#channelName{position:fixed;top:0;left:0;width:100%;z-index:100;font-weight:900;text-align:center;font-size:3rem;padding:16px 0;background:#000;letter-spacing:3px;font-family:'Orbitron',sans-serif;color:#fff;text-shadow:0 0 6px rgba(255,0,0,0.3),0 0 12px rgba(255,255,255,0.25);animation:glow 2.5s infinite alternate;}
 @keyframes glow{0%{text-shadow:0 0 6px rgba(255,0,0,0.4),0 0 12px rgba(255,255,255,0.3);}100%{text-shadow:0 0 8px rgba(255,255,255,0.4),0 0 16px rgba(255,0,0,0.4);}}
 
-#adminToggle{position:absolute;right:24px;color:#fff;border-bottom:1px dashed #fff;cursor:pointer;font-size:0.85rem;padding:2px 4px;}
-#adminLoginForm{position:absolute;top:60px;right:24px;background:#111;padding:12px;border-radius:8px;display:none;flex-direction:column;gap:6px;z-index:200;}
-#adminLoginForm input{padding:6px;border-radius:4px;border:1px solid #ccc;width:140px;color:#000;}
-#adminLoginForm button{padding:6px;border-radius:4px;border:none;background:red;color:#fff;font-weight:bold;cursor:pointer;font-size:0.85rem;}
-
-/* Layout Responsive */
-#mainContent{margin-top:90px;width:100%;display:flex;flex-direction:column;align-items:center;}
-#middleSection{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%;max-width:1200px;}
-#videoContainer{position:relative;width:100%;max-width:900px;flex:1;display:flex;flex-direction:column;}
-#player-container{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,0.6);}
+/* Player & Controls */
+#mainContent{margin-top:90px;width:100%;}
+#middleSection{background:#000;padding:15px;display:flex;flex-direction:column;align-items:center;gap:20px;}
+#player-container{position:relative;width:100%;max-width:900px;aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,0.6);}
+#player-container.fullscreen{width:100vw;height:100vh;aspect-ratio:auto;border-radius:0;}
 #video{width:100%;height:100%;object-fit:contain;}
-#overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(240,240,240,0.85);color:#ff0000;font-size:20px;font-weight:bold;display:flex;align-items:center;justify-content:center;text-align:center;z-index:20;}
+#overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(240,240,240,0.85);color:#ff0000;font-size:20px;font-weight:bold;display:flex;align-items:center;justify-content:center;text-align:center;z-index:20;opacity:1;transition:opacity 0.3s;}
 #controls{display:flex;gap:16px;align-items:center;position:absolute;bottom:10px;right:10px;z-index:15;background:#000;padding:8px 12px;border-radius:12px;font-size:14px;opacity:1;transition:opacity 0.5s;}
+#controls.hidden{opacity:0;pointer-events:none;}
 .volume-group{display:flex;align-items:center;gap:6px;}
 #volumeControl{-webkit-appearance:none;width:80px;height:6px;background:#654321;border-radius:4px;}
 #volumeControl::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;}
-#qualityGear{cursor:pointer;position:relative;}
-#qualityDropdown{display:none;flex-direction:column;position:absolute;bottom:45px;right:0;background:#000;padding:6px 10px;border-radius:6px;gap:6px;z-index:50;min-width:120px;}
-#qualityDropdown button{display:flex;align-items:center;gap:6px;background:transparent;border:none;color:#fff;cursor:pointer;font-size:0.85rem;font-weight:bold;text-align:left;padding:2px;}
-#qualityDropdown button:hover{color:#ff4444;}
+#qualityOptions{display:none;position:absolute;bottom:45px;right:40px;background:#000;padding:6px 10px;border-radius:6px;flex-direction:column;gap:6px;}
+#qualityOptions button{background:transparent;border:none;color:#fff;cursor:pointer;font-size:0.85rem;font-weight:bold;}
+#qualityOptions button:hover{color:#ff4444;}
 
 /* Stream Buttons */
 .stream-buttons{display:flex;flex-direction:column;gap:12px;width:100%;max-width:900px;}
@@ -46,16 +38,7 @@ body.dark { background:#111;color:white;margin:0;font-family:sans-serif; }
 .stream-row button.active{background:red !important;color:white !important;}
 
 /* Kotak kuning */
-#sawerBox{background:yellow;color:#000;font-weight:bold;padding:10px;border-radius:8px;text-align:center;width:100%;max-width:900px;margin-top:10px;}
-
-/* Footer */
-#bottomSection{background:#e5e5e5;padding:15px;text-align:center;margin-top:10px;}
-#bottomSection p{color:#000;font-weight:bold;}
-
-/* Live Chat */
-#liveChatContainer{width:300px;max-width:100%;flex-shrink:0;display:flex;flex-direction:column;gap:4px;}
-#liveChatMessages{background:#fff;color:#000;flex:1;padding:8px;overflow-y:auto;border-radius:6px;font-size:0.9rem;max-height:calc(100vh - 200px);}
-#chatInput{padding:6px;border-radius:6px;border:1px solid #ccc;width:100%;box-sizing:border-box;color:#000;}
+#sawerBox{background:yellow;color:#000;font-weight:bold;padding:10px;border-radius:8px;text-align:center;max-width:900px;width:100%;}
 
 /* Popup Sawer & QR */
 #popupSawer{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);z-index:250;transition:opacity 0.25s ease;opacity:0;}
@@ -67,88 +50,74 @@ body.dark { background:#111;color:white;margin:0;font-family:sans-serif; }
 .nominal-box{display:flex;justify-content:space-between;align-items:center;padding:8px;background:#fef08a;border-radius:8px;font-weight:bold;}
 .nominal-box .btns{display:flex;gap:6px;}
 .nominal-small{padding:6px 8px;border-radius:6px;background:#111;color:#fff;border:none;cursor:pointer;font-weight:700;}
-#qrContainer{margin-top:12px;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;}
+#qrContainer{margin-top:12px;display:none;flex-direction:column;align-items:center;gap:8px;position:relative;}
 #qrContainer img{width:180px;height:180px;border:2px solid #000;border-radius:12px;}
 #qrContainer .qr-msg{font-weight:bold;color:#000;text-align:center;margin-bottom:12px;}
-#btnPlayStream{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);padding:10px 20px;background:red;color:#fff;font-weight:bold;border:none;border-radius:8px;cursor:pointer;font-size:1rem;z-index:300;}
+#btnPlayStream{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);padding:10px 20px;background:red;color:#fff;font-weight:bold;border:none;border-radius:8px;cursor:pointer;font-size:1rem;z-index:300;}
 
-/* Responsive */
-@media(max-width:768px){
-  #middleSection{flex-direction:column;align-items:center;}
-  #liveChatContainer{width:95%;max-width:95%;margin-top:12px;}
-  #adminToggle{right:12px;}
-  #adminLoginForm{right:12px;}
-}
+/* Footer */
+#bottomSection{background:#e5e5e5;padding:15px;text-align:center;}
+#bottomSection p{color:#000;font-weight:bold;}
 </style>
 </head>
 <body class="dark flex flex-col items-center" oncontextmenu="return false">
 
-<div id="channelHeader">
-  <div id="channelName">RENDY CASUAL</div>
-  <div id="adminToggle">Admin Login</div>
-  <div id="adminLoginForm">
-    <input id="loginUser" placeholder="Username" type="text">
-    <input id="loginPass" placeholder="Password" type="password">
-    <button id="btnLogin">Login</button>
-  </div>
-</div>
+<div id="channelName">RENDY CASUAL</div>
 
 <main id="mainContent">
-  <div id="middleSection">
-    <div id="videoContainer">
-      <div id="player-container">
-        <video id="video" playsinline muted></video>
-        <div id="overlay">⏳ Memuat stream...</div>
-        <div id="controls">
-          <div class="volume-group">
-            <button id="btnMute" class="p-1 text-white"><i data-lucide="volume-2" class="w-5 h-5 text-white"></i></button>
-            <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
-          </div>
-          <div id="qualityGear"><i data-lucide="settings" class="w-5 h-5 text-white"></i>
-            <div id="qualityDropdown"></div>
-          </div>
-          <button id="btnFullscreen" class="p-1 text-white"><i data-lucide="maximize" class="w-5 h-5"></i></button>
-        </div>
+<div id="middleSection">
+
+  <!-- Video Player -->
+  <div id="player-container">
+    <video id="video" playsinline muted></video>
+    <div id="overlay">⏳ Memuat stream...</div>
+    <div id="controls">
+      <div class="volume-group">
+        <button id="btnMute" class="p-1 text-black"><i data-lucide="volume-2" class="w-5 h-5"></i></button>
+        <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
       </div>
-
-      <div class="stream-buttons">
-        <div class="stream-row">
-          <span>🔴 INDO vs LIBANON:</span>
-          <button data-stream="stream1">Link 1</button>
-          <button data-stream="stream1">Link 2</button>
-          <button data-stream="stream1">Link 3</button>
-        </div>
-        <div class="stream-row">
-          <span>🔴 INDO vs LIBANON:</span>
-          <button data-stream="stream2">Link 1</button>
-          <button data-stream="stream2">Link 2</button>
-          <button data-stream="stream2">Link 3</button>
-        </div>
-        <div class="stream-row">
-          <span>🔴 INDO vs LEBANON:</span>
-          <button data-stream="stream3">Link 1</button>
-          <button data-stream="stream3">Link 2</button>
-          <button data-stream="stream3">Link 3</button>
-        </div>
-      </div>
-
-      <div id="sawerBox">Klik Link untuk Tonton Live 💛 Terima kasih atas dukungan Anda!</div>
-      <div id="bottomSection"><p>© 2025 RENDY CASUAL - All rights reserved</p></div>
-    </div>
-
-    <div id="liveChatContainer">
-      <div id="liveChatMessages"></div>
-      <input id="chatInput" placeholder="Ketik pesan..." type="text">
+      <button id="btnQuality" class="p-1 text-white flex items-center gap-1"><i data-lucide="settings" class="w-5 h-5"></i> Auto</button>
+      <div id="qualityOptions" class="flex"></div>
+      <button id="btnFullscreen" class="p-1 text-white"><i data-lucide="maximize" class="w-5 h-5"></i></button>
     </div>
   </div>
+
+  <!-- Stream Buttons Horizontal -->
+  <div class="stream-buttons">
+    <div class="stream-row">
+      <span>🔴 INDO vs LIBANON:</span>
+      <button data-stream="stream1" data-index="0">Link 1</button>
+      <button data-stream="stream1" data-index="1">Link 2</button>
+      <button data-stream="stream1" data-index="2">Link 3</button>
+    </div>
+    <div class="stream-row">
+      <span>🔴 INDO vs LIBANON:</span>
+      <button data-stream="stream2" data-index="0">Link 1</button>
+      <button data-stream="stream2" data-index="1">Link 2</button>
+      <button data-stream="stream2" data-index="2">Link 3</button>
+    </div>
+    <div class="stream-row">
+      <span>🔴 INDO vs LEBANON :</span>
+      <button data-stream="stream3" data-index="0">Link 1</button>
+      <button data-stream="stream3" data-index="1">Link 2</button>
+      <button data-stream="stream3" data-index="2">Link 3</button>
+    </div>
+  </div>
+
+  <!-- Kotak kuning -->
+  <div id="sawerBox">Klik Link untuk Tonton Live 💛 Terima kasih atas dukungan Anda! .</div>
+
+</div>
+<div id="bottomSection"><p>© 2025 RENDY CASUAL - All rights reserved</p></div>
 </main>
 
+<!-- Popup Sawer & QR -->
 <div id="popupSawer" aria-hidden="true">
   <div id="popupContent">
     <div id="popupHeader">💸 SAWER SEIKHLASNYA<br><small>Sekali Sawer Nonton Gratis Tanpa Iklan</small></div>
     <div id="nominalList"></div>
     <div id="qrContainer">
-      <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://example.com" alt="QR Code">
+      <img id="qrImage" src="" alt="QR Code">
       <div class="qr-msg">Silakan scan QR untuk verifikasi...</div>
       <button id="btnPlayStream">▶️ Play Stream</button>
     </div>
@@ -159,96 +128,150 @@ body.dark { background:#111;color:white;margin:0;font-family:sans-serif; }
 <script>
 lucide.createIcons();
 
+// STREAM DATA
 const STREAMS={
-  stream1:{url:"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8"},
-  stream2:{url:"https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8"},
-  stream3:{url:"https://mahabawdilive.pyoneplay.com/hls/stream.m3u8"}
+  stream1:{urls:["https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8"]},
+  stream2:{urls:["https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8"]},
+  stream3:{urls:["https://mahabawdilive.pyoneplay.com/hls/stream.m3u8"]}
 };
 
 const video=document.getElementById("video"),
-overlay=document.getElementById("overlay"),
-btnMute=document.getElementById("btnMute"),
-volumeControl=document.getElementById("volumeControl"),
-qualityGear=document.getElementById("qualityGear"),
-qualityDropdown=document.getElementById("qualityDropdown"),
-adminToggle=document.getElementById("adminToggle"),
-adminLoginForm=document.getElementById("adminLoginForm"),
-loginUser=document.getElementById("loginUser"),
-loginPass=document.getElementById("loginPass"),
-btnLogin=document.getElementById("btnLogin"),
-liveChat=document.getElementById("liveChatMessages"),
-chatInput=document.getElementById("chatInput"),
-popup=document.getElementById('popupSawer'),
-btnPlayStream=document.getElementById('btnPlayStream');
+      overlay=document.getElementById("overlay"),
+      container=document.getElementById("player-container"),
+      controls=document.getElementById("controls"),
+      btnFullscreen=document.getElementById("btnFullscreen"),
+      btnMute=document.getElementById("btnMute"),
+      volumeControl=document.getElementById("volumeControl"),
+      qualityBtn=document.getElementById("btnQuality"),
+      qualityOptions=document.getElementById("qualityOptions");
 
-let hls=null,isAdmin=false,pendingStream=null;
+let hls=null,lastActiveButton=null,hideControlsTimeout=null,pendingStream=null;
+let qrCheckInterval=null;
 
-// Admin toggle
-adminToggle.addEventListener('click',()=>{adminLoginForm.style.display=(adminLoginForm.style.display==='flex')?'none':'flex'; adminLoginForm.style.flexDirection='column';});
+const popup=document.getElementById('popupSawer');
+const nominalListEl=document.getElementById('nominalList');
+const qrContainer=document.getElementById('qrContainer');
+const qrImage=document.getElementById('qrImage');
+const btnPlayStream=document.getElementById('btnPlayStream');
 
-// Admin login
-btnLogin.addEventListener("click",()=>{
-  if(loginUser.value==="admin" && loginPass.value==="12345"){isAdmin=true; alert("Admin Login Berhasil"); adminLoginForm.style.display='none';}
-  else{alert("Login salah!"); adminLoginForm.style.display='none';}
-});
+const NOMINALS=[10000,20000,30000,40000,50000];
 
-// Play stream
-function playStream(url){
-  overlay.style.display='flex';
-  if(hls){hls.destroy(); hls=null;}
-  if(Hls.isSupported()){
-    hls=new Hls();
-    hls.loadSource(url);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED,()=>{
-      video.play(); overlay.style.display='none';
-      buildQualityDropdown();
-    });
-  } else { video.src=url; video.play().then(()=>{overlay.style.display='none';}); }
+// OPEN POPUP
+function openPopup(){
+  nominalListEl.innerHTML="";
+  qrContainer.style.display="none";
+  btnPlayStream.style.display="none";
+
+  NOMINALS.forEach(n=>{
+    const box=document.createElement('div');box.className='nominal-box';
+    box.innerHTML=`<div>Rp ${n.toLocaleString('id-ID')}</div>
+      <div class="btns">
+        <button class="nominal-small pay-gopay" data-nom="${n}">GoPay</button>
+        <button class="nominal-small pay-dana" data-nom="${n}">Dana</button>
+      </div>`;
+    nominalListEl.appendChild(box);
+  });
+
+  nominalListEl.querySelectorAll('.pay-gopay').forEach(btn=>{
+    btn.addEventListener('click',()=>{showQR('gopay',btn.dataset.nom);});
+  });
+  nominalListEl.querySelectorAll('.pay-dana').forEach(btn=>{
+    btn.addEventListener('click',()=>{showQR('dana',btn.dataset.nom);});
+  });
+
+  popup.classList.add('show'); popup.setAttribute('aria-hidden','false');
+}
+
+function closePopup(){
+  popup.classList.remove('show');
+  popup.setAttribute('aria-hidden','true');
+  qrContainer.style.display="none";
+  btnPlayStream.style.display="none";
+  if(qrCheckInterval) clearInterval(qrCheckInterval);
+}
+
+// SHOW QR
+function showQR(method,nominal){
+  nominalListEl.style.display="none";
+  qrContainer.style.display="flex";
+  btnPlayStream.style.display="none";
+
+  qrImage.src=(method==='gopay')?"https://iili.io/Kos01X1.md.jpg":"https://iili.io/Kot8APe.md.jpg";
+
+  qrContainer.dataset.method = method;
+  qrContainer.dataset.nominal = nominal;
+  qrContainer.dataset.verified = "false";
+
+  const qrId = `${method}-${nominal}-${Date.now()}`;
+  startQrPolling(qrId);
+}
+
+// POLLING SERVER UNTUK VERIFIKASI QR
+function startQrPolling(qrId){
+  if(qrCheckInterval) clearInterval(qrCheckInterval);
+  qrCheckInterval = setInterval(async ()=>{
+    try{
+      const res = await fetch(`/qr-status?id=${qrId}`);
+      const data = await res.json();
+      if(data.verified){
+        clearInterval(qrCheckInterval);
+        qrVerified();
+      }
+    }catch(err){ console.error("QR polling error:", err); }
+  },2000);
+}
+
+// TOMBOL PLAY MUNCUL SAAT QR VERIFIED
+function qrVerified(){
+  qrContainer.dataset.verified="true";
+  btnPlayStream.style.display="block";
+}
+
+// PLAY STREAM
+function playStream(k,i=0,btn=null){
+  const u=STREAMS[k].urls;
+  if(lastActiveButton) lastActiveButton.classList.remove("active");
+  if(btn){btn.classList.add("active");lastActiveButton=btn;}
+  const url=u[i];
+  if(hls){hls.destroy();hls=null;}
+  if(Hls.isSupported()){hls=new Hls();hls.loadSource(url);hls.attachMedia(video);hls.on(Hls.Events.MANIFEST_PARSED,()=>{video.play();overlay.style.display="none";});}
+  else{video.src=url;video.play().then(()=>{overlay.style.display="none";});}
   closePopup();
 }
 
-// Stream buttons
+// STREAM BUTTON
 document.querySelectorAll(".stream-row button").forEach(b=>{
-  b.addEventListener("click",()=>{
-    pendingStream=b.dataset.stream;
-    playStream(STREAMS[pendingStream].url);
+  b.addEventListener("click",e=>{
+    e.preventDefault();
+    pendingStream={stream:b.dataset.stream,index:parseInt(b.dataset.index),btn:b};
+    openPopup();
   });
 });
 
-// Popup
-function closePopup(){popup.classList.remove('show');}
-btnPlayStream.addEventListener('click',()=>{if(pendingStream){playStream(STREAMS[pendingStream].url);}});
+// PLAY STREAM BUTTON
+btnPlayStream.addEventListener('click',()=>{
+  if(qrContainer.dataset.verified==='true' && pendingStream){
+    playStream(pendingStream.stream,pendingStream.index,pendingStream.btn);
+  }
+});
 
-// Volume
-function updateVolumeIcon(){btnMute.innerHTML=video.muted||video.volume===0?'<i data-lucide="volume-x" class="w-5 h-5 text-white"></i>':'<i data-lucide="volume-2" class="w-5 h-5 text-white"></i>';lucide.createIcons();}
+// FULLSCREEN
+function enterFullscreen(){if(container.requestFullscreen)container.requestFullscreen();container.classList.add("fullscreen");btnFullscreen.innerHTML='<i data-lucide="minimize" class="w-5 h-5"></i>';lucide.createIcons();}
+function exitFullscreen(){document.exitFullscreen?.();container.classList.remove("fullscreen");btnFullscreen.innerHTML='<i data-lucide="maximize" class="w-5 h-5"></i>';lucide.createIcons();}
+btnFullscreen.addEventListener("click",()=>{!document.fullscreenElement?enterFullscreen():exitFullscreen();});
+video.addEventListener("dblclick",()=>{!document.fullscreenElement?enterFullscreen():exitFullscreen();});
+
+// VOLUME
+function updateVolumeIcon(){if(video.muted||video.volume===0){btnMute.innerHTML='<i data-lucide="volume-x" class="w-5 h-5"></i>';}else{btnMute.innerHTML='<i data-lucide="volume-2" class="w-5 h-5"></i>';}lucide.createIcons();}
 volumeControl.addEventListener("input",e=>{video.muted=false;video.volume=e.target.value;updateVolumeIcon();});
 btnMute.addEventListener("click",()=>{video.muted=!video.muted;updateVolumeIcon();});
 
-// Fullscreen
-document.getElementById("btnFullscreen").addEventListener("click",()=>{!document.fullscreenElement?video.parentElement.requestFullscreen():document.exitFullscreen();});
+// QUALITY
+qualityBtn.addEventListener("click",()=>{qualityOptions.style.display=qualityOptions.style.display==="flex"?"none":"flex";});
 
-// Chat
-chatInput.addEventListener("keypress",(e)=>{if(e.key==="Enter" && chatInput.value.trim()!==""){let msg=document.createElement("div"); msg.textContent=chatInput.value; liveChat.appendChild(msg); chatInput.value=""; liveChat.scrollTop=liveChat.scrollHeight;}});
-
-// Quality dropdown
-function buildQualityDropdown(){
-  qualityDropdown.innerHTML='';
-  if(!hls || !hls.levels) return;
-  const btnAuto=document.createElement('button');
-  btnAuto.textContent='Auto'; btnAuto.dataset.level=-1;
-  btnAuto.addEventListener('click',()=>{hls.currentLevel=-1; highlightSelectedLevel(-1); qualityDropdown.style.display='none';});
-  qualityDropdown.appendChild(btnAuto);
-  hls.levels.forEach((level,index)=>{
-    const btn=document.createElement('button'); const height=level.height||0;
-    btn.textContent=height+(height>=720?' HD':''); btn.dataset.level=index;
-    btn.addEventListener('click',()=>{hls.currentLevel=index; highlightSelectedLevel(index); qualityDropdown.style.display='none';});
-    qualityDropdown.appendChild(btn);
-  });
-  highlightSelectedLevel(hls.currentLevel);
-}
-function highlightSelectedLevel(levelIndex){qualityDropdown.querySelectorAll('button').forEach(btn=>{if(parseInt(btn.dataset.level)===levelIndex){btn.style.color='#ff4444'; btn.style.fontWeight='bold';}else{btn.style.color='#fff'; btn.style.fontWeight='normal';}});}
-qualityGear.addEventListener('click',()=>{qualityDropdown.style.display=(qualityDropdown.style.display==='flex')?'none':'flex';});
+// AUTO-HIDE CONTROLS
+function showControls(){controls.classList.remove("hidden");clearTimeout(hideControlsTimeout);hideControlsTimeout=setTimeout(()=>controls.classList.add("hidden"),2500);}
+container.addEventListener("mousemove",showControls);container.addEventListener("click",showControls);showControls();
 </script>
 </body>
 </html>
