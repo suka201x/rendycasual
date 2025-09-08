@@ -54,7 +54,7 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 .stream-row button.active{background:red !important;color:white !important;}
 
 /* Responsive fixes */
-@media (max-width:500px){
+@media (max-width:1024px){
   #middleSection{
     flex-direction: column;
     align-items: center;
@@ -71,9 +71,9 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
     max-height:400px;
   }
   #player-container{
-    width: 50%;
-    max-width: 50%;
-    aspect-ratio:15/5;
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio:16/9;
   }
 }
 </style>
@@ -292,7 +292,7 @@ window.addEventListener('load',adjustChatHeight);
 // Responsive layout adjustment
 function adjustLayout(){
   const w = window.innerWidth;
-  if(w <= 500){
+  if(w <= 1024){
     chatContainer.style.height='auto';
   } else {
     chatContainer.style.height = container.offsetHeight+'px';
