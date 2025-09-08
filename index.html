@@ -10,14 +10,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 <style>
 body.dark { background:#111;color:white;margin:0;font-family:sans-serif; }
-#channelHeader{position:fixed;top:0;left:0;width:100%;z-index:100;display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:#000;}
-#channelName{font-weight:900;font-size:3rem;color:#fff;font-family:'Orbitron',sans-serif;text-shadow:0 0 6px rgba(255,0,0,0.3),0 0 12px rgba(255,255,255,0.25);animation:glow 2.5s infinite alternate;}
+
+/* HEADER */
+#channelHeader{position:fixed;top:0;left:0;width:100%;z-index:100;display:flex;justify-content:center;align-items:center;padding:16px 24px;background:#000;}
+#channelName{font-weight:900;font-size:3rem;color:#fff;font-family:'Orbitron',sans-serif;text-shadow:0 0 6px rgba(255,0,0,0.3),0 0 12px rgba(255,255,255,0.25);animation:glow 2.5s infinite alternate; text-align:center;}
 @keyframes glow{0%{text-shadow:0 0 6px rgba(255,0,0,0.4),0 0 12px rgba(255,255,255,0.3);}100%{text-shadow:0 0 8px rgba(255,255,255,0.4),0 0 16px rgba(255,0,0,0.4);}}
 
-/* Admin Login */
-#adminLogin{display:flex;gap:6px;align-items:center;}
-#adminLogin input{padding:4px 6px;border-radius:4px;border:1px solid #ccc;}
-#adminLogin button{padding:4px 8px;border-radius:4px;border:none;background:red;color:#fff;font-weight:bold;cursor:pointer;font-size:0.85rem;}
+#adminToggle{position:absolute;right:24px;color:#fff;border-bottom:1px dashed #fff;cursor:pointer;font-size:0.85rem;padding:2px 4px;}
+#adminLoginForm{position:absolute;top:60px;right:24px;background:#111;padding:12px;border-radius:8px;display:none;flex-direction:column;gap:6px;z-index:200;}
+#adminLoginForm input{padding:6px;border-radius:4px;border:1px solid #ccc;width:140px;color:#000;}
+#adminLoginForm button{padding:6px;border-radius:4px;border:none;background:red;color:#fff;font-weight:bold;cursor:pointer;font-size:0.85rem;}
 
 /* Layout Responsive */
 #mainContent{margin-top:90px;width:100%;display:flex;flex-direction:column;align-items:center;}
@@ -65,15 +67,17 @@ body.dark { background:#111;color:white;margin:0;font-family:sans-serif; }
 .nominal-box{display:flex;justify-content:space-between;align-items:center;padding:8px;background:#fef08a;border-radius:8px;font-weight:bold;}
 .nominal-box .btns{display:flex;gap:6px;}
 .nominal-small{padding:6px 8px;border-radius:6px;background:#111;color:#fff;border:none;cursor:pointer;font-weight:700;}
-#qrContainer{margin-top:12px;display:none;flex-direction:column;align-items:center;gap:8px;position:relative;}
+#qrContainer{margin-top:12px;display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;}
 #qrContainer img{width:180px;height:180px;border:2px solid #000;border-radius:12px;}
 #qrContainer .qr-msg{font-weight:bold;color:#000;text-align:center;margin-bottom:12px;}
-#btnPlayStream{display:none;position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);padding:10px 20px;background:red;color:#fff;font-weight:bold;border:none;border-radius:8px;cursor:pointer;font-size:1rem;z-index:300;}
+#btnPlayStream{position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);padding:10px 20px;background:red;color:#fff;font-weight:bold;border:none;border-radius:8px;cursor:pointer;font-size:1rem;z-index:300;}
 
 /* Responsive */
 @media(max-width:768px){
   #middleSection{flex-direction:column;align-items:center;}
   #liveChatContainer{width:95%;max-width:95%;margin-top:12px;}
+  #adminToggle{right:12px;}
+  #adminLoginForm{right:12px;}
 }
 </style>
 </head>
@@ -81,11 +85,12 @@ body.dark { background:#111;color:white;margin:0;font-family:sans-serif; }
 
 <div id="channelHeader">
   <div id="channelName">RENDY CASUAL</div>
-  <form id="adminLogin">
+  <div id="adminToggle">Admin Login</div>
+  <div id="adminLoginForm">
     <input id="loginUser" placeholder="Username" type="text">
     <input id="loginPass" placeholder="Password" type="password">
-    <button type="button" id="btnLogin">Login Admin</button>
-  </form>
+    <button id="btnLogin">Login</button>
+  </div>
 </div>
 
 <main id="mainContent">
@@ -106,7 +111,6 @@ body.dark { background:#111;color:white;margin:0;font-family:sans-serif; }
         </div>
       </div>
 
-      <!-- Stream Buttons -->
       <div class="stream-buttons">
         <div class="stream-row">
           <span>🔴 INDO vs LIBANON:</span>
@@ -139,13 +143,12 @@ body.dark { background:#111;color:white;margin:0;font-family:sans-serif; }
   </div>
 </main>
 
-<!-- Popup Sawer & QR -->
 <div id="popupSawer" aria-hidden="true">
   <div id="popupContent">
     <div id="popupHeader">💸 SAWER SEIKHLASNYA<br><small>Sekali Sawer Nonton Gratis Tanpa Iklan</small></div>
     <div id="nominalList"></div>
     <div id="qrContainer">
-      <img id="qrImage" src="" alt="QR Code">
+      <img id="qrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://example.com" alt="QR Code">
       <div class="qr-msg">Silakan scan QR untuk verifikasi...</div>
       <button id="btnPlayStream">▶️ Play Stream</button>
     </div>
@@ -168,9 +171,11 @@ btnMute=document.getElementById("btnMute"),
 volumeControl=document.getElementById("volumeControl"),
 qualityGear=document.getElementById("qualityGear"),
 qualityDropdown=document.getElementById("qualityDropdown"),
-btnLogin=document.getElementById("btnLogin"),
+adminToggle=document.getElementById("adminToggle"),
+adminLoginForm=document.getElementById("adminLoginForm"),
 loginUser=document.getElementById("loginUser"),
 loginPass=document.getElementById("loginPass"),
+btnLogin=document.getElementById("btnLogin"),
 liveChat=document.getElementById("liveChatMessages"),
 chatInput=document.getElementById("chatInput"),
 popup=document.getElementById('popupSawer'),
@@ -178,21 +183,16 @@ btnPlayStream=document.getElementById('btnPlayStream');
 
 let hls=null,isAdmin=false,pendingStream=null;
 
-// --- LOGIN ADMIN INLINE ---
+// Admin toggle
+adminToggle.addEventListener('click',()=>{adminLoginForm.style.display=(adminLoginForm.style.display==='flex')?'none':'flex'; adminLoginForm.style.flexDirection='column';});
+
+// Admin login
 btnLogin.addEventListener("click",()=>{
-  if(loginUser.value==="admin" && loginPass.value==="12345"){
-    isAdmin=true;
-    alert("Admin login berhasil!");
-    loginUser.value="";
-    loginPass.value="";
-  } else {
-    alert("Login salah!");
-    loginUser.value="";
-    loginPass.value="";
-  }
+  if(loginUser.value==="admin" && loginPass.value==="12345"){isAdmin=true; alert("Admin Login Berhasil"); adminLoginForm.style.display='none';}
+  else{alert("Login salah!"); adminLoginForm.style.display='none';}
 });
 
-// --- PLAY STREAM ---
+// Play stream
 function playStream(url){
   overlay.style.display='flex';
   if(hls){hls.destroy(); hls=null;}
@@ -201,18 +201,14 @@ function playStream(url){
     hls.loadSource(url);
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED,()=>{
-      video.play();
-      overlay.style.display='none';
+      video.play(); overlay.style.display='none';
       buildQualityDropdown();
     });
-  } else {
-    video.src=url;
-    video.play().then(()=>{overlay.style.display='none';});
-  }
+  } else { video.src=url; video.play().then(()=>{overlay.style.display='none';}); }
   closePopup();
 }
 
-// --- STREAM BUTTONS ---
+// Stream buttons
 document.querySelectorAll(".stream-row button").forEach(b=>{
   b.addEventListener("click",()=>{
     pendingStream=b.dataset.stream;
@@ -220,74 +216,38 @@ document.querySelectorAll(".stream-row button").forEach(b=>{
   });
 });
 
-// --- POPUP ---
+// Popup
 function closePopup(){popup.classList.remove('show');}
 btnPlayStream.addEventListener('click',()=>{if(pendingStream){playStream(STREAMS[pendingStream].url);}});
 
-// --- VOLUME ---
+// Volume
 function updateVolumeIcon(){btnMute.innerHTML=video.muted||video.volume===0?'<i data-lucide="volume-x" class="w-5 h-5 text-white"></i>':'<i data-lucide="volume-2" class="w-5 h-5 text-white"></i>';lucide.createIcons();}
 volumeControl.addEventListener("input",e=>{video.muted=false;video.volume=e.target.value;updateVolumeIcon();});
 btnMute.addEventListener("click",()=>{video.muted=!video.muted;updateVolumeIcon();});
 
-// --- FULLSCREEN ---
-document.getElementById("btnFullscreen").addEventListener("click",()=>{
-  !document.fullscreenElement?video.parentElement.requestFullscreen():document.exitFullscreen();
-});
+// Fullscreen
+document.getElementById("btnFullscreen").addEventListener("click",()=>{!document.fullscreenElement?video.parentElement.requestFullscreen():document.exitFullscreen();});
 
-// --- CHAT ---
-chatInput.addEventListener("keypress",(e)=>{
-  if(e.key==="Enter" && chatInput.value.trim()!==""){
-    let msg=document.createElement("div");
-    msg.textContent=chatInput.value;
-    liveChat.appendChild(msg);
-    chatInput.value="";
-    liveChat.scrollTop=liveChat.scrollHeight;
-  }
-});
+// Chat
+chatInput.addEventListener("keypress",(e)=>{if(e.key==="Enter" && chatInput.value.trim()!==""){let msg=document.createElement("div"); msg.textContent=chatInput.value; liveChat.appendChild(msg); chatInput.value=""; liveChat.scrollTop=liveChat.scrollHeight;}});
 
-// --- QUALITY DROPDOWN ---
+// Quality dropdown
 function buildQualityDropdown(){
   qualityDropdown.innerHTML='';
   if(!hls || !hls.levels) return;
-
   const btnAuto=document.createElement('button');
-  btnAuto.textContent='Auto';
-  btnAuto.dataset.level=-1;
-  btnAuto.addEventListener('click',()=>{
-    hls.currentLevel=-1;
-    highlightSelectedLevel(-1);
-    qualityDropdown.style.display='none';
-  });
+  btnAuto.textContent='Auto'; btnAuto.dataset.level=-1;
+  btnAuto.addEventListener('click',()=>{hls.currentLevel=-1; highlightSelectedLevel(-1); qualityDropdown.style.display='none';});
   qualityDropdown.appendChild(btnAuto);
-
   hls.levels.forEach((level,index)=>{
-    const btn=document.createElement('button');
-    const height = level.height || 0;
-    btn.textContent = height + (height>=720?' HD':'');
-    btn.dataset.level=index;
-    btn.addEventListener('click',()=>{
-      hls.currentLevel=index;
-      highlightSelectedLevel(index);
-      qualityDropdown.style.display='none';
-    });
+    const btn=document.createElement('button'); const height=level.height||0;
+    btn.textContent=height+(height>=720?' HD':''); btn.dataset.level=index;
+    btn.addEventListener('click',()=>{hls.currentLevel=index; highlightSelectedLevel(index); qualityDropdown.style.display='none';});
     qualityDropdown.appendChild(btn);
   });
-
   highlightSelectedLevel(hls.currentLevel);
 }
-
-function highlightSelectedLevel(levelIndex){
-  qualityDropdown.querySelectorAll('button').forEach(btn=>{
-    if(parseInt(btn.dataset.level)===levelIndex){
-      btn.style.color='#ff4444';
-      btn.style.fontWeight='bold';
-    } else {
-      btn.style.color='#fff';
-      btn.style.fontWeight='normal';
-    }
-  });
-}
-
+function highlightSelectedLevel(levelIndex){qualityDropdown.querySelectorAll('button').forEach(btn=>{if(parseInt(btn.dataset.level)===levelIndex){btn.style.color='#ff4444'; btn.style.fontWeight='bold';}else{btn.style.color='#fff'; btn.style.fontWeight='normal';}});}
 qualityGear.addEventListener('click',()=>{qualityDropdown.style.display=(qualityDropdown.style.display==='flex')?'none':'flex';});
 </script>
 </body>
