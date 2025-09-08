@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
 
 <style>
-/* ========== (--- **TOMBOL / UI ASLI KAMU TETAP** ---) ========== */
+/* === STYLE UTAMA === */
 body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 
 /* Header */
@@ -20,21 +20,17 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
   padding:16px 0; background:#000; letter-spacing:3px;
   font-family: 'Orbitron', sans-serif;
   color:#fff;
-  text-shadow: 0 0 6px rgba(255,0,0,0.3),
-               0 0 12px rgba(255,255,255,0.25);
+  text-shadow:0 0 6px rgba(255,0,0,0.3),0 0 12px rgba(255,255,255,0.25);
   animation: glow 2.5s infinite alternate;
 }
 @keyframes glow {
-  0% { text-shadow: 0 0 6px rgba(255,0,0,0.4),0 0 12px rgba(255,255,255,0.3); }
-  100% { text-shadow: 0 0 8px rgba(255,255,255,0.4),0 0 16px rgba(255,0,0,0.4); }
+  0% { text-shadow:0 0 6px rgba(255,0,0,0.4),0 0 12px rgba(255,255,255,0.3); }
+  100% { text-shadow:0 0 8px rgba(255,255,255,0.4),0 0 16px rgba(255,0,0,0.4); }
 }
 
 /* Konten */
 #mainContent { margin-top:90px; width:100%; }
-#middleSection {
-  background:#000; padding:15px;
-  display:flex; flex-direction:column; align-items:center; gap:20px;
-}
+#middleSection { background:#000; padding:15px; display:flex; flex-direction:column; align-items:center; gap:20px; }
 
 /* Video */
 #player-container {
@@ -52,145 +48,52 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 }
 
 /* Kontrol */
-#controls{ 
-  display:flex; gap:16px; align-items:center;
+#controls{ display:flex; gap:16px; align-items:center;
   position:absolute; bottom:10px; right:10px; z-index:15;
   background:#000; padding:8px 12px; border-radius:12px;
-  font-size:14px; opacity:1; transition:opacity 0.5s;
-}
+  font-size:14px; opacity:1; transition:opacity 0.5s; }
 #controls.hidden{ opacity:0; pointer-events:none; }
 
-/* Volume Group */
-.volume-group{
-  display:flex; align-items:center; gap:6px;
-}
-#volumeControl {
-  -webkit-appearance:none;
-  width:80px; height:6px;
-  background:#654321; border-radius:4px;
-}
-#volumeControl::-webkit-slider-thumb {
-  -webkit-appearance:none;
-  width:14px; height:14px; border-radius:50%;
-  background:#fff; cursor:pointer;
-}
+/* Volume */
+.volume-group{ display:flex; align-items:center; gap:6px; }
+#volumeControl { -webkit-appearance:none; width:80px; height:6px; background:#654321; border-radius:4px; }
+#volumeControl::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:#fff; cursor:pointer; }
 
-/* Quality popup */
+/* Quality */
 #qualityOptions {
-  display:none; 
-  position:absolute; bottom:45px; right:40px;
-  background:#000;
-  padding:6px 10px; border-radius:6px;
+  display:none; position:absolute; bottom:45px; right:40px;
+  background:#000; padding:6px 10px; border-radius:6px;
   flex-direction:column; gap:6px;
 }
-#qualityOptions button {
-  background:transparent; border:none;
-  color:#fff; cursor:pointer;
-  font-size:0.85rem; font-weight:bold;
-}
+#qualityOptions button { background:transparent; border:none; color:#fff; cursor:pointer; font-size:0.85rem; font-weight:bold; }
 #qualityOptions button:hover { color:#ff4444; }
 
-/* Stream row horizontal */
-.stream-buttons{
-  display:flex; flex-direction:column; gap:12px; width:100%; max-width:900px;
-}
-.stream-row{
-  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
-  background:#111; padding:10px; border-radius:10px;
-  box-shadow:0 3px 8px rgba(0,0,0,0.5);
-}
-.stream-row span{
-  min-width:180px; font-weight:bold; color:#fff;
-  font-size:0.95rem;
-  flex-shrink:0;
-}
-.stream-row button{
-  color:#000; font-weight:bold; background:#fff;
-  border:1px solid #000; padding:5px 12px;
-  border-radius:6px; cursor:pointer; font-size:0.85rem;
-  transition:all 0.2s;
-  flex-shrink:0;
-}
+/* Stream row */
+.stream-buttons{ display:flex; flex-direction:column; gap:12px; width:100%; max-width:900px; }
+.stream-row{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:#111; padding:10px; border-radius:10px; box-shadow:0 3px 8px rgba(0,0,0,0.5); }
+.stream-row span{ min-width:180px; font-weight:bold; color:#fff; font-size:0.95rem; flex-shrink:0; }
+.stream-row button{ color:#000; font-weight:bold; background:#fff; border:1px solid #000; padding:5px 12px; border-radius:6px; cursor:pointer; font-size:0.85rem; transition:all 0.2s; flex-shrink:0; }
 .stream-row button:hover{ background:#ddd; }
 .stream-row button.active{ background:red !important; color:white !important; }
 
-/* Mobile: horizontal scroll if too small */
-@media(max-width:480px){
-  .stream-row{
-    overflow-x:auto;
-  }
-  .stream-row::-webkit-scrollbar{ height:6px; }
-  .stream-row::-webkit-scrollbar-thumb{ background:#555; border-radius:3px; }
-}
-
 /* Sawer */
-#sawerBox {
-  background:yellow; color:#000; font-weight:bold;
-  padding:10px; border-radius:8px; text-align:center;
-  max-width:900px; width:100%;
-}
-#sawerBox .line {
-  display:flex; justify-content:space-between;
-  align-items:center; padding:6px 10px;
-  background:#fffbe5; border-radius:6px; margin:5px 0;
-}
-#sawerBox button {
-  background:#000; color:#fff; font-size:0.8rem;
-  padding:4px 8px; border-radius:4px; cursor:pointer;
-}
+#sawerBox { background:yellow; color:#000; font-weight:bold; padding:10px; border-radius:8px; text-align:center; max-width:900px; width:100%; }
+#sawerBox .line { display:flex; justify-content:space-between; align-items:center; padding:6px 10px; background:#fffbe5; border-radius:6px; margin:5px 0; }
+#sawerBox button { background:#000; color:#fff; font-size:0.8rem; padding:4px 8px; border-radius:4px; cursor:pointer; }
 #sawerBox button:hover { background:#333; }
 
 /* Footer */
 #bottomSection{ background:#e5e5e5; padding:15px; text-align:center; }
 #bottomSection p{ color:#000; font-weight:bold; }
 
-/* Responsif */
-@media(max-width:768px){
-  #channelName{ font-size:2.2rem; }
-  .stream-row span{ font-size:0.85rem; min-width:140px; }
-}
-@media(max-width:480px){
-  #channelName{ font-size:1.8rem; }
-  .stream-row{ flex-direction:row; align-items:center; }
-}
-
-/* ========== Popup Sawer (ditambahkan, minimal) ========== */
-#popupSawer {
-  position: fixed; inset: 0;
-  display: none; align-items:center; justify-content:center;
-  background: rgba(0,0,0,0.75); z-index:250;
-  transition: opacity 0.25s ease;
-  opacity: 0;
-}
+/* Popup Sawer */
+#popupSawer { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.75); z-index:250; transition:opacity 0.25s ease; opacity:0; }
 #popupSawer.show { display:flex; opacity:1; }
-#popupContent {
-  width:90%; max-width:380px; background:#fff; color:#000; border-radius:12px;
-  padding:18px; text-align:center; transform: translateY(-18px);
-  transition: transform 0.25s ease, opacity 0.25s ease;
-  opacity: 0;
-}
-#popupSawer.show #popupContent { transform: translateY(0); opacity:1; }
-#popupHeader { font-weight:900; margin-bottom:8px; line-height:1.15; }
-#nominalList { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
-.nominal-box {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:8px; background:#fef08a; border-radius:8px; font-weight:bold;
-}
-.nominal-box .btns { display:flex; gap:6px; }
-.nominal-small { padding:6px 8px; border-radius:6px; background:#111; color:#fff; border:none; cursor:pointer; font-weight:700; }
+#popupContent { width:90%; max-width:380px; background:#fff; color:#000; border-radius:12px; padding:18px; text-align:center; transform:translateY(-18px); transition:transform 0.25s ease, opacity 0.25s ease; opacity:0; }
+#popupSawer.show #popupContent { transform:translateY(0); opacity:1; }
 .paymentBox { margin-top:12px; padding:10px; border-radius:8px; background:#f3f4f6; color:#000; display:none; }
 .paymentBox.show { display:block; }
-.paymentBox .pay-links { display:flex; gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap; }
-.pay-btn { padding:8px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:bold; }
-.pay-gopay { background:#00a3d6; color:#fff; }
-.pay-dana { background:#0066ff; color:#fff; }
-.copy-btn { background:#111; color:#fff; padding:6px 10px; border-radius:6px; border:none; cursor:pointer; }
-
-/* small responsive tweaks */
-@media (max-width:420px){
-  #popupContent{ padding:14px; }
-  .nominal-small{ font-size:13px; padding:5px 8px; }
-}
+.paymentBox img { width:200px; border-radius:12px; margin:8px auto; display:block; box-shadow:0 4px 10px rgba(0,0,0,0.4); }
 </style>
 </head>
 <body class="dark flex flex-col items-center" oncontextmenu="return false">
@@ -199,23 +102,19 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 
 <main id="mainContent">
   <div id="middleSection">
-
     <!-- Video Player -->
     <div id="player-container">
       <video id="video" playsinline autoplay muted></video>
       <div id="overlay">⏳ Memuat stream...</div>
-
       <div id="controls">
         <div class="volume-group">
           <button id="btnMute" class="p-1 text-white"><i data-lucide="volume-2" class="w-5 h-5"></i></button>
           <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
         </div>
-
         <button id="btnQuality" class="p-1 text-white flex items-center gap-1">
           <i data-lucide="settings" class="w-5 h-5"></i> Auto
         </button>
         <div id="qualityOptions" class="flex"></div>
-
         <button id="btnFullscreen" class="p-1 text-white"><i data-lucide="maximize" class="w-5 h-5"></i></button>
       </div>
     </div>
@@ -228,56 +127,38 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
         <button data-stream="stream1" data-index="1">Link 2</button>
         <button data-stream="stream1" data-index="2">Link 3</button>
       </div>
-      <div class="stream-row">
-        <span>🔴 INDO vs LIBANON:</span>
-        <button data-stream="stream2" data-index="0">Link 1</button>
-        <button data-stream="stream2" data-index="1">Link 2</button>
-        <button data-stream="stream2" data-index="2">Link 3</button>
-      </div>
-      <div class="stream-row">
-        <span>🔴 INDO vs LEBANON :</span>
-        <button data-stream="stream3" data-index="0">Link 1</button>
-        <button data-stream="stream3" data-index="1">Link 2</button>
-        <button data-stream="stream3" data-index="2">Link 3</button>
-      </div>
     </div>
 
     <!-- Sawer -->
     <div id="sawerBox">
       <div>💸 SAWER MIMIN AGAR LIVE UPDATE TERUS</div>
-      <div class="line">
-        <span>GOPAY: <b>081353754185</b></span>
+      <div class="line"><span>GOPAY: <b>081353754185</b></span>
         <button onclick="copyNumber('081353754185')">Salin Nomor</button>
       </div>
-      <div class="line">
-        <span>DANA: <b>081353754185</b></span>
+      <div class="line"><span>DANA: <b>081353754185</b></span>
         <button onclick="copyNumber('081353754185')">Salin Nomor</button>
       </div>
     </div>
-
   </div>
-
-  <div id="bottomSection">
-    <p>© 2025 RENDY CASUAL - All rights reserved</p>
-  </div>
+  <div id="bottomSection"><p>© 2025 RENDY CASUAL - All rights reserved</p></div>
 </main>
 
-<!-- Popup Sawer (minimal markup déjà present in your file) -->
+<!-- Popup Sawer -->
 <div id="popupSawer" aria-hidden="true">
   <div id="popupContent">
-    <div id="popupHeader">💸 SAWER SEIKHLASNYA<br><small>Sekali Sawer Nonton Gratis Tanpa Iklan</small></div>
+    <h3>💸 SAWER SEIKHLASNYA</h3>
+    <p>Sekali Sawer Nonton Gratis Tanpa Iklan</p>
 
-    <div id="nominalList">
-      <!-- Dinamis dibuat via JS: setiap nominal akan muncul di sini -->
-    </div>
-
-    <!-- Payment box (appears after clicking nominal) -->
-    <div id="paymentBox" class="paymentBox" aria-hidden="true">
+    <div id="paymentBox" class="paymentBox show">
       <div>Transfer ke nomor admin: <b id="adminNumber">081353754185</b></div>
-      <div style="margin-top:8px;">
-        <button class="copy-btn" id="btnCopyAdmin">Salin Nomor</button>
-      </div>
-      <div class="pay-links">
+      <button class="copy-btn" id="btnCopyAdmin">Salin Nomor</button>
+
+      <p><b>Scan QR GoPay:</b></p>
+      <img src="gopay.jpeg" alt="QR GoPay">
+      <p><b>Scan QR Dana:</b></p>
+      <img src="dana.jpeg" alt="QR Dana">
+
+      <div class="pay-links" style="margin-top:10px;">
         <button class="pay-btn pay-gopay" id="btnGotoGopay">Buka GoPay</button>
         <button class="pay-btn pay-dana" id="btnGotoDana">Buka Dana</button>
       </div>
@@ -290,220 +171,81 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 <script>
 lucide.createIcons();
 
-/* ========== STREAMS (sama seperti versi-mu sebelumnya) ========== */
-const STREAMS={
-  stream1:{urls:[
-    "https://hms.pfs.gdn/stream/mtv.m3u8?token=IzGsauJ3_QzR0zYHht6Atw:l_PHZnPNdOQVfDeSEK8osb5xs1z1z2nuOOX4DoCCWxx2DIh14CRqgEMJs8kQkS3WwNGuOuFUx7TjECQTgjBMz3-Pq-IjTI_So3_IXBZ7rjQfisK7vPzlfsClsnpp7GgqkqSVj6_AaZWiL00vokkotGO6ECU96M4b8OuRwE1EfFYiDkrjkjZCMcowYmaJA19aDkxPaVaUQkmP267rGmgnKJ9YhBbW8HA8FkOixlaUsW2acXtE1SLcDqeBhn73YmjrnlR7_Clm5zTVIxnaSw2ZUw",
-    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
-    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8"
-  ]},
-  stream2:{urls:[
-    "00000000000000000000000",
-    "https://hms.pfs.gdn/hms/v1/broadcast/one/primary/tracks-v3a1/mono.m3u8?token=je8V9hMREKhw5keYu4Qj1A:2dpXBrh8M71BQyge9xZ88Exu6ocd20SXS6NTjfNQVkD8h9jU6MwOJ9F-YYVzpAIPhI9jvBk8yzVvVtYzcEqoSeJXo09-DoD3VOUx6SsX5TGMUQ8wC5orAft9I55H9j6udfbxNtwOB6_xbrDVQHQBN1371uj9gH8cRlA1lXhI51g1ujd5cHp0FhFI6tZqt-EmVnpcMxCiIbS_RQk91TZiQg",
-    "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8"
-  ]},
-  stream3:{urls:[
-    "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-    "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8"
-  ]}
+// Daftar link stream
+const streams = {
+  stream1: [
+    "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+    "https://moiptvhls-i.akamaihd.net/hls/live/652022/moiptvsite/MOITV_1/playlist.m3u8",
+    "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
+  ]
 };
 
-/* ========== (KODE PLAYER ASLI) ========== */
-const video=document.getElementById("video"),
-overlay=document.getElementById("overlay"),
-container=document.getElementById("player-container"),
-qualityBtn=document.getElementById("btnQuality"),
-qualityOptions=document.getElementById("qualityOptions"),
-btnFullscreen=document.getElementById("btnFullscreen"),
-btnMute=document.getElementById("btnMute"),
-volumeControl=document.getElementById("volumeControl"),
-controls=document.getElementById("controls");
-let hls=null,lastActiveButton=null,hideControlsTimeout=null;
+const video = document.getElementById("video");
+const overlay = document.getElementById("overlay");
+let hls;
 
-// Main stream play (TIDAK DIUBAH, saya biarkan persis)
-function playStream(k,i=0,btn=null){
-  const u=STREAMS[k].urls;
-  if(lastActiveButton) lastActiveButton.classList.remove("active");
-  if(btn){ btn.classList.add("active"); lastActiveButton=btn; }
-  let x=i;
-  function n(){
-    if(x>=u.length){overlay.textContent="⚠️ Stream tidak tersedia";overlay.style.display="flex";return;}
-    const url=u[x];
-    if(hls){hls.destroy();hls=null;}
-    overlay.textContent="⏳ Memuat stream...";overlay.style.display="flex";overlay.style.opacity="1";
-    if(Hls.isSupported()){
-      hls=new Hls();hls.loadSource(url);hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED,()=>{video.play().then(()=>{
-        overlay.style.opacity="0";setTimeout(()=>overlay.style.display="none",300);
-        video.muted=false;video.volume=1;updateVolumeIcon();
-        qualityOptions.innerHTML="";
-        const autoBtn=document.createElement("button");
-        autoBtn.textContent="Auto";
-        autoBtn.onclick=()=>{hls.currentLevel=-1;qualityOptions.style.display="none";qualityBtn.innerHTML='<i data-lucide="settings" class="w-4 h-4"></i> Auto';lucide.createIcons();};
-        qualityOptions.appendChild(autoBtn);
-        hls.levels.forEach((l,j)=>{
-          const b=document.createElement("button");
-          b.textContent=l.height+"p";
-          b.onclick=()=>{hls.currentLevel=j;qualityOptions.style.display="none";qualityBtn.innerHTML='<i data-lucide="settings" class="w-4 h-4"></i> '+l.height+"p";lucide.createIcons();};
-          qualityOptions.appendChild(b);
-        });
-      });});
-      hls.on(Hls.Events.ERROR,(e,d)=>{if(d.fatal){x++;n();}});
-    } else if(video.canPlayType("application/vnd.apple.mpegurl")){
-      video.src=url; video.play().then(()=>{overlay.style.opacity="0";setTimeout(()=>overlay.style.display="none",300);}).catch(()=>{x++;n();});
-    }
+// Play stream dengan HLS
+function playStream(url){
+  if(hls){ hls.destroy(); }
+  if(Hls.isSupported()){
+    hls = new Hls();
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, ()=> video.play());
+  } else if(video.canPlayType("application/vnd.apple.mpegurl")){
+    video.src = url;
+    video.addEventListener("loadedmetadata", ()=> video.play());
   }
-  n();
+  overlay.style.display="none";
 }
 
-/* ========== Perubahan MINIMAL: intercept klik tombol supaya popup muncul dulu ========== */
-
-// kita ganti handler default agar buka popup (tidak langsung play)
-let pendingStream = null;
-
-document.querySelectorAll(".stream-row button").forEach(b=>{
-  b.addEventListener("click",(e)=>{
-    e.preventDefault();
-    // simpan pending stream (akan dipanggil setelah pembayaran / penutupan popup)
-    pendingStream = { stream: b.dataset.stream, index: parseInt(b.dataset.index), btn: b };
-    openPopup(); // buka popup sawer
+// Stream button -> buka popup dulu
+document.querySelectorAll("[data-stream]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.getElementById("popupSawer").classList.add("show");
+    // simpan link stream yang dipilih
+    window.selectedStream = streams[btn.dataset.stream][btn.dataset.index];
   });
 });
 
-/* ========== Popup functions ========== */
+// Tutup popup
+function closePopup(){ document.getElementById("popupSawer").classList.remove("show"); }
 
-const popup = document.getElementById('popupSawer');
-const nominalListEl = document.getElementById('nominalList');
-const paymentBox = document.getElementById('paymentBox');
-const adminNumberEl = document.getElementById('adminNumber');
-const btnCopyAdmin = document.getElementById('btnCopyAdmin');
-const btnGotoGopay = document.getElementById('btnGotoGopay');
-const btnGotoDana = document.getElementById('btnGotoDana');
-
-const ADMIN_NUMBER = "081353754185";
-adminNumberEl.textContent = ADMIN_NUMBER;
-
-// Build nominal list only once (or rebuild each open if you prefer)
-const NOMINALS = [5000,10000,20000,30000,40000,50000,100000];
-
-function openPopup(){
-  // populate nominal list
-  nominalListEl.innerHTML = "";
-  paymentBox.classList.remove('show');
-  NOMINALS.forEach(nom=>{
-    const box = document.createElement('div');
-    box.className = 'nominal-box';
-    box.innerHTML = `
-      <div>Rp ${nom.toLocaleString('id-ID')}</div>
-      <div class="btns">
-        <button class="nominal-small select-nominal" data-nom="${nom}">Pilih</button>
-        <button class="nominal-small quick-gopay" data-nom="${nom}">GoPay</button>
-        <button class="nominal-small quick-dana" data-nom="${nom}">Dana</button>
-      </div>
-    `;
-    nominalListEl.appendChild(box);
-  });
-
-  // add listeners for the newly created buttons
-  nominalListEl.querySelectorAll('.select-nominal').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-      const nom = btn.dataset.nom;
-      showPaymentBox(nom);
-    });
-  });
-  // quick links: copy admin & open payment site + play stream
-  nominalListEl.querySelectorAll('.quick-gopay').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      copyToClipboardAndOpenSite(ADMIN_NUMBER,'https://gopay.co.id/');
-    });
-  });
-  nominalListEl.querySelectorAll('.quick-dana').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      copyToClipboardAndOpenSite(ADMIN_NUMBER,'https://www.dana.id/');
-    });
-  });
-
-  // show popup (with animation classes)
-  popup.classList.add('show');
-  popup.setAttribute('aria-hidden','false');
-}
-
-function closePopup(){
-  popup.classList.remove('show');
-  popup.setAttribute('aria-hidden','true');
-  // small delay to allow CSS transition hide if needed
-  setTimeout(()=>{ paymentBox.classList.remove('show'); }, 250);
-  pendingStream = pendingStream; // keep pending stream if user closes without paying
-}
-
-function showPaymentBox(nominal){
-  // show admin number area
-  document.getElementById('adminNumber').textContent = ADMIN_NUMBER;
-  paymentBox.classList.add('show');
-  paymentBox.setAttribute('data-nominal', nominal);
-}
-
-btnCopyAdmin.addEventListener('click', ()=>{
-  navigator.clipboard.writeText(ADMIN_NUMBER).then(()=>{ alert("Nomor admin disalin: " + ADMIN_NUMBER); }).catch(()=>{ alert("Gagal menyalin"); });
-});
-
-// When user clicks "Buka GoPay" or "Buka Dana": copy then open link and start stream
-btnGotoGopay.addEventListener('click', ()=>{
-  copyToClipboardAndOpenSite(ADMIN_NUMBER,'https://gopay.co.id/');
-});
-btnGotoDana.addEventListener('click', ()=>{
-  copyToClipboardAndOpenSite(ADMIN_NUMBER,'https://www.dana.id/');
-});
-
-function copyToClipboardAndOpenSite(number, url){
-  navigator.clipboard.writeText(number).then(()=>{
-    // open payment site in new tab (works on desktop + mobile browsers)
-    window.open(url, "_blank");
-  }).catch(()=>{ window.open(url, "_blank"); });
-  // close popup, then play pending stream (if any)
+// Tombol Buka GoPay / Dana
+document.getElementById("btnGotoGopay").onclick=()=>{
+  alert("Silakan bayar via GoPay, lalu klik OK untuk mulai menonton.");
+  playStream(window.selectedStream);
   closePopup();
-  if(pendingStream){
-    // call your existing playStream exactly like before
-    playStream(pendingStream.stream, pendingStream.index, pendingStream.btn);
-    pendingStream = null;
-  }
-}
+};
+document.getElementById("btnGotoDana").onclick=()=>{
+  alert("Silakan bayar via Dana, lalu klik OK untuk mulai menonton.");
+  playStream(window.selectedStream);
+  closePopup();
+};
 
-/* ========== Sisa kode asli tetap ========== */
-
-// Fullscreen / rotate
-function enterFullscreen(){
-  if(container.requestFullscreen) container.requestFullscreen();
-  container.classList.add("fullscreen");
-  btnFullscreen.innerHTML='<i data-lucide="minimize" class="w-5 h-5"></i>'; 
-  lucide.createIcons();
-  if(screen.orientation?.lock) screen.orientation.lock("landscape").catch(()=>{});
+// Copy nomor
+function copyNumber(num){
+  navigator.clipboard.writeText(num);
+  alert("Nomor disalin: "+num);
 }
-function exitFullscreen(){
-  document.exitFullscreen?.();
-  container.classList.remove("fullscreen");
-  btnFullscreen.innerHTML='<i data-lucide="maximize" class="w-5 h-5"></i>';
-  lucide.createIcons();
-  if(screen.orientation?.unlock) screen.orientation.unlock();
-}
-btnFullscreen.addEventListener("click",()=>{!document.fullscreenElement?enterFullscreen():exitFullscreen();});
-video.addEventListener("dblclick",()=>{!document.fullscreenElement?enterFullscreen():exitFullscreen();});
 
 // Volume
-function updateVolumeIcon(){ if(video.muted||video.volume===0){ btnMute.innerHTML='<i data-lucide="volume-x" class="w-5 h-5"></i>'; } else { btnMute.innerHTML='<i data-lucide="volume-2" class="w-5 h-5"></i>'; } lucide.createIcons();}
-volumeControl.addEventListener("input",e=>{video.muted=false; video.volume=e.target.value; updateVolumeIcon();});
+const volumeControl=document.getElementById("volumeControl");
+const btnMute=document.getElementById("btnMute");
+volumeControl.addEventListener("input", e=> video.volume=e.target.value);
+btnMute.addEventListener("click", ()=>{
+  video.muted=!video.muted;
+  btnMute.innerHTML=video.muted?'<i data-lucide="volume-x"></i>':'<i data-lucide="volume-2"></i>';
+  lucide.createIcons();
+});
 
-// Quality
-qualityBtn.addEventListener("click",()=>{qualityOptions.style.display=qualityOptions.style.display==="flex"?"none":"flex";});
-
-// Auto-hide controls
-function showControls(){controls.classList.remove("hidden");clearTimeout(hideControlsTimeout);hideControlsTimeout=setTimeout(()=>controls.classList.add("hidden"),2500);}
-container.addEventListener("mousemove",showControls);container.addEventListener("click",showControls);showControls();
-
-// Copy number (in main page)
-function copyNumber(num){navigator.clipboard.writeText(num).then(()=>{alert("Nomor "+num+" berhasil disalin!");});}
-
+// Fullscreen
+const btnFullscreen=document.getElementById("btnFullscreen");
+const playerContainer=document.getElementById("player-container");
+btnFullscreen.addEventListener("click", ()=>{
+  if(!document.fullscreenElement){ playerContainer.requestFullscreen(); playerContainer.classList.add("fullscreen"); }
+  else{ document.exitFullscreen(); playerContainer.classList.remove("fullscreen"); }
+});
 </script>
 </body>
 </html>
