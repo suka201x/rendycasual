@@ -52,9 +52,29 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 .stream-row span{min-width:180px;font-weight:bold;color:#fff;font-size:0.95rem;flex-shrink:0;}
 .stream-row button{color:#000;font-weight:bold;background:#fff;border:1px solid #000;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;flex-shrink:0;}
 .stream-row button.active{background:red !important;color:white !important;}
+
+/* Responsive fixes */
 @media (max-width:1024px){
-  #middleSection{flex-direction:row; flex-wrap:wrap; justify-content:center;} 
-  #chatContainer{width:300px; height:auto; max-height:500px;}
+  #middleSection{
+    flex-direction: column;
+    align-items: center;
+  }
+  #middleSection > div:first-child{
+    width: 100%;
+    max-width: 100%;
+  }
+  #chatContainer{
+    width: 90%;
+    max-width: 400px;
+    margin-top: 12px;
+    height:auto;
+    max-height:400px;
+  }
+  #player-container{
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio:16/9;
+  }
 }
 </style>
 </head>
@@ -92,10 +112,32 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
       <div id="sawerBox">Klik Link untuk Tonton Live 💛 Terima kasih atas dukungan Anda!</div>
 
       <div class="stream-row">
+        <div class="stream-row">
         <span>🔴 INDO vs LIBANON:</span>
-        <button data-stream="stream1">Link 1</button>
-        <button data-stream="stream1">Link 2</button>
+        <button data-stream="stream1" data-index="0">Link 1</button>
+        <button data-stream="stream1" data-index="1">Link 2</button>
+        <button data-stream="stream1" data-index="2">Link 3</button>
       </div>
+      <div class="stream-row">
+        <span>🔴 INDO vs LIBANON:</span>
+        <button data-stream="stream2" data-index="0">Link 1</button>
+        <button data-stream="stream2" data-index="1">Link 2</button>
+        <button data-stream="stream2" data-index="2">Link 3</button>
+      </div>
+      <div class="stream-row">
+        <span>🔴 INDO vs LEBANON :</span>
+        <button data-stream="stream3" data-index="0">Link 1</button>
+        <button data-stream="stream3" data-index="1">Link 2</button>
+        <button data-stream="stream3" data-index="2">Link 3</button>
+      </div>
+      <div class="stream-row">
+        <span>🔴 INDO vs LEBANON :</span>
+        <button data-stream="stream3" data-index="0">Link 1</button>
+        <button data-stream="stream3" data-index="1">Link 2</button>
+        <button data-stream="stream3" data-index="2">Link 3</button>
+      </div>
+    </div>
+
 
       <button id="btnPlayStream">▶️ Play Stream</button>
     </div>
@@ -127,8 +169,28 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 
 <script>
 lucide.createIcons();
-const STREAMS={ stream1:{urls:["https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8"]} };
-const video=document.getElementById("video"),overlay=document.getElementById("overlay"),container=document.getElementById("player-container"),btnFullscreen=document.getElementById("btnFullscreen"),btnMute=document.getElementById("btnMute"),volumeControl=document.getElementById("volumeControl"),qualityBtn=document.getElementById("btnQuality"),qualityOptions=document.getElementById("qualityOptions"),popup=document.getElementById('popupSawer'),nominalListEl=document.getElementById('nominalList'),qrContainer=document.getElementById('qrContainer'),qrImage=document.getElementById('qrImage'),btnPlayStream=document.getElementById('btnPlayStream');
+const STREAMS={ 
+stream1:{urls:[
+"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+]},
+stream2:{urls:[
+"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+"https://hms.pfs.gdn/hms/v1/broadcast/one/primary/tracks-v3a1/mono.m3u8?token=je8V9hMREKhw5keYu4Qj1A:2dpXBrh8M71BQyge9xZ88Exu6ocd20SXS6NTjfNQVkD8h9jU6MwOJ9F-YYVzpAIPhI9jvBk8yzVvVtYzcEqoSeJXo09-DoD3VOUx6SsX5TGMUQ8wC5orAft9I55H9j6udfbxNtwOB6_xbrDVQHQBN1371uj9gH8cRlA1lXhI51g1ujd5cHp0FhFI6tZqt-EmVnpcMxCiIbS_RQk91TZiQg",
+"https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
+]},
+stream3:{urls:[
+"https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+"https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+"https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
+]},
+stream4:{urls:[
+"https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+"https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+"https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
+]} };
+const video=document.getElementById("video"),overlay=document.getElementById("overlay"),container=document.getElementById("player-container"),btnFullscreen=document.getElementById("btnFullscreen"),btnMute=document.getElementById("btnMute"),volumeControl=document.getElementById("volumeControl"),qualityBtn=document.getElementById("btnQuality"),qualityOptions=document.getElementById("qualityOptions"),popup=document.getElementById('popupSawer'),nominalListEl=document.getElementById('nominalList'),qrContainer=document.getElementById('qrContainer'),qrImage=document.getElementById('qrImage'),btnPlayStream=document.getElementById('btnPlayStream'),chatContainer=document.getElementById('chatContainer');
 let hls=null,lastActiveButton=null,pendingStream=null,qrTimer=null,isAdmin=false;
 
 // Admin Login
@@ -226,6 +288,18 @@ const initMessages=JSON.parse(localStorage.getItem('liveChat')||'[]');initMessag
 function adjustChatHeight(){chatContainer.style.height=container.offsetHeight+'px';}
 window.addEventListener('resize',adjustChatHeight);
 window.addEventListener('load',adjustChatHeight);
+
+// Responsive layout adjustment
+function adjustLayout(){
+  const w = window.innerWidth;
+  if(w <= 1024){
+    chatContainer.style.height='auto';
+  } else {
+    chatContainer.style.height = container.offsetHeight+'px';
+  }
+}
+window.addEventListener('resize', adjustLayout);
+window.addEventListener('load', adjustLayout);
 
 // Auto-hide controls
 let controlsTimeout;
