@@ -22,6 +22,7 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 #video{width:100%;height:100%;object-fit:contain;}
 #overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(240,240,240,0.85);color:#ff0000;font-size:20px;font-weight:bold;display:flex;align-items:center;justify-content:center;text-align:center;z-index:20;opacity:1;transition:opacity 0.3s;}
 #controls{display:flex;gap:16px;align-items:center;position:absolute;bottom:10px;right:10px;z-index:15;background:#000;padding:8px 12px;border-radius:12px;font-size:14px;opacity:1;transition:opacity 0.5s;}
+#controls.hidden{opacity:0;pointer-events:none;}
 .volume-group{display:flex;align-items:center;gap:6px;}
 #volumeControl{-webkit-appearance:none;width:80px;height:6px;background:#654321;border-radius:4px;}
 #volumeControl::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;cursor:pointer;}
@@ -51,7 +52,10 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 .stream-row span{min-width:180px;font-weight:bold;color:#fff;font-size:0.95rem;flex-shrink:0;}
 .stream-row button{color:#000;font-weight:bold;background:#fff;border:1px solid #000;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:0.85rem;transition:all 0.2s;flex-shrink:0;}
 .stream-row button.active{background:red !important;color:white !important;}
-@media (max-width:1024px){#middleSection{flex-direction:column;}#chatContainer{width:100%;max-width:100%;height:200px;}}
+@media (max-width:1024px){
+  #middleSection{flex-direction:row; flex-wrap:wrap; justify-content:center;} 
+  #chatContainer{width:300px; height:auto; max-height:500px;}
+}
 </style>
 </head>
 <body class="dark flex flex-col items-center" oncontextmenu="return false">
@@ -157,7 +161,6 @@ function openPopup(){
 function closePopup(){
   popup.classList.remove('show'); popup.setAttribute('aria-hidden','true');
   if(qrTimer) clearTimeout(qrTimer);
-  // reset ke menu nominal jika belum scan
   if(qrContainer.dataset.verified!=="true"){nominalListEl.style.display='flex'; qrContainer.style.display='none';}
 }
 
@@ -165,7 +168,6 @@ function showQR(method,nominal){
   nominalListEl.style.display='none'; qrContainer.style.display='flex';
   qrImage.src=(method==='gopay')?"https://iili.io/Kos01X1.md.jpg":"https://iili.io/Kot8APe.md.jpg";
   qrContainer.dataset.verified="false";
-  // timer 10 detik reset nominal
   if(qrTimer) clearTimeout(qrTimer);
   qrTimer=setTimeout(()=>{if(qrContainer.dataset.verified!=="true"){nominalListEl.style.display='flex'; qrContainer.style.display='none';}},10000);
 }
@@ -224,6 +226,15 @@ const initMessages=JSON.parse(localStorage.getItem('liveChat')||'[]');initMessag
 function adjustChatHeight(){chatContainer.style.height=container.offsetHeight+'px';}
 window.addEventListener('resize',adjustChatHeight);
 window.addEventListener('load',adjustChatHeight);
+
+// Auto-hide controls
+let controlsTimeout;
+function showControls(){container.querySelector('#controls').classList.remove('hidden'); resetControlsTimer();}
+function hideControls(){container.querySelector('#controls').classList.add('hidden');}
+function resetControlsTimer(){if(controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout=setTimeout(hideControls,3000);}
+container.addEventListener('mousemove',showControls);
+container.addEventListener('touchstart',showControls);
+resetControlsTimer();
 </script>
 </body>
 </html>
