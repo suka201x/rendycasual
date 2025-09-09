@@ -314,6 +314,15 @@ stream4:{urls:[
 ]} };
 const video=document.getElementById("video"),overlay=document.getElementById("overlay"),container=document.getElementById("player-container"),btnFullscreen=document.getElementById("btnFullscreen"),btnMute=document.getElementById("btnMute"),volumeControl=document.getElementById("volumeControl"),qualityBtn=document.getElementById("btnQuality"),qualityOptions=document.getElementById("qualityOptions"),popup=document.getElementById('popupSawer'),nominalListEl=document.getElementById('nominalList'),qrContainer=document.getElementById('qrContainer'),qrImage=document.getElementById('qrImage'),btnPlayStream=document.getElementById('btnPlayStream'),chatContainer=document.getElementById('chatContainer');
 let hls=null,lastActiveButton=null,pendingStream=null,qrTimer=null,isAdmin=false;
+video.addEventListener("waiting", () => {
+  overlay.style.display = "flex";  // tampilkan loading
+});
+video.addEventListener("canplay", () => {
+  overlay.style.display = "none";  // sembunyikan loading
+});
+video.addEventListener("playing", () => {
+  overlay.style.display = "none";  // pastikan tetap hilang
+});
 
 // Admin Login
 document.getElementById('adminLogin').addEventListener('click',()=>{
