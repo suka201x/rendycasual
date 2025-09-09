@@ -81,15 +81,32 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 .nominal-box .btns{ display:flex; gap:6px; }
 .nominal-small{ padding:6px 8px; border-radius:6px; background:#111; color:#fff; border:none; cursor:pointer; font-weight:700; }
 
-/* Responsive tweaks */
+/* ============================
+   RESPONSIVE MOBILE FIX (chat kanan) 
+============================ */
 @media (max-width:768px){
   #middleSection {
-    flex-direction: row;  /* chat di samping video di mobile */
-    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
   }
-  .left-col { max-width: 100%; width: 100%; }
-  #chatContainer { width: 100%; max-width: 100%; margin-top: 12px; }
-  #player-container { aspect-ratio:16/9; width: 100%; }
+  .left-col {
+    flex: 1 1 65%;
+    max-width: 65%;
+  }
+  #chatContainer {
+    flex: 1 1 32%;
+    max-width: 32%;
+    min-width: 200px;
+    height: auto;
+  }
+  #player-container { 
+    width: 100%; 
+    aspect-ratio:16/9;
+  }
+  .stream-row { flex-wrap: wrap; }
+  .stream-row span, .stream-row button { flex-shrink: 1; min-width: auto; }
 }
 </style>
 </head>
