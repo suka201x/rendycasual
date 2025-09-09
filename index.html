@@ -379,16 +379,52 @@ if(localStorage.getItem('verified_'+new Date().toLocaleDateString())==='true'){
   if(pendingStream) playStream(pendingStream.stream,pendingStream.btn);
 }
 
-// Play Stream
-function playStream(k,btn=null){
-  if(!isAdmin && qrContainer.dataset.verified!=="true"){ openPopup(); pendingStream={stream:k,btn:btn}; return; }
-  if(lastActiveButton) lastActiveButton.classList.remove("active");
-  if(btn){btn.classList.add("active"); lastActiveButton=btn;}
-  const url=STREAMS[k].urls[0];
-  if(hls){hls.destroy(); hls=null;}
-  if(Hls.isSupported()){hls=new Hls(); hls.loadSource(url); hls.attachMedia(video); hls.on(Hls.Events.MANIFEST_PARSED,()=>{video.play(); overlay.style.display="none";});}else{video.src=url; video.play().then(()=>{overlay.style.display="none";});}
+// Play Stream dengan error handling
+function playStream(k, btn = null) {
+  if (!isAdmin && qrContainer.dataset.verified !== "true") {
+    openPopup();
+    pendingStream = { stream: k, btn: btn };
+    return;
+  }
+  if (lastActiveButton) lastActiveButton.classList.remove("active");
+  if (btn) {
+    btn.classList.add("active");
+    lastActiveButton = btn;
+  }
+  const url = STREAMS[k].urls[0];
+  if (hls) {
+    hls.destroy();
+    hls = null;
+  }
+
+  // Fungsi untuk tampilkan error
+  function showStreamError() {
+    overlay.style.display = "flex";
+    overlay.innerHTML = "⚠️ Stream tidak tersedia, coba klik ulang";
+  }
+
+  if (Hls.isSupported()) {
+    hls = new Hls();
+    hls.loadSource(url);
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+      video.play()
+        .then(() => { overlay.style.display = "none"; })
+        .catch(showStreamError);
+    });
+    hls.on(Hls.Events.ERROR, (event, data) => {
+      console.error("HLS Error:", data);
+      showStreamError();
+    });
+  } else {
+    video.src = url;
+    video.play()
+      .then(() => { overlay.style.display = "none"; })
+      .catch(showStreamError);
+  }
   closePopup();
 }
+
 
 // Stream Buttons
 document.querySelectorAll('.stream-row button').forEach(btn=>{btn.addEventListener('click',()=>{playStream(btn.dataset.stream,btn);});});
