@@ -15,55 +15,208 @@ background:
     url("https://iili.io/KzdpHxV.md.png") no-repeat center center fixed;
   background-size: cover;
 } 
-#header { position:fixed; top:0; left:0; width:100%; z-index:100;
+
+/* Header */
+#header {
+  position:fixed; top:0; left:0; width:100%; z-index:100;
   display:flex; justify-content:center; align-items:center;
   background:#000; color:#fff; padding:35px 0;
   font-family:'Orbitron',sans-serif;
+  gap:10px;
 }
-#HOME, #QR_TOGGLE { position:absolute; top:16px; background:#333; color:#fff; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold; }
-#HOME { right:20px; } #QR_TOGGLE { right:100px; }
-#footer { position:fixed; bottom:0; left:0; width:100%; z-index:100; text-align:center; background:#000; color:#fff; padding:12px; font-weight:bold; box-shadow:0 -2px 8px rgba(0,0,0,0.5);}
+#HOME {
+  position:absolute; right:20px; top:16px;
+  background:#333; color:#fff; padding:6px 12px;
+  border-radius:6px; cursor:pointer; font-weight:bold;
+}
+#homeMenu {
+  position:absolute; top:40px; right:0;
+  background:#333; color:#fff; padding:6px 12px;
+  border-radius:6px; display:none; flex-direction:column; gap:6px;
+  min-width:120px; z-index:150;
+}
+#homeMenu button { background:#555; border:none; color:#fff; padding:4px 8px; border-radius:4px; cursor:pointer; font-weight:bold; }
+#homeMenu button:hover { background:red; }
+
+/* Footer */
+#footer {
+  position:fixed; bottom:0; left:0; width:100%; z-index:100;
+  text-align:center; background:#000; color:#fff;
+  padding:12px; font-weight:bold;
+  box-shadow:0 -2px 8px rgba(0,0,0,0.5);
+}
+
+/* Layout */
 #mainContent { margin-top:90px; margin-bottom:60px; width:100%; min-height:150vh; }
-#middleSection { display:flex; flex-wrap:wrap; justify-content:center; gap:20px; width:100%; max-width:1200px; margin:0 auto; }
-#player-container { position:relative; width:100%; aspect-ratio:16/9; border-radius:12px; overflow:hidden; box-shadow:0 6px 16px rgba(0,0,0,0.6);}
+#middleSection {
+  display:flex; flex-wrap:wrap; justify-content:center; gap:20px;
+  width:100%; max-width:1200px; margin:0 auto;
+}
+.left-col { flex:1; max-width:900px; display:flex; flex-direction:column; gap:12px; }
+#chatContainer {
+  display:flex; flex-direction:column;
+  width:300px; min-width:250px;
+  background:#222; color:#fff; border-radius:8px;
+  overflow:hidden;
+}
+
+/* Player */
+#player-container {
+  position:relative; width:100%; aspect-ratio:16/9;
+  border-radius:12px; overflow:hidden;
+  box-shadow:0 6px 16px rgba(0,0,0,0.6);
+}
+#player-container.fullscreen {
+  width:100vw; height:100vh; aspect-ratio:auto; border-radius:0;
+}
 #video { width:100%; height:100%; object-fit:contain; }
-#overlay { position:absolute; inset:0; background:rgba(240,240,240,0.85); color:#ff0000; font-size:20px; font-weight:bold; display:flex; align-items:center; justify-content:center; text-align:center; z-index:20; opacity:1; transition:opacity 0.3s;}
-#controls { display:flex; gap:16px; align-items:center; position:absolute; bottom:10px; right:10px; z-index:15; background:#000; padding:8px 12px; border-radius:12px; font-size:14px; opacity:1; transition:opacity 0.5s;}
+#overlay {
+  position:absolute; inset:0; background:rgba(240,240,240,0.85);
+  color:#ff0000; font-size:20px; font-weight:bold;
+  display:flex; align-items:center; justify-content:center;
+  text-align:center; z-index:20;
+  opacity:1; transition:opacity 0.3s;
+}
+
+/* Controls */
+#controls {
+  display:flex; gap:16px; align-items:center;
+  position:absolute; bottom:10px; right:10px; z-index:15;
+  background:#000; padding:8px 12px; border-radius:12px;
+  font-size:14px; opacity:1; transition:opacity 0.5s;
+}
 #controls.hidden { opacity:0; pointer-events:none; }
 .volume-group { display:flex; align-items:center; gap:6px; }
-#volumeControl { -webkit-appearance:none; width:80px; height:6px; background:#654321; border-radius:4px; }
-#volumeControl::-webkit-slider-thumb { -webkit-appearance:none; width:14px; height:14px; border-radius:50%; background:#fff; cursor:pointer; }
-#qualityOptions { display:none; position:absolute; bottom:45px; right:40px; background:#000; padding:6px 10px; border-radius:6px; flex-direction:column; gap:6px; }
-#qualityOptions button { background:transparent; border:none; color:#fff; cursor:pointer; font-size:0.85rem; font-weight:bold; }
+#volumeControl {
+  -webkit-appearance:none; width:80px; height:6px;
+  background:#654321; border-radius:4px;
+}
+#volumeControl::-webkit-slider-thumb {
+  -webkit-appearance:none; width:14px; height:14px;
+  border-radius:50%; background:#fff; cursor:pointer;
+}
+#qualityOptions {
+  display:none; position:absolute; bottom:45px; right:40px;
+  background:#000; padding:6px 10px; border-radius:6px;
+  flex-direction:column; gap:6px;
+}
+#qualityOptions button {
+  background:transparent; border:none; color:#fff;
+  cursor:pointer; font-size:0.85rem; font-weight:bold;
+}
 #qualityOptions button.active { color:red; }
-#chatContainer { display:flex; flex-direction:column; width:300px; min-width:250px; background:#222; color:#fff; border-radius:8px; overflow:hidden; }
+
+/* Chat */
 #chatBox { flex:1; overflow-y:auto; padding:10px; font-size:0.9rem; }
 #chatForm { display:flex; padding:8px; background:#111; gap:4px; }
-#chatForm input { flex:1; padding:6px; border-radius:4px; border:none; background:#333; color:#fff; }
-#chatForm button { padding:6px 10px; border-radius:4px; border:none; background:red; color:#fff; font-weight:bold; cursor:pointer; }
-#popupSawer { position:fixed; inset:0; z-index:250; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.75); opacity:0; transition:opacity 0.25s ease; }
+#chatForm input {
+  flex:1; padding:6px; border-radius:4px;
+  border:none; background:#333; color:#fff;
+}
+#chatForm button {
+  padding:6px 10px; border-radius:4px; border:none;
+  background:red; color:#fff; font-weight:bold; cursor:pointer;
+}
+
+/* Popup Sawer */
+#popupSawer {
+  position:fixed; inset:0; z-index:250;
+  display:none; align-items:center; justify-content:center;
+  background:rgba(0,0,0,0.75);
+  opacity:0; transition:opacity 0.25s ease;
+}
 #popupSawer.show { display:flex; opacity:1; }
-#popupContent { width:90%; max-width:380px; background:#fff; color:#000; border-radius:12px; padding:18px; text-align:center; transform:translateY(-18px); opacity:0; transition:transform 0.25s ease, opacity 0.25s ease; }
-#popupSawer.show #popupContent { transform:translateY(0); opacity:1; }
-.nominal-box { display:flex; justify-content:space-between; align-items:center; padding:8px; background:#fef08a; border-radius:8px; font-weight:bold; }
+#popupContent {
+  width:90%; max-width:380px; background:#fff; color:#000;
+  border-radius:12px; padding:18px; text-align:center;
+  transform:translateY(-18px); opacity:0;
+  transition:transform 0.25s ease, opacity 0.25s ease;
+}
+#popupSawer.show #popupContent {
+  transform:translateY(0); opacity:1;
+}
+#popupHeader { font-weight:900; margin-bottom:8px; line-height:1.15; }
+#nominalList {
+  display:flex; flex-direction:column; gap:8px; margin-top:12px;
+}
+.nominal-box {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px; background:#fef08a; border-radius:8px; font-weight:bold;
+}
 .nominal-box .btns { display:flex; gap:6px; }
-.nominal-small { padding:6px 8px; border-radius:6px; background:#111; color:#fff; border:none; cursor:pointer; font-weight:700; }
-#qrContainer { margin-top:12px; display:flex; flex-direction:column; align-items:center; gap:8px; position:relative; }
-#qrContainer img { width:180px; height:180px; border:2px solid #000; border-radius:12px; }
+.nominal-small {
+  padding:6px 8px; border-radius:6px; background:#111;
+  color:#fff; border:none; cursor:pointer; font-weight:700;
+}
+#qrContainer {
+  margin-top:12px; display:flex; flex-direction:column;
+  align-items:center; gap:8px; position:relative;
+}
+#qrContainer img {
+  width:180px; height:180px; border:2px solid #000; border-radius:12px;
+}
 .qr-msg { font-weight:bold; color:#000; text-align:center; margin-bottom:12px; }
-#btnPlayStream { display:none; margin:12px auto; padding:10px 20px; background:red; color:#fff; font-weight:bold; border:none; border-radius:8px; cursor:pointer; font-size:1rem; z-index:300; }
-.stream-row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:#111; padding:10px; border-radius:10px; box-shadow:0 3px 8px rgba(0,0,0,0.5); margin-top:10px; }
-.stream-row span { min-width:90px; font-weight:bold; color:#fff; font-size:0.95rem; flex-shrink:0; }
-.stream-row button { color:#000; font-weight:bold; background:#fff; border:1px solid #000; padding:5px 12px; border-radius:2px; cursor:pointer; font-size:0.85rem; transition:all 0.2s; flex-shrink:0; }
+#btnPlayStream {
+  display:none; margin:12px auto;
+  padding:10px 20px; background:red; color:#fff;
+  font-weight:bold; border:none; border-radius:8px;
+  cursor:pointer; font-size:1rem; z-index:300;
+}
+
+/* Stream links */
+#sawerBox {
+  background:yellow; color:#000; font-weight:bold;
+  padding:10px; border-radius:8px; text-align:center; margin-top:20px;
+}
+.stream-row {
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+  background:#111; padding:10px; border-radius:10px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.5); margin-top:10px;
+}
+.stream-row span {
+  min-width:90px; font-weight:bold; color:#fff;
+  font-size:0.95rem; flex-shrink:0;
+}
+.stream-row button {
+  color:#000; font-weight:bold; background:#fff;
+  border:1px solid #000; padding:5px 12px;
+  border-radius:2px; cursor:pointer; font-size:0.85rem;
+  transition:all 0.2s; flex-shrink:0;
+}
 .stream-row button.active { background:red !important; color:white !important; }
-@media (max-width:1024px){#middleSection{flex-direction: column;align-items: center;}#chatContainer{width: 90%; max-width: 400px;margin-top: 12px;height:auto;max-height:400px;}#player-container{width:100%;max-width:100%;aspect-ratio:16/9;}}
+
+/* Responsive fixes */
+@media (max-width:1024px){
+  #middleSection{
+    flex-direction: column;
+    align-items: center;
+  }
+  #middleSection > div:first-child{
+    width: 100%;
+    max-width: 100%;
+  }
+  #chatContainer{
+    width: 90%;
+    max-width: 400px;
+    margin-top: 12px;
+    height:auto;
+    max-height:400px;
+  }
+  #player-container{
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio:16/9;
+  }
+}
 </style>
 </head>
 <body class="dark flex flex-col items-center" oncontextmenu="return false">
 
 <div id="header">
-  <button id="HOME">HOME</button>
-  <button id="QR_TOGGLE">QR ON/OFF</button>
+  <button id="HOME">HOME ▾</button>
+  <div id="homeMenu">
+    <button id="QR_TOGGLE">QR ON/OFF</button>
+  </div>
 </div>
 
 <main id="mainContent">
@@ -79,14 +232,29 @@ background:
             <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
           </div>
           <button id="btnQuality" class="p-1 text-white flex items-center gap-1"><i data-lucide="settings" class="w-5 h-5"></i> Auto</button>
-          <div id="qualityOptions" class="flex flex-col gap-2"></div>
+          <div id="qualityOptions" class="flex flex-col gap-2">
+            <button data-quality="auto" class="active">Auto</button>
+            <button data-quality="360">360p</button>
+            <button data-quality="480">480p</button>
+            <button data-quality="720">720p HD</button>
+            <button data-quality="1080">1080p HD</button>
+          </div>
           <button id="btnFullscreen" class="p-1 text-white"><i data-lucide="maximize" class="w-5 h-5"></i></button>
         </div>
       </div>
+
       <div id="sawerBox">Klik Link untuk Tonton Live | Terima kasih atas dukungan Anda!</div>
-      <div id="streamsContainer"></div>
+
+      <div class="stream-row">
+        <span>🔴 INDO vs KOR:</span>
+        <button data-stream="stream1" data-index="0">Link 1</button>
+        <button data-stream="stream1" data-index="1">Link 2</button>
+        <button data-stream="stream1" data-index="2">Link 3</button>
+      </div>
+
       <button id="btnPlayStream">▶️ Play Stream</button>
     </div>
+
     <div id="chatContainer">
       <div id="chatBox"></div>
       <form id="chatForm">
@@ -114,84 +282,113 @@ background:
 
 <script>
 lucide.createIcons();
-let qrEnabled=true;
-let isAdmin=false;
-let pendingStream=null;
-let lastActiveButton=null;
-let hls=null;
+const STREAMS={ 
+stream1:{urls:[
+"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+]}};
 
-const STREAMS={
-  "INDO vs KOR": ["https://redirector.rudo.video/hls-video/.../playlist.m3u8","..."],
-  "BRA vs FRA": ["https://live.example.com/stream1.m3u8","..."],
-  "USA vs TUR": ["https://live.example.com/stream2.m3u8","..."]
-};
+const video=document.getElementById("video"),overlay=document.getElementById("overlay"),container=document.getElementById("player-container"),btnFullscreen=document.getElementById("btnFullscreen"),btnMute=document.getElementById("btnMute"),volumeControl=document.getElementById("volumeControl"),qualityBtn=document.getElementById("btnQuality"),qualityOptions=document.getElementById("qualityOptions"),popup=document.getElementById('popupSawer'),nominalListEl=document.getElementById('nominalList'),qrContainer=document.getElementById('qrContainer'),qrImage=document.getElementById('qrImage'),btnPlayStream=document.getElementById('btnPlayStream');
 
-const NOMINALS=[10000,20000,30000,40000,50000];
+let hls=null,lastActiveButton=null,pendingStream=null,qrTimer=null,isAdmin=false,qrEnabled=true;
 
-// --- ADMIN ---
-document.getElementById('HOME').addEventListener('click',()=>{
-  const u=prompt("Username:"),p=prompt("Password :");
-  if(u==="reno"&&p==="wadju"){alert("Admin mode aktif");isAdmin=true;}
-  else alert("Login gagal!");
+// Free access global
+function setFreeAccess(days=10){
+  const expireDate=new Date();
+  expireDate.setDate(expireDate.getDate()+days);
+  localStorage.setItem("freeAccessUntil", expireDate.getTime());
+}
+function hasFreeAccess(){
+  const expire=localStorage.getItem("freeAccessUntil");
+  if(!expire) return false;
+  return new Date().getTime()<parseInt(expire);
+}
+function onQrPaymentSuccess(){
+  qrContainer.dataset.verified="true";
+  setFreeAccess(10);
+  closePopup();
+  alert("Terima kasih! Kamu mendapat akses gratis 10 hari.");
+  if(pendingStream){ playStream(pendingStream.stream,pendingStream.btn); pendingStream=null; }
+}
+
+// Video overlay
+video.addEventListener("waiting",()=>{overlay.style.display="flex";});
+video.addEventListener("canplay",()=>{overlay.style.display="none";});
+video.addEventListener("playing",()=>{overlay.style.display="none";});
+
+// Admin Login HOME
+const homeBtn=document.getElementById('HOME');
+const homeMenu=document.getElementById('homeMenu');
+homeBtn.addEventListener('click',()=>{
+  if(!isAdmin){
+    const u=prompt("Username:"),p=prompt("Password:");
+    if(u==="reno"&&p==="wadju"){alert("Admin mode aktif");isAdmin=true;}
+    else{ alert("Login gagal!"); return; }
+  }
+  homeMenu.style.display=homeMenu.style.display==="flex"?"none":"flex";
 });
-document.getElementById('QR_TOGGLE').addEventListener('click',()=>{
-  if(!isAdmin){alert("Hanya admin!"); return;}
-  qrEnabled = !qrEnabled;
+document.addEventListener('click',e=>{
+  if(!homeBtn.contains(e.target)&&!homeMenu.contains(e.target)) homeMenu.style.display='none';
+});
+
+// QR toggle
+const qrToggleBtn=document.getElementById('QR_TOGGLE');
+qrToggleBtn.addEventListener('click',()=>{
+  qrEnabled=!qrEnabled;
   alert("QR "+(qrEnabled?"ON":"OFF"));
 });
 
-// --- FREE ACCESS 10 HARI ---
-function setFreeAccess(days=10){ const expire=new Date(); expire.setDate(expire.getDate()+days); localStorage.setItem("freeAccessUntil", expire.getTime()); }
-function hasFreeAccess(){ const expire=localStorage.getItem("freeAccessUntil"); return expire && new Date().getTime() < parseInt(expire); }
-function onQrPaymentSuccess(){ qrContainer.dataset.verified="true"; setFreeAccess(10); closePopup(); alert("Terima kasih! Kamu mendapat akses gratis 10 hari."); if(pendingStream){ playStream(pendingStream.stream,pendingStream.btn); pendingStream=null; } }
-
-// --- POPUP QR ---
+// Popup Sawer
+const NOMINALS=[10000,20000,30000,40000,50000];
 function openPopup(){
-  if(isAdmin) return;
-  nominalList.innerHTML=""; qrContainer.style.display="none";
+  if(isAdmin||!qrEnabled) return;
+  nominalListEl.innerHTML=""; qrContainer.style.display="none";
   NOMINALS.forEach(n=>{
-    const box=document.createElement('div'); box.className='nominal-box';
-    box.innerHTML=`<div>Rp ${n.toLocaleString('id')}</div><div class="btns">
-      <button class="nominal-small pay-gopay" data-nom="${n}">GoPay</button>
-      <button class="nominal-small pay-dana" data-nom="${n}">Dana</button>
-    </div>`;
-    nominalList.appendChild(box);
+    const box=document.createElement('div');box.className='nominal-box';
+    box.innerHTML=`<div>Rp ${n.toLocaleString('id-ID')}</div>
+      <div class="btns">
+        <button class="nominal-small pay-gopay" data-nom="${n}">GoPay</button>
+        <button class="nominal-small pay-dana" data-nom="${n}">Dana</button>
+      </div>`;
+    nominalListEl.appendChild(box);
   });
-  nominalList.querySelectorAll('.pay-gopay').forEach(b=>b.addEventListener('click',()=>showQR('gopay',b.dataset.nom)));
-  nominalList.querySelectorAll('.pay-dana').forEach(b=>b.addEventListener('click',()=>showQR('dana',b.dataset.nom)));
-  popupSawer.classList.add('show'); popupSawer.setAttribute('aria-hidden','false');
+  nominalListEl.querySelectorAll('.pay-gopay').forEach(btn=>{btn.addEventListener('click',()=>{showQR('gopay',btn.dataset.nom);});});
+  nominalListEl.querySelectorAll('.pay-dana').forEach(btn=>{btn.addEventListener('click',()=>{showQR('dana',btn.dataset.nom);});});
+  popup.classList.add('show'); popup.setAttribute('aria-hidden','false');
   btnPlayStream.style.display='none';
 }
-function closePopup(){ popupSawer.classList.remove('show'); popupSawer.setAttribute('aria-hidden','true'); if(qrContainer.dataset.verified!=="true"){ nominalList.style.display='flex'; qrContainer.style.display='none'; } }
-function showQR(method,nom){ nominalList.style.display='none'; qrContainer.style.display='flex'; qrImage.src=(method==='gopay')?"https://iili.io/Kos01X1.md.jpg":"https://iili.io/Kot8APe.md.jpg"; qrContainer.dataset.verified="false"; setTimeout(()=>{ if(qrContainer.dataset.verified!=="true"){ nominalList.style.display='flex'; qrContainer.style.display='none'; }},10000); }
+function closePopup(){ popup.classList.remove('show'); popup.setAttribute('aria-hidden','true'); if(qrTimer) clearTimeout(qrTimer); if(qrContainer.dataset.verified!=="true"){nominalListEl.style.display='flex'; qrContainer.style.display='none'; } }
+function showQR(method,nominal){ nominalListEl.style.display='none'; qrContainer.style.display='flex'; qrImage.src=(method==='gopay')?"https://iili.io/Kos01X1.md.jpg":"https://iili.io/Kot8APe.md.jpg"; qrContainer.dataset.verified="false"; if(qrTimer) clearTimeout(qrTimer); qrTimer=setTimeout(()=>{if(qrContainer.dataset.verified!=="true"){alert("QR expired");closePopup();}},120000); btnPlayStream.style.display='block'; }
 
-// --- PLAY STREAM ---
-function playStream(k,btn=null){
-  if(!isAdmin && qrEnabled && qrContainer.dataset.verified!=="true" && !hasFreeAccess()){
-    openPopup(); pendingStream={stream:k,btn:btn}; return;
-  }
-  const url=(Array.isArray(STREAMS[k])?STREAMS[k][0]:null); if(!url){ overlay.innerHTML="⚠️ Stream tidak tersedia"; overlay.style.display="flex"; return; }
+// Stream play
+function playStream(stream,btn){
+  if(qrEnabled&&!hasFreeAccess()&&!isAdmin){ pendingStream={stream,btn}; openPopup(); return; }
   if(hls){ hls.destroy(); hls=null; }
-  if(Hls.isSupported()){ hls=new Hls(); hls.loadSource(url); hls.attachMedia(video); hls.on(Hls.Events.MANIFEST_PARSED,()=>{ video.play().then(()=>{ overlay.style.display="none"; }).catch(()=>{ overlay.style.display="flex"; overlay.innerHTML="⚠️ Stream error"; }); }); hls.on(Hls.Events.ERROR,()=>{ overlay.style.display="flex"; overlay.innerHTML="⚠️ Stream error"; }); } else { video.src=url; video.play().catch(()=>{ overlay.style.display="flex"; overlay.innerHTML="⚠️ Stream error"; }); }
-  if(btn){ if(lastActiveButton) lastActiveButton.classList.remove("active"); btn.classList.add("active"); lastActiveButton=btn; }
+  const url=STREAMS[stream].urls[btn.dataset.index];
+  if(Hls.isSupported()){ hls=new Hls(); hls.loadSource(url); hls.attachMedia(video); hls.on(Hls.Events.MANIFEST_PARSED,()=>video.play()); } 
+  else { video.src=url; video.play(); }
+  overlay.style.display='none'; lastActiveButton?.classList.remove('active'); btn.classList.add('active'); lastActiveButton=btn;
 }
 
-// --- GENERATE STREAM ROWS OTOMATIS ---
-const streamsContainer=document.getElementById('streamsContainer');
-Object.keys(STREAMS).forEach(key=>{
-  const row=document.createElement('div'); row.className='stream-row';
-  const label=document.createElement('span'); label.textContent=key; row.appendChild(label);
-  STREAMS[key].forEach((s,i)=>{
-    const btn=document.createElement('button'); btn.textContent="Link "+(i+1);
-    btn.addEventListener('click',()=>playStream(key,btn));
-    row.appendChild(btn);
-  });
-  streamsContainer.appendChild(row);
+// Stream buttons
+document.querySelectorAll('.stream-row button').forEach(btn=>{
+  btn.addEventListener('click',()=>{ playStream(btn.dataset.stream,btn); });
 });
+btnPlayStream.addEventListener('click',()=>{ if(pendingStream) onQrPaymentSuccess(); });
 
-// --- BTN PLAY STREAM ---
-btnPlayStream.addEventListener('click',()=>{ onQrPaymentSuccess(); });
-if(hasFreeAccess()){ qrContainer.dataset.verified="true"; btnPlayStream.style.display='block'; }
+// Fullscreen
+btnFullscreen.addEventListener('click',()=>{ if(!document.fullscreenElement){ container.requestFullscreen(); try{screen.orientation.lock("landscape");}catch(e){} } else { document.exitFullscreen(); try{screen.orientation.unlock();}catch(e){} } });
+
+// Volume
+btnMute.addEventListener('click',()=>{ video.muted=!video.muted; btnMute.innerHTML=video.muted?'<i data-lucide="volume-x"></i>':'<i data-lucide="volume-2"></i>'; lucide.createIcons(); });
+volumeControl.addEventListener('input',()=>{ video.volume=volumeControl.value; video.muted=false; btnMute.innerHTML='<i data-lucide="volume-2"></i>'; lucide.createIcons(); });
+
+// Quality
+qualityBtn.addEventListener('click',()=>{ qualityOptions.style.display=qualityOptions.style.display==='flex'?'none':'flex'; });
+qualityOptions.querySelectorAll('button').forEach(btn=>{ btn.addEventListener('click',()=>{
+  qualityOptions.querySelectorAll('button').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); alert("Ganti kualitas ke "+btn.dataset.quality); qualityOptions.style.display='none';
+}); });
 
 </script>
 </body>
