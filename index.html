@@ -381,11 +381,41 @@ if(localStorage.getItem('verified_'+new Date().toLocaleDateString())==='true'){
 
 // Play Stream dengan error handling
 function playStream(k, btn = null) {
-  if (!isAdmin && qrContainer.dataset.verified !== "true") {
+if (!isAdmin && qrContainer.dataset.verified !== "true" && qrEnabled && !hasFreeAccess()) {
     openPopup();
     pendingStream = { stream: k, btn: btn };
     return;
+}
+
+// === Sistem Akses Gratis 10 Hari ===
+
+// Simpan tanggal expired di localStorage
+function setFreeAccess(days = 7) {
+  const expireDate = new Date();
+  expireDate.setDate(expireDate.getDate() + days);
+  localStorage.setItem("freeAccessUntil", expireDate.getTime());
+}
+
+// Cek apakah user masih punya akses gratis
+function hasFreeAccess() {
+  const expire = localStorage.getItem("freeAccessUntil");
+  if (!expire) return false;
+  return new Date().getTime() < parseInt(expire);
+}
+
+// Jika user scan QR berhasil
+function onQrPaymentSuccess() {
+  qrContainer.dataset.verified = "true"; 
+  setFreeAccess(7); // aktifkan akses 10 hari
+  closePopup();
+  alert("Terima kasih! Kamu mendapat akses gratis 10 hari.");
+  
+  // Kalau ada stream tertunda, mainkan
+  if (pendingStream) {
+    playStream(pendingStream.stream, pendingStream.btn);
+    pendingStream = null;
   }
+
   if (lastActiveButton) lastActiveButton.classList.remove("active");
   if (btn) {
     btn.classList.add("active");
