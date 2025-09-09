@@ -213,7 +213,6 @@ body.dark { background:#111; color:white; margin:0; font-family:sans-serif; }
 /* preserve lucide */
 lucide.createIcons();
 
-/* ---------- STREAMS & DOM refs (kept utuh) ---------- */
 const STREAMS={
   stream1:{urls:[
     "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
@@ -253,14 +252,12 @@ const video=document.getElementById("video"),
 
 let hls=null,lastActiveButton=null,pendingStream=null,qrTimer=null,isAdmin=false;
 
-/* ---------- ADMIN LOGIN (unchanged) ---------- */
 document.getElementById('adminLogin').addEventListener('click',()=>{
   const u=prompt("Username user:"),p=prompt("Password password:");
   if(u==="reno"&&p==="wadju"){ alert("Admin mode aktif"); isAdmin=true; }
   else alert("Login gagal!");
 });
 
-/* ---------- SAWER POPUP & QR (unchanged logic) ---------- */
 const NOMINALS=[10000,20000,30000,40000,50000];
 function openPopup(){
   if(isAdmin) return;
@@ -292,7 +289,6 @@ function showQR(method,nominal){
   qrTimer=setTimeout(()=>{ if(qrContainer.dataset.verified!=="true"){ nominalListEl.style.display='flex'; qrContainer.style.display='none'; } }, 10000);
 }
 
-/* ---------- PLAY STREAM (unchanged logic) ---------- */
 function playStream(k,btn=null){
   if(!isAdmin && qrContainer.dataset.verified!=="true"){ openPopup(); pendingStream={stream:k,btn:btn}; return; }
   if(lastActiveButton) lastActiveButton.classList.remove("active");
@@ -323,7 +319,6 @@ document.querySelectorAll('.stream-row button').forEach(btn=>{
   btn.addEventListener('click',()=>{ playStream(btn.dataset.stream, btn); });
 });
 
-/* ---------- FULLSCREEN + ROTATE (unchanged) ---------- */
 async function enterFullscreen(){
   try{
     if(container.requestFullscreen) await container.requestFullscreen();
@@ -343,12 +338,10 @@ async function exitFullscreen(){
 btnFullscreen.addEventListener("click",()=>{ !document.fullscreenElement?enterFullscreen():exitFullscreen(); });
 video.addEventListener("dblclick",()=>{ !document.fullscreenElement?enterFullscreen():exitFullscreen(); });
 
-/* ---------- VOLUME (unchanged) ---------- */
 function updateVolumeIcon(){ btnMute.innerHTML = video.muted || video.volume===0 ? '<i data-lucide="volume-x" class="w-5 h-5"></i>' : '<i data-lucide="volume-2" class="w-5 h-5"></i>'; lucide.createIcons(); }
 volumeControl.addEventListener("input",e=>{ video.muted=false; video.volume=e.target.value; updateVolumeIcon(); });
 btnMute.addEventListener("click",()=>{ video.muted = !video.muted; updateVolumeIcon(); });
 
-/* ---------- QUALITY DROPDOWN (unchanged) ---------- */
 qualityBtn.addEventListener("click",()=>{ qualityOptions.classList.toggle("show"); });
 qualityOptions.querySelectorAll("button").forEach(b=>{
   b.addEventListener("click",()=>{
@@ -359,7 +352,6 @@ qualityOptions.querySelectorAll("button").forEach(b=>{
   });
 });
 
-/* ---------- CHAT (localStorage sync, unchanged) ---------- */
 function addChatMessage(user,msg){
   const div=document.createElement('div');
   div.innerHTML=`<strong style="color:yellow">${user}</strong>: ${msg}`;
@@ -386,7 +378,6 @@ window.addEventListener('storage', e=>{
 const initMessages = JSON.parse(localStorage.getItem('liveChat')||'[]');
 initMessages.forEach(m=>addChatMessage(m.user,m.msg));
 
-/* ---------- ADJUST CHAT HEIGHT & RESPONSIVE (kept & extended) ---------- */
 function adjustChatHeight(){
   // If desktop layout show chat height equal to player
   if(window.innerWidth > 1024){
@@ -421,7 +412,6 @@ function adjustChatHeight(){
 window.addEventListener('resize', adjustChatHeight);
 window.addEventListener('load', adjustChatHeight);
 
-/* ---------- Mobile bottom-sheet controls (open/close + swipe) ---------- */
 chatToggle.addEventListener('click', ()=> {
   chatSheet.classList.add('open'); chatSheet.setAttribute('aria-hidden','false');
 });
@@ -460,7 +450,6 @@ sheetInner.addEventListener('touchend', (e)=>{
   startY = currentY = 0;
 });
 
-/* ---------- Auto-hide controls (smooth) ---------- */
 let controlsTimeout;
 function showControls(){ controls.classList.remove('hidden'); resetControlsTimer(); }
 function hideControls(){ controls.classList.add('hidden'); }
