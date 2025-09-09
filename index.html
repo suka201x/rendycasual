@@ -204,7 +204,7 @@ background:
 <body class="dark flex flex-col items-center" oncontextmenu="return false">
 
 <div id="header">
-  <button id="adminLogin">Admin Login</button>
+  <button id="HOME">HOME</button>
 </div>
 
 <main id="mainContent">
@@ -325,8 +325,8 @@ video.addEventListener("playing", () => {
 });
 
 // Admin Login
-document.getElementById('adminLogin').addEventListener('click',()=>{
-  const u=prompt("Username user:"),p=prompt("Password password:");
+document.getElementById('HOME').addEventListener('click',()=>{
+  const u=prompt("Username:"),p=prompt("Password :");
   if(u==="reno"&&p==="wadju"){alert("Admin mode aktif");isAdmin=true;}
   else alert("Login gagal!");
 });
