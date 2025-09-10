@@ -22,11 +22,20 @@ background:
   display:flex; justify-content:flex-end; align-items:center;
   background:#000; color:#fff; padding:35px 0;
   font-family:'Orbitron',sans-serif;
+  gap:8px;
+  padding-right:20px;
 }
-#HOME {
-  position:absolute; right:20px; top:16px;
-  background:#333; color:#fff; padding:6px 12px;
-  border-radius:6px; cursor:pointer; font-weight:bold;
+.header-btn {
+  background:#333; color:#fff; padding:6px 12px; border-radius:6px;
+  cursor:pointer; font-weight:bold; border:none;
+}
+
+/* Toggle QR style (small) */
+#toggleQR {
+  display:none;
+  padding:6px 10px; border-radius:999px; border:2px solid #222;
+  font-weight:700; cursor:pointer;
+  min-width:72px; text-align:center; font-size:0.9rem;
 }
 
 /* Footer */
@@ -67,6 +76,7 @@ background:
   display:flex; align-items:center; justify-content:center;
   text-align:center; z-index:20;
   opacity:1; transition:opacity 0.3s;
+  pointer-events:none;
 }
 
 /* Controls */
@@ -145,14 +155,9 @@ background:
 }
 #qrContainer img {
   width:180px; height:180px; border:2px solid #000; border-radius:12px;
+  cursor:pointer;
 }
 .qr-msg { font-weight:bold; color:#000; text-align:center; margin-bottom:12px; }
-#btnPlayStream {
-  display:none; margin:12px auto;
-  padding:10px 20px; background:red; color:#fff;
-  font-weight:bold; border:none; border-radius:8px;
-  cursor:pointer; font-size:1rem; z-index:300;
-}
 
 /* Stream links */
 #sawerBox {
@@ -176,7 +181,7 @@ background:
 }
 .stream-row button.active { background:red !important; color:white !important; }
 
-/* Responsive fixes */
+/* Responsive fixes (kept original sizing behavior) */
 @media (max-width:1024px){
   #middleSection{
     flex-direction: column;
@@ -204,7 +209,8 @@ background:
 <body class="dark flex flex-col items-center" oncontextmenu="return false">
 
 <div id="header">
-  <button id="adminLogin">Admin Login</button> <!-- tombol di kanan -->
+  <button id="adminLogin" class="header-btn">Admin Login</button>
+  <button id="toggleQR" title="Toggle QR ON/OFF">QR ON</button>
 </div>
 
 <main id="mainContent">
@@ -220,7 +226,7 @@ background:
             <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
           </div>
           <button id="btnQuality" class="p-1 text-white flex items-center gap-1"><i data-lucide="settings" class="w-5 h-5"></i> Auto</button>
-          <div id="qualityOptions" class="flex flex-col gap-2">
+          <div id="qualityOptions" class="flex flex-col gap-2" aria-hidden="true">
             <button data-quality="auto" class="active">Auto</button>
             <button data-quality="360">360p</button>
             <button data-quality="480">480p</button>
@@ -233,35 +239,37 @@ background:
 
       <div id="sawerBox">Klik Link untuk Tonton Live | Terima kasih atas dukungan Anda!</div>
 
+      <!-- Stream rows - kept original structure (you can change labels/urls in STREAMS) -->
       <div class="stream-row">
-        <div class="stream-row">
         <span>🔴 INDO vs KOR:</span>
         <button data-stream="stream1" data-index="0">Link 1</button>
         <button data-stream="stream1" data-index="1">Link 2</button>
         <button data-stream="stream1" data-index="2">Link 3</button>
       </div>
+
       <div class="stream-row">
-        <span>🔴 INDO vs KOR:</span>
+        <span>🔴 MATCH B:</span>
         <button data-stream="stream2" data-index="0">Link 1</button>
         <button data-stream="stream2" data-index="1">Link 2</button>
         <button data-stream="stream2" data-index="2">Link 3</button>
       </div>
+
       <div class="stream-row">
-        <span>🔴 INDO vs KOR:</span>
+        <span>🔴 MATCH C:</span>
         <button data-stream="stream3" data-index="0">Link 1</button>
         <button data-stream="stream3" data-index="1">Link 2</button>
         <button data-stream="stream3" data-index="2">Link 3</button>
       </div>
+
       <div class="stream-row">
-        <span>🔴 INDO vs KOR:</span>
-        <button data-stream="stream3" data-index="0">Link 1</button>
-        <button data-stream="stream3" data-index="1">Link 2</button>
-        <button data-stream="stream3" data-index="2">Link 3</button>
+        <span>🔴 MATCH D:</span>
+        <button data-stream="stream4" data-index="0">Link 1</button>
+        <button data-stream="stream4" data-index="1">Link 2</button>
+        <button data-stream="stream4" data-index="2">Link 3</button>
       </div>
-    </div>
 
-
-      <button id="btnPlayStream">▶️ Play Stream</button>
+      <!-- kept hidden: no manual Play button in final behavior -->
+      <button id="btnPlayStream" style="display:none">▶️ Play Stream</button>
     </div>
 
     <div id="chatContainer">
@@ -277,131 +285,270 @@ background:
 
 <div id="footer"><a href="#" style="color:white; font-weight:bold;">© 2025 RENDY CASUAL</a></div>
 
+<!-- Popup Sawer (keadaan asli dipertahankan) -->
 <div id="popupSawer" aria-hidden="true">
   <div id="popupContent">
     <div id="popupHeader">💸 SAWER SEIKHLASNYA<br><small>Sekali Sawer Nonton Gratis Tanpa Iklan</small></div>
     <div id="nominalList"></div>
     <div id="qrContainer">
       <img id="qrImage" src="" alt="QR Code">
-      <div class="qr-msg">Silakan scan QR untuk verifikasi...</div>
+      <div class="qr-msg">Silakan scan QR untuk verifikasi... (klik gambar untuk verifikasi)</div>
     </div>
     <button onclick="closePopup()">Tutup</button>
   </div>
 </div>
 
 <script>
+/* ---------- init icons ---------- */
 lucide.createIcons();
+
+/* ---------- STREAMS (keep your original URLs) ---------- */
 const STREAMS={ 
-stream1:{urls:[
-"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8?did=b2153788642168a388cac0681",
-"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
-"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
-]},
-stream2:{urls:[
-"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
-"https://hms.pfs.gdn/hms/v1/broadcast/one/primary/tracks-v3a1/mono.m3u8?token=je8V9hMREKhw5keYu4Qj1A:2dpXBrh8M71BQyge9xZ88Exu6ocd20SXS6NTjfNQVkD8h9jU6MwOJ9F-YYVzpAIPhI9jvBk8yzVvVtYzcEqoSeJXo09-DoD3VOUx6SsX5TGMUQ8wC5orAft9I55H9j6udfbxNtwOB6_xbrDVQHQBN1371uj9gH8cRlA1lXhI51g1ujd5cHp0FhFI6tZqt-EmVnpcMxCiIbS_RQk91TZiQg",
-"https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
-]},
-stream3:{urls:[
-"https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-"https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-"https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
-]},
-stream4:{urls:[
-"https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8?did=b2153788642168a388cac0681",
-"https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-"https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
-]} };
-const video=document.getElementById("video"),overlay=document.getElementById("overlay"),container=document.getElementById("player-container"),btnFullscreen=document.getElementById("btnFullscreen"),btnMute=document.getElementById("btnMute"),volumeControl=document.getElementById("volumeControl"),qualityBtn=document.getElementById("btnQuality"),qualityOptions=document.getElementById("qualityOptions"),popup=document.getElementById('popupSawer'),nominalListEl=document.getElementById('nominalList'),qrContainer=document.getElementById('qrContainer'),qrImage=document.getElementById('qrImage'),btnPlayStream=document.getElementById('btnPlayStream'),chatContainer=document.getElementById('chatContainer');
-let hls=null,lastActiveButton=null,pendingStream=null,qrTimer=null,isAdmin=false;
+  stream1:{urls:[
+    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8?did=b2153788642168a388cac0681",
+    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+  ]},
+  stream2:{urls:[
+    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+    "https://hms.pfs.gdn/hms/v1/broadcast/one/primary/tracks-v3a1/mono.m3u8?token=je8V9hMREKhw5keYu4Qj1A:2dpXBrh8M71BQyge9xZ88Exu6ocd20SXS6NTjfNQVkD8h9jU6MwOJ9F-YYVzpAIPhI9jvBk8yzVvVtYzcEqoSeJXo09-DoD3VOUx6SsX5TGMUQ8wC5orAft9I55H9j6udfbxNtwOB6_xbrDVQHQBN1371uj9gH8cRlA1lXhI51g1ujd5cHp0FhFI6tZqt-EmVnpcMxCiIbS_RQk91TZiQg",
+    "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
+  ]},
+  stream3:{urls:[
+    "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+    "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+    "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
+  ]},
+  stream4:{urls:[
+    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8?did=b2153788642168a388cac0681",
+    "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+    "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
+  ]} 
+};
+
+/* ---------- Element refs ---------- */
+const video = document.getElementById("video");
+const overlay = document.getElementById("overlay");
+const container = document.getElementById("player-container");
+const btnFullscreen = document.getElementById("btnFullscreen");
+const btnMute = document.getElementById("btnMute");
+const volumeControl = document.getElementById("volumeControl");
+const qualityBtn = document.getElementById("btnQuality");
+const qualityOptions = document.getElementById("qualityOptions");
+const popup = document.getElementById('popupSawer');
+const nominalListEl = document.getElementById('nominalList');
+const qrContainer = document.getElementById('qrContainer');
+const qrImage = document.getElementById('qrImage');
+const btnPlayStream = document.getElementById('btnPlayStream');
+const adminLoginBtn = document.getElementById('adminLogin');
+const toggleQRBtn = document.getElementById('toggleQR');
+const chatContainer = document.getElementById('chatContainer');
+
+/* ---------- State ---------- */
+let hls = null;
+let lastActiveButton = null;
+let pendingStream = null;
+let qrTimer = null;
+let isAdmin = false;
+
+// QR enabled flag (global)
+let qrEnabled = true; // default ON (can be toggled by admin)
+
+/* ---------- Overlay behavior ---------- */
 video.addEventListener("waiting", () => {
-  overlay.style.display = "flex";  // tampilkan loading
+  overlay.style.display = "flex";
+  overlay.innerText = "⏳ Memuat stream...";
 });
 video.addEventListener("canplay", () => {
-  overlay.style.display = "none";  // sembunyikan loading
+  overlay.style.display = "none";
 });
 video.addEventListener("playing", () => {
-  overlay.style.display = "none";  // pastikan tetap hilang
+  overlay.style.display = "none";
 });
 
-// Admin Login
-document.getElementById('adminLogin').addEventListener('click',()=>{
-  const u=prompt("Username user:"),p=prompt("Password password:");
-  if(u==="reno"&&p==="wadju"){alert("Admin mode aktif");isAdmin=true;}
-  else alert("Login gagal!");
+/* ---------- Free access helpers (global) ---------- */
+function setFreeAccess(days = 10) {
+  const expireDate = new Date();
+  expireDate.setDate(expireDate.getDate() + days);
+  localStorage.setItem("freeAccessUntil", expireDate.getTime());
+}
+function hasFreeAccess() {
+  const expire = localStorage.getItem("freeAccessUntil");
+  if (!expire) return false;
+  return new Date().getTime() < parseInt(expire);
+}
+
+/* If user previously verified today / free access, mark qrContainer accordingly */
+if (localStorage.getItem('verified_'+new Date().toLocaleDateString()) === 'true') {
+  qrContainer.dataset.verified = "true";
+}
+
+/* ---------- Admin Login & Toggle ---------- */
+function updateToggleUI() {
+  toggleQRBtn.style.display = isAdmin ? 'inline-block' : 'none';
+  if (!isAdmin) return;
+  // color: red for ON, black/gray for OFF
+  if (qrEnabled) {
+    toggleQRBtn.style.background = 'red';
+    toggleQRBtn.style.color = '#fff';
+    toggleQRBtn.innerText = 'QR ON';
+  } else {
+    toggleQRBtn.style.background = '#111';
+    toggleQRBtn.style.color = '#fff';
+    toggleQRBtn.innerText = 'QR OFF';
+  }
+}
+
+adminLoginBtn.addEventListener('click', () => {
+  const u = prompt("Username user:");
+  const p = prompt("Password password:");
+  if (u === "reno" && p === "wadju") {
+    isAdmin = true;
+    alert("Admin mode aktif");
+    updateToggleUI();
+  } else {
+    alert("Login gagal!");
+  }
 });
 
-// Popup Sawer & QR
-const NOMINALS=[10000,20000,30000,40000,50000];
+toggleQRBtn.addEventListener('click', () => {
+  // only visible when isAdmin === true
+  qrEnabled = !qrEnabled;
+  updateToggleUI();
+  // if turning OFF, close popup if open
+  if (!qrEnabled) {
+    closePopup();
+    // mark verified for this session so user won't see popup
+    qrContainer.dataset.verified = "true";
+  } else {
+    // turning ON resets verified flag for non-admins
+    if (!hasFreeAccess()) {
+      qrContainer.dataset.verified = "false";
+      localStorage.removeItem('verified_'+new Date().toLocaleDateString());
+    }
+  }
+});
+
+
+/* ---------- Popup Sawer & QR (keaslian dipertahankan) ---------- */
+const NOMINALS = [10000,20000,30000,40000,50000];
+
 function openPopup(){
-  if(isAdmin) return;
-  nominalListEl.innerHTML=""; qrContainer.style.display="none";
+  // if admin logged in -> bypass
+  if (isAdmin) return;
+  // if QR disabled -> bypass
+  if (!qrEnabled) return;
+  nominalListEl.innerHTML = "";
+  qrContainer.style.display = "none";
+
   NOMINALS.forEach(n=>{
-    const box=document.createElement('div');box.className='nominal-box';
-    box.innerHTML=`<div>Rp ${n.toLocaleString('id-ID')}</div>
+    const box = document.createElement('div'); box.className='nominal-box';
+    box.innerHTML = `<div>Rp ${n.toLocaleString('id-ID')}</div>
       <div class="btns">
         <button class="nominal-small pay-gopay" data-nom="${n}">GoPay</button>
         <button class="nominal-small pay-dana" data-nom="${n}">Dana</button>
       </div>`;
     nominalListEl.appendChild(box);
   });
-  nominalListEl.querySelectorAll('.pay-gopay').forEach(btn=>{btn.addEventListener('click',()=>{showQR('gopay',btn.dataset.nom);});});
-  nominalListEl.querySelectorAll('.pay-dana').forEach(btn=>{btn.addEventListener('click',()=>{showQR('dana',btn.dataset.nom);});});
+
+  nominalListEl.querySelectorAll('.pay-gopay').forEach(btn=>{
+    btn.addEventListener('click', ()=> { showQR('gopay', btn.dataset.nom); });
+  });
+  nominalListEl.querySelectorAll('.pay-dana').forEach(btn=>{
+    btn.addEventListener('click', ()=> { showQR('dana', btn.dataset.nom); });
+  });
+
   popup.classList.add('show'); popup.setAttribute('aria-hidden','false');
-  btnPlayStream.style.display='none';
 }
 
 function closePopup(){
   popup.classList.remove('show'); popup.setAttribute('aria-hidden','true');
-  if(qrTimer) clearTimeout(qrTimer);
-  if(qrContainer.dataset.verified!=="true"){nominalListEl.style.display='flex'; qrContainer.style.display='none';}
+  if (qrTimer) clearTimeout(qrTimer);
+  if (qrContainer.dataset.verified !== "true") {
+    nominalListEl.style.display = 'flex';
+    qrContainer.style.display = 'none';
+  }
 }
 
-function showQR(method,nominal){
-  nominalListEl.style.display='none'; qrContainer.style.display='flex';
-  qrImage.src=(method==='gopay')?"https://iili.io/Kos01X1.md.jpg":"https://iili.io/Kot8APe.md.jpg";
-  qrContainer.dataset.verified="false";
-  if(qrTimer) clearTimeout(qrTimer);
-  qrTimer=setTimeout(()=>{if(qrContainer.dataset.verified!=="true"){nominalListEl.style.display='flex'; qrContainer.style.display='none';}},10000);
+function showQR(method, nominal){
+  // show QR image and message
+  nominalListEl.style.display = 'none';
+  qrContainer.style.display = 'flex';
+  // use the images you provided originally
+  qrImage.src = (method === 'gopay') ? "https://iili.io/Kos01X1.md.jpg" : "https://iili.io/Kot8APe.md.jpg";
+  qrContainer.dataset.verified = "false";
+
+  if (qrTimer) clearTimeout(qrTimer);
+  qrTimer = setTimeout(()=> {
+    if (qrContainer.dataset.verified !== "true") {
+      nominalListEl.style.display = 'flex';
+      qrContainer.style.display = 'none';
+    }
+  }, 10000);
 }
 
-// Tombol Play otomatis
-btnPlayStream.addEventListener('click',()=>{
-  qrContainer.dataset.verified="true";
-  localStorage.setItem('verified_'+new Date().toLocaleDateString(),'true');
-  if(pendingStream) playStream(pendingStream.stream,pendingStream.btn);
-  btnPlayStream.style.display='none';
+/* Simulate success by clicking QR image (you can replace with real verification callback) */
+qrImage.addEventListener('click', ()=> {
+  // simulate payment success
+  onQrPaymentSuccess();
 });
 
-// Auto bypass QR jika sudah scan hari ini
-if(localStorage.getItem('verified_'+new Date().toLocaleDateString())==='true'){
-  qrContainer.dataset.verified="true"; btnPlayStream.style.display='block';
-  if(pendingStream) playStream(pendingStream.stream,pendingStream.btn);
+function onQrPaymentSuccess() {
+  qrContainer.dataset.verified = "true";
+  // set free access for 10 days
+  setFreeAccess(10);
+  // mark today's verified (keeps btnPlayStream bypass if needed)
+  localStorage.setItem('verified_'+new Date().toLocaleDateString(), 'true');
+  closePopup();
+  alert("Terima kasih! Kamu mendapat akses gratis 10 hari.");
+  // play pending stream automatically
+  if (pendingStream) {
+    playStream(pendingStream.stream, pendingStream.btn);
+    pendingStream = null;
+  }
 }
 
-// Play Stream dengan error handling
+/* ---------- Stream selection & playing (no manual Play button required) ---------- */
+function selectStream(key, btn=null) {
+  // if admin OR qr disabled OR user has free access -> play directly
+  if (isAdmin || !qrEnabled || hasFreeAccess() || qrContainer.dataset.verified === "true") {
+    playStream(key, btn);
+    return;
+  }
+
+  // else open popup and store pending stream
+  pendingStream = { stream: key, btn: btn };
+  openPopup();
+}
+
+/* Play stream with HLS support + error handling (overlay messages per spec) */
 function playStream(k, btn = null) {
-  if (!isAdmin && qrContainer.dataset.verified !== "true") {
+  // if still not allowed (safety), abort
+  if (!isAdmin && qrEnabled && qrContainer.dataset.verified !== "true" && !hasFreeAccess()) {
     openPopup();
     pendingStream = { stream: k, btn: btn };
     return;
   }
+
   if (lastActiveButton) lastActiveButton.classList.remove("active");
-  if (btn) {
-    btn.classList.add("active");
-    lastActiveButton = btn;
-  }
-  const url = STREAMS[k].urls[0];
-  if (hls) {
-    hls.destroy();
-    hls = null;
+  if (btn) { btn.classList.add("active"); lastActiveButton = btn; }
+
+  const url = STREAMS[k] && STREAMS[k].urls && STREAMS[k].urls[0];
+  if (!url) {
+    overlay.style.display = "flex";
+    overlay.innerText = "⚠️ Stream tidak tersedia, coba klik ulang";
+    return;
   }
 
-  // Fungsi untuk tampilkan error
+  if (hls) { try { hls.destroy(); } catch(e){} hls = null; }
+
   function showStreamError() {
     overlay.style.display = "flex";
-    overlay.innerHTML = "⚠️ Stream tidak tersedia, coba klik ulang";
+    overlay.innerText = "⚠️ Stream tidak tersedia, coba klik ulang";
   }
+
+  overlay.style.display = "flex";
+  overlay.innerText = "⏳ Memuat stream...";
 
   if (Hls.isSupported()) {
     hls = new Hls();
@@ -410,7 +557,7 @@ function playStream(k, btn = null) {
     hls.on(Hls.Events.MANIFEST_PARSED, () => {
       video.play()
         .then(() => { overlay.style.display = "none"; })
-        .catch(showStreamError);
+        .catch(() => { showStreamError(); });
     });
     hls.on(Hls.Events.ERROR, (event, data) => {
       console.error("HLS Error:", data);
@@ -420,62 +567,130 @@ function playStream(k, btn = null) {
     video.src = url;
     video.play()
       .then(() => { overlay.style.display = "none"; })
-      .catch(showStreamError);
+      .catch(() => { showStreamError(); });
   }
   closePopup();
 }
 
+/* ---------- Wire up stream buttons ---------- */
+document.querySelectorAll('.stream-row button').forEach(btn=>{
+  btn.addEventListener('click', ()=> {
+    const s = btn.dataset.stream;
+    selectStream(s, btn);
+  });
+});
 
-// Stream Buttons
-document.querySelectorAll('.stream-row button').forEach(btn=>{btn.addEventListener('click',()=>{playStream(btn.dataset.stream,btn);});});
+/* ---------- Fullscreen + orientation ---------- */
+async function enterFullscreen(){
+  try {
+    if (container.requestFullscreen) await container.requestFullscreen();
+    container.classList.add("fullscreen");
+    btnFullscreen.innerHTML = '<i data-lucide="minimize" class="w-5 h-5"></i>';
+    lucide.createIcons();
+    if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
+  } catch(e) {}
+}
+async function exitFullscreen(){
+  try {
+    if (document.exitFullscreen) await document.exitFullscreen();
+    container.classList.remove("fullscreen");
+    btnFullscreen.innerHTML = '<i data-lucide="maximize" class="w-5 h-5"></i>';
+    lucide.createIcons();
+    if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+  } catch(e) {}
+}
+btnFullscreen.addEventListener("click", ()=>{ !document.fullscreenElement?enterFullscreen():exitFullscreen(); });
+video.addEventListener("dblclick", ()=>{ !document.fullscreenElement?enterFullscreen():exitFullscreen(); });
 
-// Fullscreen + rotate
-async function enterFullscreen(){try{if(container.requestFullscreen) await container.requestFullscreen();container.classList.add("fullscreen");btnFullscreen.innerHTML='<i data-lucide="minimize" class="w-5 h-5"></i>';lucide.createIcons();if(screen.orientation&&screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});}catch(e){}}
-async function exitFullscreen(){try{if(document.exitFullscreen) await document.exitFullscreen();container.classList.remove("fullscreen");btnFullscreen.innerHTML='<i data-lucide="maximize" class="w-5 h-5"></i>';lucide.createIcons();if(screen.orientation&&screen.orientation.unlock) screen.orientation.unlock();}catch(e){}}
-btnFullscreen.addEventListener("click",()=>{!document.fullscreenElement?enterFullscreen():exitFullscreen();});
-video.addEventListener("dblclick",()=>{!document.fullscreenElement?enterFullscreen():exitFullscreen();});
+/* ---------- Volume ---------- */
+function updateVolumeIcon(){ 
+  btnMute.innerHTML = (video.muted || video.volume===0) ? '<i data-lucide="volume-x" class="w-5 h-5"></i>' : '<i data-lucide="volume-2" class="w-5 h-5"></i>';
+  lucide.createIcons();
+}
+volumeControl.addEventListener("input", e => { video.muted = false; video.volume = e.target.value; updateVolumeIcon(); });
+btnMute.addEventListener("click", ()=> { video.muted = !video.muted; updateVolumeIcon(); });
 
-// Volume
-function updateVolumeIcon(){btnMute.innerHTML=video.muted||video.volume===0?'<i data-lucide="volume-x" class="w-5 h-5"></i>':'<i data-lucide="volume-2" class="w-5 h-5"></i>';lucide.createIcons();}
-volumeControl.addEventListener("input",e=>{video.muted=false;video.volume=e.target.value;updateVolumeIcon();});
-btnMute.addEventListener("click",()=>{video.muted=!video.muted;updateVolumeIcon();});
+/* ---------- Quality dropdown (UI only) ---------- */
+qualityBtn.addEventListener("click", ()=> {
+  qualityOptions.style.display = qualityOptions.style.display === "flex" ? "none" : "flex";
+});
+qualityOptions.querySelectorAll("button").forEach(b=>{
+  b.addEventListener("click", ()=> {
+    qualityOptions.querySelectorAll("button").forEach(bt=>bt.classList.remove("active"));
+    b.classList.add("active");
+    qualityBtn.innerText = b.innerText;
+    qualityOptions.style.display = "none";
+  });
+});
 
-// Quality dropdown
-qualityBtn.addEventListener("click",()=>{qualityOptions.style.display=qualityOptions.style.display==="flex"?"none":"flex";});
-qualityOptions.querySelectorAll("button").forEach(b=>{b.addEventListener("click",()=>{qualityOptions.querySelectorAll("button").forEach(bt=>bt.classList.remove("active"));b.classList.add("active");qualityBtn.innerText=b.innerText;qualityOptions.style.display="none";});});
+/* ---------- Chat (localStorage multi-tab) ---------- */
+const chatBox = document.getElementById("chatBox");
+const chatForm = document.getElementById("chatForm");
+const chatInput = document.getElementById("chatInput");
 
-// Chat
-const chatBox=document.getElementById("chatBox"),chatForm=document.getElementById("chatForm"),chatInput=document.getElementById("chatInput");
-function addChatMessage(user,msg){const div=document.createElement('div'); div.innerHTML=`<strong style="color:yellow">${user}</strong>: ${msg}`; chatBox.appendChild(div); chatBox.scrollTop=chatBox.scrollHeight;}
-chatForm.addEventListener('submit',e=>{e.preventDefault();const msg=chatInput.value.trim();if(msg==='')return;const data={user:isAdmin?"Admin":"Guest",msg:msg,time:Date.now()};const messages=JSON.parse(localStorage.getItem('liveChat')||'[]');messages.push(data);localStorage.setItem('liveChat',JSON.stringify(messages));addChatMessage(data.user,msg);chatInput.value='';});
-window.addEventListener('storage',e=>{if(e.key==='liveChat'){chatBox.innerHTML='';const messages=JSON.parse(localStorage.getItem('liveChat')||'[]');messages.forEach(m=>addChatMessage(m.user,m.msg));}});
-const initMessages=JSON.parse(localStorage.getItem('liveChat')||'[]');initMessages.forEach(m=>addChatMessage(m.user,m.msg));
+function addChatMessage(user, msg) {
+  const div = document.createElement('div');
+  div.innerHTML = `<strong style="color:yellow">${user}</strong>: ${msg}`;
+  chatBox.appendChild(div);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
 
-// Adjust chat height
-function adjustChatHeight(){chatContainer.style.height=container.offsetHeight+'px';}
-window.addEventListener('resize',adjustChatHeight);
-window.addEventListener('load',adjustChatHeight);
+chatForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const msg = chatInput.value.trim();
+  if (msg === '') return;
+  const data = { user: isAdmin ? "Admin" : "Guest", msg: msg, time: Date.now() };
+  const messages = JSON.parse(localStorage.getItem('liveChat') || '[]');
+  messages.push(data);
+  localStorage.setItem('liveChat', JSON.stringify(messages));
+  addChatMessage(data.user, msg);
+  chatInput.value = '';
+});
 
-// Responsive layout adjustment
+window.addEventListener('storage', e => {
+  if (e.key === 'liveChat') {
+    chatBox.innerHTML = '';
+    const messages = JSON.parse(localStorage.getItem('liveChat') || '[]');
+    messages.forEach(m => addChatMessage(m.user, m.msg));
+  }
+});
+const initMessages = JSON.parse(localStorage.getItem('liveChat') || '[]');
+initMessages.forEach(m => addChatMessage(m.user, m.msg));
+
+/* ---------- Adjust chat height & responsive helpers ---------- */
+function adjustChatHeight(){ chatContainer.style.height = container.offsetHeight + 'px'; }
+window.addEventListener('resize', adjustChatHeight);
+window.addEventListener('load', adjustChatHeight);
+
 function adjustLayout(){
   const w = window.innerWidth;
-  if(w <= 1024){
-    chatContainer.style.height='auto';
+  if (w <= 1024) {
+    chatContainer.style.height = 'auto';
   } else {
-    chatContainer.style.height = container.offsetHeight+'px';
+    chatContainer.style.height = container.offsetHeight + 'px';
   }
 }
 window.addEventListener('resize', adjustLayout);
 window.addEventListener('load', adjustLayout);
 
-// Auto-hide controls
+/* ---------- Auto-hide controls ---------- */
 let controlsTimeout;
-function showControls(){container.querySelector('#controls').classList.remove('hidden'); resetControlsTimer();}
-function hideControls(){container.querySelector('#controls').classList.add('hidden');}
-function resetControlsTimer(){if(controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout=setTimeout(hideControls,3000);}
-container.addEventListener('mousemove',showControls);
-container.addEventListener('touchstart',showControls);
+function showControls(){ container.querySelector('#controls').classList.remove('hidden'); resetControlsTimer(); }
+function hideControls(){ container.querySelector('#controls').classList.add('hidden'); }
+function resetControlsTimer(){ if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(hideControls, 3000); }
+container.addEventListener('mousemove', showControls);
+container.addEventListener('touchstart', showControls);
 resetControlsTimer();
+
+/* ---------- Initial UI state ---------- */
+updateToggleUI();
+
+/* ---------- Notes for integration ----------
+ - To change stream URLs, edit STREAMS object above.
+ - For real payment verification, replace qrImage click handler with real webhook/callback that calls onQrPaymentSuccess().
+ - setFreeAccess(days) and hasFreeAccess() are global and persistent (localStorage).
+ - Admin login credentials (for dev) are 'reno' / 'wadju'.
+------------------------------------------------- */
 </script>
 </body>
 </html>
