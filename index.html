@@ -2,695 +2,698 @@
 <html lang="id">
 <head>
 <meta charset="utf-8" />
-<title>RENDY CASUAL</title>
+<title>RENDY CASUAL – Live</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
 <style>
-body.dark { color:white; margin:0; font-family:sans-serif; 
-background: 
-    linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
-    url("https://iili.io/KzdpHxV.md.png") no-repeat center center fixed;
-  background-size: cover;
-} 
-
-/* Header */
-#header {
-  position:fixed; top:0; left:0; width:100%; z-index:100;
-  display:flex; justify-content:flex-end; align-items:center;
-  background:#000; color:#fff; padding:35px 0;
-  font-family:'Orbitron',sans-serif;
-  gap:8px;
-  padding-right:20px;
-}
-.header-btn {
-  background:#333; color:#fff; padding:6px 12px; border-radius:6px;
-  cursor:pointer; font-weight:bold; border:none;
-}
-
-/* Toggle QR style (small) */
-#toggleQR {
-  display:none;
-  padding:6px 10px; border-radius:999px; border:2px solid #222;
-  font-weight:700; cursor:pointer;
-  min-width:72px; text-align:center; font-size:0.9rem;
-}
-
-/* Footer */
-#footer {
-  position:fixed; bottom:0; left:0; width:100%; z-index:100;
-  text-align:center; background:#000; color:#fff;
-  padding:12px; font-weight:bold;
-  box-shadow:0 -2px 8px rgba(0,0,0,0.5);
-}
-
-/* Layout */
-#mainContent { margin-top:90px; margin-bottom:60px; width:100%; min-height:150vh; }
-#middleSection {
-  display:flex; flex-wrap:wrap; justify-content:center; gap:20px;
-  width:100%; max-width:1200px; margin:0 auto;
-}
-.left-col { flex:1; max-width:900px; display:flex; flex-direction:column; gap:12px; }
-#chatContainer {
-  display:flex; flex-direction:column;
-  width:300px; min-width:250px;
-  background:#222; color:#fff; border-radius:8px;
-  overflow:hidden;
-}
-
-/* Player */
-#player-container {
-  position:relative; width:100%; aspect-ratio:16/9;
-  border-radius:12px; overflow:hidden;
-  box-shadow:0 6px 16px rgba(0,0,0,0.6);
-}
-#player-container.fullscreen {
-  width:100vw; height:100vh; aspect-ratio:auto; border-radius:0;
-}
-#video { width:100%; height:100%; object-fit:contain; }
-#overlay {
-  position:absolute; inset:0; background:rgba(240,240,240,0.85);
-  color:#ff0000; font-size:20px; font-weight:bold;
-  display:flex; align-items:center; justify-content:center;
-  text-align:center; z-index:20;
-  opacity:1; transition:opacity 0.3s;
-  pointer-events:none;
-}
-
-/* Controls */
-#controls {
-  display:flex; gap:16px; align-items:center;
-  position:absolute; bottom:10px; right:10px; z-index:15;
-  background:#000; padding:8px 12px; border-radius:12px;
-  font-size:14px; opacity:1; transition:opacity 0.5s;
-}
-#controls.hidden { opacity:0; pointer-events:none; }
-.volume-group { display:flex; align-items:center; gap:6px; }
-#volumeControl {
-  -webkit-appearance:none; width:80px; height:6px;
-  background:#654321; border-radius:4px;
-}
-#volumeControl::-webkit-slider-thumb {
-  -webkit-appearance:none; width:14px; height:14px;
-  border-radius:50%; background:#fff; cursor:pointer;
-}
-#qualityOptions {
-  display:none; position:absolute; bottom:45px; right:40px;
-  background:#000; padding:6px 10px; border-radius:6px;
-  flex-direction:column; gap:6px;
-}
-#qualityOptions button {
-  background:transparent; border:none; color:#fff;
-  cursor:pointer; font-size:0.85rem; font-weight:bold;
-}
-#qualityOptions button.active { color:red; }
-
-/* Chat */
-#chatBox { flex:1; overflow-y:auto; padding:10px; font-size:0.9rem; }
-#chatForm { display:flex; padding:8px; background:#111; gap:4px; }
-#chatForm input {
-  flex:1; padding:6px; border-radius:4px;
-  border:none; background:#333; color:#fff;
-}
-#chatForm button {
-  padding:6px 10px; border-radius:4px; border:none;
-  background:red; color:#fff; font-weight:bold; cursor:pointer;
-}
-
-/* Popup Sawer */
-#popupSawer {
-  position:fixed; inset:0; z-index:250;
-  display:none; align-items:center; justify-content:center;
-  background:rgba(0,0,0,0.75);
-  opacity:0; transition:opacity 0.25s ease;
-}
-#popupSawer.show { display:flex; opacity:1; }
-#popupContent {
-  width:90%; max-width:380px; background:#fff; color:#000;
-  border-radius:12px; padding:18px; text-align:center;
-  transform:translateY(-18px); opacity:0;
-  transition:transform 0.25s ease, opacity 0.25s ease;
-}
-#popupSawer.show #popupContent {
-  transform:translateY(0); opacity:1;
-}
-#popupHeader { font-weight:900; margin-bottom:8px; line-height:1.15; }
-#nominalList {
-  display:flex; flex-direction:column; gap:8px; margin-top:12px;
-}
-.nominal-box {
-  display:flex; justify-content:space-between; align-items:center;
-  padding:8px; background:#fef08a; border-radius:8px; font-weight:bold;
-}
-.nominal-box .btns { display:flex; gap:6px; }
-.nominal-small {
-  padding:6px 8px; border-radius:6px; background:#111;
-  color:#fff; border:none; cursor:pointer; font-weight:700;
-}
-#qrContainer {
-  margin-top:12px; display:flex; flex-direction:column;
-  align-items:center; gap:8px; position:relative;
-}
-#qrContainer img {
-  width:180px; height:180px; border:2px solid #000; border-radius:12px;
-  cursor:pointer;
-}
-.qr-msg { font-weight:bold; color:#000; text-align:center; margin-bottom:12px; }
-
-/* Stream links */
-#sawerBox {
-  background:yellow; color:#000; font-weight:bold;
-  padding:10px; border-radius:8px; text-align:center; margin-top:20px;
-}
-.stream-row {
-  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
-  background:#111; padding:10px; border-radius:10px;
-  box-shadow:0 3px 8px rgba(0,0,0,0.5); margin-top:10px;
-}
-.stream-row span {
-  min-width:90px; font-weight:bold; color:#fff;
-  font-size:0.95rem; flex-shrink:0;
-}
-.stream-row button {
-  color:#000; font-weight:bold; background:#fff;
-  border:1px solid #000; padding:5px 12px;
-  border-radius:2px; cursor:pointer; font-size:0.85rem;
-  transition:all 0.2s; flex-shrink:0;
-}
-.stream-row button.active { background:red !important; color:white !important; }
-
-/* Responsive fixes (kept original sizing behavior) */
-@media (max-width:1024px){
-  #middleSection{
-    flex-direction: column;
-    align-items: center;
+  :root{
+    --bg:#000;
+    --panel:#111;
+    --panel-2:#1a1a1a;
+    --text:#fff;
+    --muted:#bbb;
+    --link-bg:#222;
+    --link-border:#444;
+    --link-hover:#ff0;
+    --accent:#ff0;      /* kuning untuk link */
+    --danger:#e00;      /* merah tombol kirim */
+    --shadow:0 6px 16px rgba(0,0,0,.55);
+    --radius:12px;
   }
-  #middleSection > div:first-child{
-    width: 100%;
-    max-width: 100%;
+  html,body{height:100%;}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
   }
-  #chatContainer{
-    width: 90%;
-    max-width: 400px;
-    margin-top: 12px;
-    height:auto;
-    max-height:400px;
+
+  /* ===== Admin login kecil kanan atas ===== */
+  #adminLogin{
+    position:fixed; top:8px; right:10px; z-index:1000;
+    background:#222; color:#fff; border:1px solid #333; border-radius:8px;
+    padding:6px 10px; font-size:12px; cursor:pointer; box-shadow:var(--shadow);
   }
-  #player-container{
-    width: 100%;
-    max-width: 100%;
-    aspect-ratio:16/9;
+
+  /* ===== Layout utama: dua kolom (kiri besar, kanan kecil) ===== */
+  #wrap{
+    width:100%; max-width:1400px; margin:0 auto; padding:10px 8px 16px;
   }
-}
+  #row{
+    display:flex; gap:10px; align-items:flex-start;
+  }
+  #left{
+    flex:1 1 auto; min-width:0;
+  }
+  #right{
+    flex:0 0 clamp(240px, 28vw, 360px); /* ±25–30% */
+    min-width:220px;
+  }
+
+  /* ===== Player box (mepet ke chat) ===== */
+  #playerCard{
+    background:var(--panel); border-radius:var(--radius); box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  #player{
+    position:relative; width:100%; aspect-ratio:16/9; background:#000;
+  }
+  #video{ width:100%; height:100%; display:block; background:#000; }
+  #overlay{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(255,255,255,.06); color:#ff2d2d; font-weight:800;
+  }
+
+  /* ===== Kontrol (1 baris, kecil di HP) ===== */
+  #controls{
+    display:flex; justify-content:center; align-items:center; gap:8px;
+    padding:8px; background:var(--panel-2); border-top:1px solid #222;
+    font-size:clamp(11px, 2.8vw, 14px);
+  }
+  .ctrl-btn{
+    background:#222; color:#fff; border:1px solid #333; border-radius:8px;
+    padding:6px 10px; cursor:pointer; font-weight:700; min-height:32px;
+  }
+  .ctrl-btn:hover{ background:#2d2d2d; }
+  /* Volume group kecil */
+  #volWrap{ display:flex; align-items:center; gap:6px; }
+  #volume{ width:clamp(70px, 18vw, 120px); accent-color:#fff; }
+
+  /* ===== Resolusi: dropdown ke atas ===== */
+  #qualityWrap{ position:relative; }
+  #qualityBtn{ position:relative; }
+  #qualityMenu{
+    position:absolute; bottom:100%; right:0; transform:translateY(-8px);
+    background:#000; border:1px solid #333; border-radius:10px; box-shadow:var(--shadow);
+    display:none; min-width:140px; padding:6px;
+  }
+  #qualityMenu.show{ display:block; }
+  #qualityMenu button{
+    display:block; width:100%; text-align:left;
+    background:transparent; color:#fff; border:0; padding:8px; border-radius:8px; cursor:pointer;
+    font-weight:800;
+  }
+  #qualityMenu button.active, #qualityMenu button:hover{ background:#111; color:#ff2d2d; }
+
+  /* ===== Info kuning ===== */
+  #info{
+    margin:10px 0; background:var(--accent); color:#000; font-weight:900; text-align:center;
+    padding:8px 10px; border-radius:10px;
+  }
+
+  /* ===== Baris link pertandingan ===== */
+  .match{
+    background:#111; border-radius:10px; padding:10px; box-shadow:var(--shadow);
+    margin-bottom:10px;
+  }
+  .match-head{
+    font-family:'Orbitron',sans-serif; letter-spacing:.5px;
+    font-weight:900; font-size:clamp(13px,3vw,16px); margin-bottom:8px;
+    display:flex; align-items:center; gap:8px; color:#fff;
+  }
+  .links{
+    display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .link-btn{
+    background:var(--link-bg); color:#fff; border:1px solid var(--link-border);
+    padding:6px 10px; border-radius:8px; font-weight:900; cursor:pointer;
+  }
+  .link-btn:hover{ background:var(--link-hover); color:#000; }
+  .link-btn.active{ background:#ff2d2d; color:#fff; border-color:#ff2d2d; }
+
+  /* ===== Chat kanan ===== */
+  #chat{
+    background:#121212; border-radius:12px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; min-height:100%;
+    /* tingginya akan dipaksa = tinggi player via JS */
+  }
+  #chatHeader{
+    padding:10px 12px; border-bottom:1px solid #222; font-weight:900; font-size:14px;
+  }
+  #chatBox{
+    flex:1; overflow-y:auto; padding:10px 10px 2px;
+    scroll-behavior:smooth;
+  }
+  .msg{ margin:6px 0; font-size:13px; }
+  .msg .u{ color:#ff0; font-weight:900; }
+  .msg.admin .u{ color:#0f0; }
+  #chatForm{
+    display:flex; gap:6px; padding:10px; border-top:1px solid #222;
+    background:#0e0e0e;
+  }
+  #chatInput{
+    flex:1; background:#1c1c1c; color:#fff; border:1px solid #333; border-radius:8px; padding:8px;
+    font-size:14px;
+  }
+  #btnSend{
+    background:var(--danger); color:#fff; border:0; border-radius:8px; padding:8px 12px; font-weight:900;
+    cursor:pointer;
+  }
+  #btnSend:hover{ filter:brightness(1.08); }
+
+  /* ===== Popup Sawer (GoPay/Dana) ===== */
+  #popup{
+    position:fixed; inset:0; background:rgba(0,0,0,.75); display:none; align-items:center; justify-content:center; z-index:1200;
+  }
+  #popup.show{ display:flex; }
+  #popCard{
+    width:min(92vw,420px); background:#fff; color:#000; border-radius:14px; padding:16px; text-align:center;
+    transform:translateY(-10px); opacity:0; transition:transform .2s, opacity .2s;
+  }
+  #popup.show #popCard{ transform:translateY(0); opacity:1; }
+  #popTitle{ font-weight:900; line-height:1.2; }
+  #nominal{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+  .nom-row{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    background:#fef08a; border-radius:10px; padding:8px 10px; font-weight:900;
+  }
+  .mini{ background:#111; color:#fff; border:0; border-radius:8px; padding:6px 9px; font-weight:900; cursor:pointer; }
+  #qrWrap{ display:none; margin-top:12px; align-items:center; flex-direction:column; gap:8px; }
+  #qr{ width:180px; height:180px; border:2px solid #000; border-radius:12px; object-fit:cover; }
+  #btnClose{ margin-top:10px; background:#111; color:#fff; border:0; border-radius:10px; padding:8px 12px; font-weight:900; cursor:pointer; }
+
+  /* ===== Responsif: tetap 2 kolom di HP (player besar, chat kecil) ===== */
+  @media (max-width: 760px){
+    #row{ gap:6px; }
+    #right{ flex-basis:38%; min-width:150px; }
+    #left { flex-basis:62%; }
+    /* title orbitron kecil */
+    .match-head{ font-size:13px; }
+    /* kontrol diperkecil */
+    .ctrl-btn{ padding:5px 8px; border-radius:8px; min-height:30px; }
+    #volume{ width:clamp(60px, 26vw, 110px); }
+  }
 </style>
 </head>
-<body class="dark flex flex-col items-center" oncontextmenu="return false">
+<body>
 
-<div id="header">
-  <button id="adminLogin" class="header-btn">Admin Login</button>
-  <button id="toggleQR" title="Toggle QR ON/OFF">QR ON</button>
-</div>
+<!-- Admin kecil kanan atas -->
+<button id="adminLogin" type="button">Admin</button>
 
-<main id="mainContent">
-<div id="middleSection">
-  <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;">
-    <div style="position:relative;flex:1;max-width:900px;">
-      <div id="player-container">
-        <video id="video" playsinline muted></video>
-        <div id="overlay">⏳ Memuat stream...</div>
+<div id="wrap">
+  <div id="row">
+    <!-- ===== KIRI: Player + kontrol + link ===== -->
+    <section id="left">
+      <div id="playerCard">
+        <div id="player">
+          <video id="video" playsinline muted></video>
+          <div id="overlay">⏳ Memuat stream...</div>
+        </div>
+
+        <!-- Kontrol kecil (volume+mute, quality (dropdown ke atas), fullscreen) -->
         <div id="controls">
-          <div class="volume-group">
-            <button id="btnMute" class="p-1 text-white"><i data-lucide="volume-2" class="w-5 h-5"></i></button>
-            <input id="volumeControl" type="range" min="0" max="1" step="0.05" value="1">
+          <div id="volWrap">
+            <button class="ctrl-btn" id="btnMute" title="Mute/Unmute">🔊</button>
+            <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
           </div>
-          <button id="btnQuality" class="p-1 text-white flex items-center gap-1"><i data-lucide="settings" class="w-5 h-5"></i> Auto</button>
-          <div id="qualityOptions" class="flex flex-col gap-2" aria-hidden="true">
-            <button data-quality="auto" class="active">Auto</button>
-            <button data-quality="360">360p</button>
-            <button data-quality="480">480p</button>
-            <button data-quality="720">720p HD</button>
-            <button data-quality="1080">1080p HD</button>
+
+          <div id="qualityWrap">
+            <button class="ctrl-btn" id="qualityBtn" title="Pilih Resolusi">HD ▾</button>
+            <div id="qualityMenu" role="menu" aria-hidden="true">
+              <button data-q="auto" class="active">Auto</button>
+              <button data-q="360">360p</button>
+              <button data-q="480">480p</button>
+              <button data-q="720">720p</button>
+              <button data-q="1080">1080p</button>
+            </div>
           </div>
-          <button id="btnFullscreen" class="p-1 text-white"><i data-lucide="maximize" class="w-5 h-5"></i></button>
+
+          <button class="ctrl-btn" id="btnFS" title="Fullscreen / Exit">⤢</button>
         </div>
       </div>
 
-      <div id="sawerBox">Klik Link untuk Tonton Live | Terima kasih atas dukungan Anda!</div>
+      <div id="info">Klik Link untuk Tonton Live | Terima kasih atas dukungan Anda!</div>
 
-      <!-- Stream rows - kept original structure (you can change labels/urls in STREAMS) -->
-      <div class="stream-row">
-        <span>🔴HYUNDAI.C VS BANK.T - 11:30 WIB :</span>
-        <button data-stream="stream1" data-index="0">Link 1</button>
-        <button data-stream="stream1" data-index="1">Link 2</button>
-        <button data-stream="stream1" data-index="2">Link 3</button>
+      <!-- Baris link sesuai screenshot: "Korea vs Indo : Link 1 Link 2 Link 3" -->
+      <div class="match">
+        <div class="match-head">🔴 KOREA vs INDO :</div>
+        <div class="links">
+          <button class="link-btn" data-stream="stream1" data-index="0">Link 1</button>
+          <button class="link-btn" data-stream="stream1" data-index="1">Link 2</button>
+          <button class="link-btn" data-stream="stream1" data-index="2">Link 3</button>
+        </div>
       </div>
 
-      <div class="stream-row">
-        <span>🔴SAMSUNG VS ASURANSI - 14:00 WIB :</span>
-        <button data-stream="stream2" data-index="0">Link 1</button>
-        <button data-stream="stream2" data-index="1">Link 2</button>
-        <button data-stream="stream2" data-index="2">Link 3</button>
+      <div class="match">
+        <div class="match-head">🔴 KOREA vs INDO :</div>
+        <div class="links">
+          <button class="link-btn" data-stream="stream2" data-index="0">Link 1</button>
+          <button class="link-btn" data-stream="stream2" data-index="1">Link 2</button>
+          <button class="link-btn" data-stream="stream2" data-index="2">Link 3</button>
+        </div>
       </div>
 
-      <div class="stream-row">
-        <span>🔴KOREAN.A VS KARTU.W - 11:30 WIB :</span>
-        <button data-stream="stream3" data-index="0">Link 1</button>
-        <button data-stream="stream3" data-index="1">Link 2</button>
-        <button data-stream="stream3" data-index="2">Link 3</button>
+      <div class="match">
+        <div class="match-head">🔴 KOREA vs INDO :</div>
+        <div class="links">
+          <button class="link-btn" data-stream="stream3" data-index="0">Link 1</button>
+          <button class="link-btn" data-stream="stream3" data-index="1">Link 2</button>
+          <button class="link-btn" data-stream="stream3" data-index="2">Link 3</button>
+        </div>
       </div>
 
-      <div class="stream-row">
-        <span>🔴LISTRIK VS NAKHON.R - 14:00 WIB :</span>
-        <button data-stream="stream4" data-index="0">Link 1</button>
-        <button data-stream="stream4" data-index="1">Link 2</button>
-        <button data-stream="stream4" data-index="2">Link 3</button>
+      <div class="match">
+        <div class="match-head">🔴 KOREA vs INDO :</div>
+        <div class="links">
+          <button class="link-btn" data-stream="stream4" data-index="0">Link 1</button>
+          <button class="link-btn" data-stream="stream4" data-index="1">Link 2</button>
+          <button class="link-btn" data-stream="stream4" data-index="2">Link 3</button>
+        </div>
       </div>
+    </section>
 
-      <!-- kept hidden: no manual Play button in final behavior -->
-      <button id="btnPlayStream" style="display:none">▶️ Play Stream</button>
-    </div>
-
-    <div id="chatContainer">
-      <div id="chatBox"></div>
-      <form id="chatForm">
-        <input type="text" id="chatInput" placeholder="Ketik pesan..."/>
-        <button type="submit">Kirim</button>
-      </form>
-    </div>
+    <!-- ===== KANAN: Chat (proporsional, sama tinggi player) ===== -->
+    <aside id="right">
+      <div id="chat">
+        <div id="chatHeader">💬 Live Chat</div>
+        <div id="chatBox"></div>
+        <form id="chatForm" autocomplete="off">
+          <input id="chatInput" type="text" placeholder="Ketik pesan..." />
+          <button id="btnSend" type="submit">Kirim</button>
+        </form>
+      </div>
+    </aside>
   </div>
 </div>
-</main>
 
-<div id="footer"><a href="#" style="color:white; font-weight:bold;">© 2025 RENDY CASUAL</a></div>
-
-<!-- Popup Sawer (keadaan asli dipertahankan) -->
-<div id="popupSawer" aria-hidden="true">
-  <div id="popupContent">
-    <div id="popupHeader">💸 SAWER SEIKHLASNYA<br><small>Sekali Sawer Nonton Gratis Tanpa Iklan</small></div>
-    <div id="nominalList"></div>
-    <div id="qrContainer">
-      <img id="qrImage" src="" alt="QR Code">
-      <div class="qr-msg">Silakan scan QR untuk verifikasi... (klik gambar untuk verifikasi)</div>
+<!-- ===== Popup Sawer ===== -->
+<div id="popup" aria-hidden="true">
+  <div id="popCard">
+    <div id="popTitle">💸 SAWER SEIKHLASNYA<br><small>Sekali Sawer Nonton Gratis Tanpa Iklan</small></div>
+    <div id="nominal"></div>
+    <div id="qrWrap">
+      <img id="qr" alt="QR">
+      <div>Silakan scan QR untuk verifikasi...</div>
     </div>
-    <button onclick="closePopup()">Tutup</button>
+    <button id="btnClose">Tutup</button>
   </div>
 </div>
 
 <script>
-/* ---------- init icons ---------- */
-lucide.createIcons();
+  /***********************
+   *  STREAM SOURCES
+   ***********************/
+  // Tetap pakai sumber dari versimu (boleh ganti ke manifest HLS multi-bitrate agar quality switching efektif)
+  const STREAMS = {
+    stream1: {
+      urls: [
+        "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+        "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+        "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
+      ]
+    },
+    stream2: {
+      urls: [
+        "https://live.alilicloud.com/live/a7236226f7213711f9891683d978fb38/playlist.m3u8",
+        "https://live.alilicloud.com/live/a7236226f7213711f9891683d978fb38/playlist.m3u8",
+        "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
+      ]
+    },
+    stream3: {
+      urls: [
+        "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+        "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+        "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
+      ]
+    },
+    stream4: {
+      urls: [
+        "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+        "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
+        "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
+      ]
+    }
+  };
 
-/* ---------- STREAMS (keep your original URLs) ---------- */
-const STREAMS={ 
-  stream1:{urls:[
-    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8?did=b2153788642168a388cac0681",
-    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
-    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
-  ]},
-  stream2:{urls:[
-    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
-    "https://hms.pfs.gdn/hms/v1/broadcast/one/primary/tracks-v3a1/mono.m3u8?token=je8V9hMREKhw5keYu4Qj1A:2dpXBrh8M71BQyge9xZ88Exu6ocd20SXS6NTjfNQVkD8h9jU6MwOJ9F-YYVzpAIPhI9jvBk8yzVvVtYzcEqoSeJXo09-DoD3VOUx6SsX5TGMUQ8wC5orAft9I55H9j6udfbxNtwOB6_xbrDVQHQBN1371uj9gH8cRlA1lXhI51g1ujd5cHp0FhFI6tZqt-EmVnpcMxCiIbS_RQk91TZiQg",
-    "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
-  ]},
-  stream3:{urls:[
-    "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-    "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-    "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
-  ]},
-  stream4:{urls:[
-    "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8?did=b2153788642168a388cac0681",
-    "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-    "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
-  ]} 
-};
+  /***********************
+   *  ELEM / STATE
+   ***********************/
+  const video = document.getElementById('video');
+  const overlay = document.getElementById('overlay');
+  const player = document.getElementById('player');
+  const adminBtn = document.getElementById('adminLogin');
 
-/* ---------- Element refs ---------- */
-const video = document.getElementById("video");
-const overlay = document.getElementById("overlay");
-const container = document.getElementById("player-container");
-const btnFullscreen = document.getElementById("btnFullscreen");
-const btnMute = document.getElementById("btnMute");
-const volumeControl = document.getElementById("volumeControl");
-const qualityBtn = document.getElementById("btnQuality");
-const qualityOptions = document.getElementById("qualityOptions");
-const popup = document.getElementById('popupSawer');
-const nominalListEl = document.getElementById('nominalList');
-const qrContainer = document.getElementById('qrContainer');
-const qrImage = document.getElementById('qrImage');
-const btnPlayStream = document.getElementById('btnPlayStream');
-const adminLoginBtn = document.getElementById('adminLogin');
-const toggleQRBtn = document.getElementById('toggleQR');
-const chatContainer = document.getElementById('chatContainer');
+  const btnMute = document.getElementById('btnMute');
+  const volume = document.getElementById('volume');
+  const btnFS = document.getElementById('btnFS');
 
-/* ---------- State ---------- */
-let hls = null;
-let lastActiveButton = null;
-let pendingStream = null;
-let qrTimer = null;
-let isAdmin = false;
+  const qualityBtn = document.getElementById('qualityBtn');
+  const qualityMenu = document.getElementById('qualityMenu');
 
-// QR enabled flag (global)
-let qrEnabled = true; // default ON (can be toggled by admin)
+  const chatBox = document.getElementById('chatBox');
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
 
-/* ---------- Overlay behavior ---------- */
-video.addEventListener("waiting", () => {
-  overlay.style.display = "flex";
-  overlay.innerText = "⏳ Memuat stream...";
-});
-video.addEventListener("canplay", () => {
-  overlay.style.display = "none";
-});
-video.addEventListener("playing", () => {
-  overlay.style.display = "none";
-});
+  const popup = document.getElementById('popup');
+  const popCard = document.getElementById('popCard');
+  const nominalWrap = document.getElementById('nominal');
+  const qrWrap = document.getElementById('qrWrap');
+  const qrImg = document.getElementById('qr');
 
-/* ---------- Free access helpers (global) ---------- */
-function setFreeAccess(days = 10) {
-  const expireDate = new Date();
-  expireDate.setDate(expireDate.getDate() + days);
-  localStorage.setItem("freeAccessUntil", expireDate.getTime());
-}
-function hasFreeAccess() {
-  const expire = localStorage.getItem("freeAccessUntil");
-  if (!expire) return false;
-  return new Date().getTime() < parseInt(expire);
-}
+  let hls = null;
+  let isAdmin = false;
+  let selectedStreamKey = 'stream1';
+  let selectedUrlIndex = 0;
+  let selectedQuality = 'auto'; // auto|360|480|720|1080
 
-/* If user previously verified today / free access, mark qrContainer accordingly */
-if (localStorage.getItem('verified_'+new Date().toLocaleDateString()) === 'true') {
-  qrContainer.dataset.verified = "true";
-}
+  /***********************
+   *  ADMIN LOGIN KECIL
+   ***********************/
+  adminBtn.addEventListener('click', ()=>{
+    const u = prompt('Username user:');
+    const p = prompt('Password password:');
+    if(u==='reno' && p==='wadju'){
+      isAdmin = true;
+      alert('Admin mode aktif');
+    } else {
+      alert('Login gagal');
+    }
+  });
 
-/* ---------- Admin Login & Toggle ---------- */
-function updateToggleUI() {
-  toggleQRBtn.style.display = isAdmin ? 'inline-block' : 'none';
-  if (!isAdmin) return;
-  // color: red for ON, black/gray for OFF
-  if (qrEnabled) {
-    toggleQRBtn.style.background = 'red';
-    toggleQRBtn.style.color = '#fff';
-    toggleQRBtn.innerText = 'QR ON';
-  } else {
-    toggleQRBtn.style.background = '#111';
-    toggleQRBtn.style.color = '#fff';
-    toggleQRBtn.innerText = 'QR OFF';
+  /***********************
+   *  SAWER POPUP
+   ***********************/
+  const NOMINALS = [10000,20000,30000,40000,50000];
+  function openPopup(){
+    if(isAdmin) return; // admin bypass
+    nominalWrap.innerHTML = '';
+    qrWrap.style.display = 'none';
+    NOMINALS.forEach(n=>{
+      const row = document.createElement('div');
+      row.className='nom-row';
+      row.innerHTML = `
+        <div>Rp ${n.toLocaleString('id-ID')}</div>
+        <div>
+          <button class="mini pay" data-method="gopay" data-n="${n}">GoPay</button>
+          <button class="mini pay" data-method="dana" data-n="${n}">Dana</button>
+        </div>`;
+      nominalWrap.appendChild(row);
+    });
+    nominalWrap.querySelectorAll('.pay').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const method = btn.dataset.method;
+        qrImg.src = method==='gopay' ? 'https://iili.io/Kos01X1.md.jpg' : 'https://iili.io/Kot8APe.md.jpg';
+        nominalWrap.style.display='none';
+        qrWrap.style.display='flex';
+        // auto back after 10s jika belum verif
+        setTimeout(()=>{
+          if(localStorage.getItem('verified_'+todayKey())!=='true'){
+            qrWrap.style.display='none';
+            nominalWrap.style.display='flex';
+          }
+        }, 10000);
+      });
+    });
+    popup.classList.add('show');
+    popup.setAttribute('aria-hidden','false');
   }
-}
-
-adminLoginBtn.addEventListener('click', () => {
-  const u = prompt("Username user:");
-  const p = prompt("Password password:");
-  if (u === "reno" && p === "wadju") {
-    isAdmin = true;
-    alert("Admin mode aktif");
-    updateToggleUI();
-  } else {
-    alert("Login gagal!");
+  function closePopup(){
+    popup.classList.remove('show');
+    popup.setAttribute('aria-hidden','true');
+    nominalWrap.style.display='flex';
+    qrWrap.style.display='none';
   }
-});
+  function todayKey(){ return new Date().toLocaleDateString('id-ID'); }
+  document.getElementById('btnClose').addEventListener('click', closePopup);
+  popup.addEventListener('click', (e)=>{ if(e.target===popup) closePopup(); });
 
-toggleQRBtn.addEventListener('click', () => {
-  // only visible when isAdmin === true
-  qrEnabled = !qrEnabled;
-  updateToggleUI();
-  // if turning OFF, close popup if open
-  if (!qrEnabled) {
-    closePopup();
-    // mark verified for this session so user won't see popup
-    qrContainer.dataset.verified = "true";
-  } else {
-    // turning ON resets verified flag for non-admins
-    if (!hasFreeAccess()) {
-      qrContainer.dataset.verified = "false";
-      localStorage.removeItem('verified_'+new Date().toLocaleDateString());
+  // Jika sudah verified today, bypass
+  if(localStorage.getItem('verified_'+todayKey())==='true'){
+    // pass
+  }
+
+  /***********************
+   *  LOAD STREAM + QUALITY
+   ***********************/
+  function destroyHls(){
+    if(hls){
+      try{ hls.destroy(); }catch(e){}
+      hls = null;
     }
   }
-});
 
+  function loadStreamBy(key, idx=0){
+    selectedStreamKey = key;
+    selectedUrlIndex = idx;
+    const urls = (STREAMS[key] && STREAMS[key].urls) ? STREAMS[key].urls : [];
+    const src = urls[idx] || urls[0];
+    if(!src){ console.warn('URL stream tidak ditemukan'); return; }
 
-/* ---------- Popup Sawer & QR (keaslian dipertahankan) ---------- */
-const NOMINALS = [10000,20000,30000,40000,50000];
-
-function openPopup(){
-  // if admin logged in -> bypass
-  if (isAdmin) return;
-  // if QR disabled -> bypass
-  if (!qrEnabled) return;
-  nominalListEl.innerHTML = "";
-  qrContainer.style.display = "none";
-
-  NOMINALS.forEach(n=>{
-    const box = document.createElement('div'); box.className='nominal-box';
-    box.innerHTML = `<div>Rp ${n.toLocaleString('id-ID')}</div>
-      <div class="btns">
-        <button class="nominal-small pay-gopay" data-nom="${n}">GoPay</button>
-        <button class="nominal-small pay-dana" data-nom="${n}">Dana</button>
-      </div>`;
-    nominalListEl.appendChild(box);
-  });
-
-  nominalListEl.querySelectorAll('.pay-gopay').forEach(btn=>{
-    btn.addEventListener('click', ()=> { showQR('gopay', btn.dataset.nom); });
-  });
-  nominalListEl.querySelectorAll('.pay-dana').forEach(btn=>{
-    btn.addEventListener('click', ()=> { showQR('dana', btn.dataset.nom); });
-  });
-
-  popup.classList.add('show'); popup.setAttribute('aria-hidden','false');
-}
-
-function closePopup(){
-  popup.classList.remove('show'); popup.setAttribute('aria-hidden','true');
-  if (qrTimer) clearTimeout(qrTimer);
-  if (qrContainer.dataset.verified !== "true") {
-    nominalListEl.style.display = 'flex';
-    qrContainer.style.display = 'none';
-  }
-}
-
-function showQR(method, nominal){
-  // show QR image and message
-  nominalListEl.style.display = 'none';
-  qrContainer.style.display = 'flex';
-  // use the images you provided originally
-  qrImage.src = (method === 'gopay') ? "https://iili.io/Kos01X1.md.jpg" : "https://iili.io/Kot8APe.md.jpg";
-  qrContainer.dataset.verified = "false";
-
-  if (qrTimer) clearTimeout(qrTimer);
-  qrTimer = setTimeout(()=> {
-    if (qrContainer.dataset.verified !== "true") {
-      nominalListEl.style.display = 'flex';
-      qrContainer.style.display = 'none';
+    // Non-admin: tampilkan popup verifikasi QR sekali per hari sebelum play
+    if(!isAdmin && localStorage.getItem('verified_'+todayKey())!=='true'){
+      openPopup();
+      return;
     }
-  }, 10000);
-}
 
-/* Simulate success by clicking QR image (you can replace with real verification callback) */
-qrImage.addEventListener('click', ()=> {
-  // simulate payment success
-  onQrPaymentSuccess();
-});
+    destroyHls();
+    overlay.style.display = 'flex';
 
-function onQrPaymentSuccess() {
-  qrContainer.dataset.verified = "true";
-  // set free access for 10 days
-  setFreeAccess(10);
-  // mark today's verified (keeps btnPlayStream bypass if needed)
-  localStorage.setItem('verified_'+new Date().toLocaleDateString(), 'true');
-  closePopup();
-  alert("Terima kasih! Kamu mendapat akses gratis 10 hari.");
-  // play pending stream automatically
-  if (pendingStream) {
-    playStream(pendingStream.stream, pendingStream.btn);
-    pendingStream = null;
-  }
-}
+    if(Hls.isSupported()){
+      hls = new Hls();
+      hls.loadSource(src);
+      hls.attachMedia(video);
 
-/* ---------- Stream selection & playing (no manual Play button required) ---------- */
-function selectStream(key, btn=null) {
-  // if admin OR qr disabled OR user has free access -> play directly
-  if (isAdmin || !qrEnabled || hasFreeAccess() || qrContainer.dataset.verified === "true") {
-    playStream(key, btn);
-    return;
-  }
+      hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
+        // apply selectedQuality bila bukan auto
+        applyQuality(selectedQuality);
+        video.play().catch(()=>{});
+        overlay.style.display = 'none';
+      });
 
-  // else open popup and store pending stream
-  pendingStream = { stream: key, btn: btn };
-  openPopup();
-}
+      hls.on(Hls.Events.LEVEL_SWITCHED, (_e,data)=>{
+        // console.log('Level switched ->', data.level);
+      });
 
-/* Play stream with HLS support + error handling (overlay messages per spec) */
-function playStream(k, btn = null) {
-  // if still not allowed (safety), abort
-  if (!isAdmin && qrEnabled && qrContainer.dataset.verified !== "true" && !hasFreeAccess()) {
-    openPopup();
-    pendingStream = { stream: k, btn: btn };
-    return;
+      hls.on(Hls.Events.ERROR, (_ev, data)=>{
+        console.warn('HLS error', data);
+      });
+    }else if(video.canPlayType('application/vnd.apple.mpegurl')){
+      // Safari iOS
+      video.src = src;
+      video.play().catch(()=>{});
+      overlay.style.display='none';
+    }else{
+      // fallback
+      video.src = src;
+      video.play().catch(()=>{});
+      overlay.style.display='none';
+    }
+
+    // tandai tombol link aktif
+    document.querySelectorAll('.link-btn').forEach(b=>b.classList.remove('active'));
+    const activeBtn = document.querySelector(`.link-btn[data-stream="${key}"][data-index="${idx}"]`);
+    if(activeBtn) activeBtn.classList.add('active');
   }
 
-  if (lastActiveButton) lastActiveButton.classList.remove("active");
-  if (btn) { btn.classList.add("active"); lastActiveButton = btn; }
-
-  const url = STREAMS[k] && STREAMS[k].urls && STREAMS[k].urls[0];
-  if (!url) {
-    overlay.style.display = "flex";
-    overlay.innerText = "⚠️ Stream tidak tersedia, coba klik ulang";
-    return;
+  // Map tinggi ke label (mencari level terdekat yang <= target)
+  function findLevelIndexByHeight(target){
+    if(!hls || !hls.levels || !hls.levels.length) return -1;
+    const lvls = hls.levels;
+    // urutkan berdasarkan height
+    const arr = lvls.map((l,i)=>({i,h:l.height||0})).sort((a,b)=>a.h-b.h);
+    // cari <= target yang paling besar, kalau tidak ada ambil terkecil di atasnya
+    let pick = arr[0].i;
+    for(const item of arr){
+      if(item.h <= target) pick = item.i;
+      else break;
+    }
+    return pick;
   }
 
-  if (hls) { try { hls.destroy(); } catch(e){} hls = null; }
+  function applyQuality(q){
+    selectedQuality = q;
+    if(!hls){ return; }
 
-  function showStreamError() {
-    overlay.style.display = "flex";
-    overlay.innerText = "⚠️ Stream tidak tersedia, coba klik ulang";
+    if(q==='auto'){
+      hls.currentLevel = -1; // auto
+      setQualityActive('auto');
+      return;
+    }
+    const targetHeight = q==='360'?360 : q==='480'?480 : q==='720'?720 : 1080;
+    const idx = findLevelIndexByHeight(targetHeight);
+    if(idx>=0){
+      hls.currentLevel = idx;
+      setQualityActive(q);
+    }else{
+      // jika manifest tidak multi-bitrate
+      setQualityActive('auto');
+      hls.currentLevel = -1;
+    }
   }
 
-  overlay.style.display = "flex";
-  overlay.innerText = "⏳ Memuat stream...";
-
-  if (Hls.isSupported()) {
-    hls = new Hls();
-    hls.loadSource(url);
-    hls.attachMedia(video);
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      video.play()
-        .then(() => { overlay.style.display = "none"; })
-        .catch(() => { showStreamError(); });
-    });
-    hls.on(Hls.Events.ERROR, (event, data) => {
-      console.error("HLS Error:", data);
-      showStreamError();
-    });
-  } else {
-    video.src = url;
-    video.play()
-      .then(() => { overlay.style.display = "none"; })
-      .catch(() => { showStreamError(); });
+  function setQualityActive(val){
+    qualityMenu.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+    const btn = qualityMenu.querySelector(`button[data-q="${val}"]`);
+    if(btn) btn.classList.add('active');
+    qualityBtn.textContent = (val==='auto'?'HD ▾': (val+'p ▾'));
   }
-  closePopup();
-}
 
-/* ---------- Wire up stream buttons ---------- */
-document.querySelectorAll('.stream-row button').forEach(btn=>{
-  btn.addEventListener('click', ()=> {
-    const s = btn.dataset.stream;
-    selectStream(s, btn);
+  // Klik tombol quality -> menu muncul ke atas
+  qualityBtn.addEventListener('click', ()=>{
+    qualityMenu.classList.toggle('show');
+    qualityMenu.setAttribute('aria-hidden', !qualityMenu.classList.contains('show'));
   });
-});
-
-/* ---------- Fullscreen + orientation ---------- */
-async function enterFullscreen(){
-  try {
-    if (container.requestFullscreen) await container.requestFullscreen();
-    container.classList.add("fullscreen");
-    btnFullscreen.innerHTML = '<i data-lucide="minimize" class="w-5 h-5"></i>';
-    lucide.createIcons();
-    if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(()=>{});
-  } catch(e) {}
-}
-async function exitFullscreen(){
-  try {
-    if (document.exitFullscreen) await document.exitFullscreen();
-    container.classList.remove("fullscreen");
-    btnFullscreen.innerHTML = '<i data-lucide="maximize" class="w-5 h-5"></i>';
-    lucide.createIcons();
-    if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
-  } catch(e) {}
-}
-btnFullscreen.addEventListener("click", ()=>{ !document.fullscreenElement?enterFullscreen():exitFullscreen(); });
-video.addEventListener("dblclick", ()=>{ !document.fullscreenElement?enterFullscreen():exitFullscreen(); });
-
-/* ---------- Volume ---------- */
-function updateVolumeIcon(){ 
-  btnMute.innerHTML = (video.muted || video.volume===0) ? '<i data-lucide="volume-x" class="w-5 h-5"></i>' : '<i data-lucide="volume-2" class="w-5 h-5"></i>';
-  lucide.createIcons();
-}
-volumeControl.addEventListener("input", e => { video.muted = false; video.volume = e.target.value; updateVolumeIcon(); });
-btnMute.addEventListener("click", ()=> { video.muted = !video.muted; updateVolumeIcon(); });
-
-/* ---------- Quality dropdown (UI only) ---------- */
-qualityBtn.addEventListener("click", ()=> {
-  qualityOptions.style.display = qualityOptions.style.display === "flex" ? "none" : "flex";
-});
-qualityOptions.querySelectorAll("button").forEach(b=>{
-  b.addEventListener("click", ()=> {
-    qualityOptions.querySelectorAll("button").forEach(bt=>bt.classList.remove("active"));
-    b.classList.add("active");
-    qualityBtn.innerText = b.innerText;
-    qualityOptions.style.display = "none";
+  // Pilih quality
+  qualityMenu.querySelectorAll('button').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const q = b.dataset.q;
+      qualityMenu.classList.remove('show');
+      applyQuality(q);
+    });
   });
-});
+  // Tutup menu saat klik luar
+  document.addEventListener('click', (e)=>{
+    if(!qualityMenu.contains(e.target) && !qualityBtn.contains(e.target)){
+      qualityMenu.classList.remove('show');
+    }
+  });
 
-/* ---------- Chat (localStorage multi-tab) ---------- */
-const chatBox = document.getElementById("chatBox");
-const chatForm = document.getElementById("chatForm");
-const chatInput = document.getElementById("chatInput");
+  // Bind link baris
+  document.querySelectorAll('.link-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const k = btn.dataset.stream;
+      const i = parseInt(btn.dataset.index||0,10);
+      loadStreamBy(k,i);
+    });
+  });
 
-function addChatMessage(user, msg) {
-  const div = document.createElement('div');
-  div.innerHTML = `<strong style="color:yellow">${user}</strong>: ${msg}`;
-  chatBox.appendChild(div);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
+  // Load default
+  loadStreamBy('stream1',0);
 
-chatForm.addEventListener('submit', e => {
-  e.preventDefault();
-  const msg = chatInput.value.trim();
-  if (msg === '') return;
-  const data = { user: isAdmin ? "Admin" : "Guest", msg: msg, time: Date.now() };
-  const messages = JSON.parse(localStorage.getItem('liveChat') || '[]');
-  messages.push(data);
-  localStorage.setItem('liveChat', JSON.stringify(messages));
-  addChatMessage(data.user, msg);
-  chatInput.value = '';
-});
+  /***********************
+   *  VOLUME / MUTE
+   ***********************/
+  function setMuteIcon(){
+    btnMute.textContent = (video.muted || video.volume===0) ? '🔇' : '🔊';
+  }
+  btnMute.addEventListener('click', ()=>{
+    video.muted = !video.muted;
+    if(!video.muted && video.volume===0){ video.volume = 0.6; volume.value = 0.6; }
+    setMuteIcon();
+  });
+  volume.addEventListener('input', (e)=>{
+    const v = parseFloat(e.target.value);
+    video.volume = isNaN(v)?1:v;
+    video.muted = (video.volume===0);
+    setMuteIcon();
+  });
+  setMuteIcon();
 
-window.addEventListener('storage', e => {
-  if (e.key === 'liveChat') {
+  /***********************
+   *  FULLSCREEN + ROTASI
+   ***********************/
+  async function enterFS(el){
+    try{
+      if(el.requestFullscreen) await el.requestFullscreen();
+      else if(el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
+      // rotate landscape (best effort)
+      if(screen.orientation && screen.orientation.lock){
+        try{ await screen.orientation.lock('landscape'); }catch(e){}
+      }
+    }catch(e){ console.warn(e); }
+  }
+  async function exitFS(){
+    try{
+      if(document.exitFullscreen) await document.exitFullscreen();
+      else if(document.webkitExitFullscreen) await document.webkitExitFullscreen();
+      if(screen.orientation && screen.orientation.unlock){
+        try{ screen.orientation.unlock(); }catch(e){}
+      }
+    }catch(e){ console.warn(e); }
+  }
+  btnFS.addEventListener('click', ()=>{
+    if(!document.fullscreenElement && !document.webkitFullscreenElement) enterFS(player);
+    else exitFS();
+  });
+  document.addEventListener('fullscreenchange', ()=>{
+    btnFS.textContent = (document.fullscreenElement?'⤡':'⤢');
+  });
+
+  /***********************
+   *  CHAT (localStorage 5 menit)
+   ***********************/
+  const CHAT_KEY = 'rc_chat_items';
+  const MAX_AGE = 5*60*1000;
+
+  function now(){ return Date.now(); }
+  function saveChat(user, text){
+    const arr = getChat().filter(m => now()-m.t < MAX_AGE);
+    arr.push({u:user, x:text, t:now()});
+    localStorage.setItem(CHAT_KEY, JSON.stringify(arr));
+  }
+  function getChat(){
+    try{ return JSON.parse(localStorage.getItem(CHAT_KEY)||'[]'); }catch{ return []; }
+  }
+  function renderChat(){
     chatBox.innerHTML = '';
-    const messages = JSON.parse(localStorage.getItem('liveChat') || '[]');
-    messages.forEach(m => addChatMessage(m.user, m.msg));
+    getChat().forEach(m=> addMsg(m.u, m.x));
   }
-});
-const initMessages = JSON.parse(localStorage.getItem('liveChat') || '[]');
-initMessages.forEach(m => addChatMessage(m.user, m.msg));
-
-/* ---------- Adjust chat height & responsive helpers ---------- */
-function adjustChatHeight(){ chatContainer.style.height = container.offsetHeight + 'px'; }
-window.addEventListener('resize', adjustChatHeight);
-window.addEventListener('load', adjustChatHeight);
-
-function adjustLayout(){
-  const w = window.innerWidth;
-  if (w <= 1024) {
-    chatContainer.style.height = 'auto';
-  } else {
-    chatContainer.style.height = container.offsetHeight + 'px';
+  function addMsg(u,x){
+    const d = document.createElement('div');
+    d.className = 'msg' + (u==='Admin'?' admin':'');
+    d.innerHTML = `<span class="u">${u}</span>: <span class="t"></span>`;
+    d.querySelector('.t').textContent = x;
+    chatBox.appendChild(d);
   }
-}
-window.addEventListener('resize', adjustLayout);
-window.addEventListener('load', adjustLayout);
 
-/* ---------- Auto-hide controls ---------- */
-let controlsTimeout;
-function showControls(){ container.querySelector('#controls').classList.remove('hidden'); resetControlsTimer(); }
-function hideControls(){ container.querySelector('#controls').classList.add('hidden'); }
-function resetControlsTimer(){ if (controlsTimeout) clearTimeout(controlsTimeout); controlsTimeout = setTimeout(hideControls, 3000); }
-container.addEventListener('mousemove', showControls);
-container.addEventListener('touchstart', showControls);
-resetControlsTimer();
+  chatForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const txt = chatInput.value.trim();
+    if(!txt) return;
+    const user = isAdmin ? 'Admin' : 'Guest';
+    addMsg(user, txt);
+    saveChat(user, txt);
+    chatInput.value='';
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
 
-/* ---------- Initial UI state ---------- */
-updateToggleUI();
+  // initial load & purge
+  (function initChat(){
+    // purge >5 menit
+    const arr = getChat().filter(m => now()-m.t < MAX_AGE);
+    localStorage.setItem(CHAT_KEY, JSON.stringify(arr));
+    renderChat();
+    chatBox.scrollTop = chatBox.scrollHeight;
+  })();
 
-/* ---------- Notes for integration ----------
- - To change stream URLs, edit STREAMS object above.
- - For real payment verification, replace qrImage click handler with real webhook/callback that calls onQrPaymentSuccess().
- - setFreeAccess(days) and hasFreeAccess() are global and persistent (localStorage).
- - Admin login credentials (for dev) are 'reno' / 'wadju'.
-------------------------------------------------- */
+  // sinkron tab
+  window.addEventListener('storage', (e)=>{
+    if(e.key===CHAT_KEY){
+      renderChat();
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  });
+
+  /***********************
+   *  SINKRON TINGGI CHAT = PLAYER
+   ***********************/
+  function syncChatHeight(){
+    const rect = document.getElementById('playerCard').getBoundingClientRect();
+    const controlsH = document.getElementById('controls').getBoundingClientRect().height;
+    const playerH = rect.height; // termasuk kontrol
+    const chat = document.getElementById('chat');
+    chat.style.minHeight = playerH+'px';
+    chat.style.height = playerH+'px';
+  }
+  window.addEventListener('load', syncChatHeight);
+  window.addEventListener('resize', syncChatHeight);
+  // saat masuk/keluar fullscreen, tetap sinkron
+  document.addEventListener('fullscreenchange', syncChatHeight);
+
+  /***********************
+   *  VERIFIKASI (setelah scan QR)
+   ***********************/
+  // Kamu bisa set verified secara manual misalnya setelah klik tombol Play atau sukses bayar.
+  // Contoh sederhana: double-tap overlay utk set verified hari ini.
+  overlay.addEventListener('dblclick', ()=>{
+    localStorage.setItem('verified_'+todayKey(), 'true');
+    overlay.style.display='none';
+  });
+
+  // Pertama kali, biar terlihat loading lalu hilang saat video play
+  video.addEventListener('play', ()=>{ overlay.style.display='none'; });
+  video.addEventListener('pause', ()=>{ /* overlay tetap off */ });
+
 </script>
 </body>
 </html>
