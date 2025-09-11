@@ -39,45 +39,77 @@
   #wrap{
     width:100%; max-width:1400px; margin:0 auto; padding:10px 8px 16px;
   }
-  #row{
+#row{
     display:flex; gap:10px; align-items:flex-start;
-  }
-  #left{
-    flex:1 1 auto; min-width:0;
-  }
-  #right{
-    flex:0 0 clamp(180px, 20vw, 280px); /* ±25–30% */
+}
+#left{
+    flex:1 1 auto; min-width:0; /* player fleksibel, ambil sisa ruang */
+}
+#right{
+    flex:0 0 clamp(200px, 24vw, 280px); /* chat lebih kecil */
     min-width:180px;
-  }
+}
 
-  /* ===== Player box (mepet ke chat) ===== */
-  #playerCard{
-    background:var(--panel); border-radius:var(--radius); box-shadow:var(--shadow);
-    overflow:hidden;
-  }
-  #player{
-    position:relative; width:100%; aspect-ratio:16/9; background:#000;
-  }
-  #video{ width:100%; height:100%; display:block; background:#000; }
-  #overlay{
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    background:rgba(255,255,255,.06); color:#ff2d2d; font-weight:800;
-  }
+/* ===== CHAT ===== */
+#chat{
+    background:#121212; border-radius:12px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; min-height:100%;
+    /* tinggi disesuaikan via JS = tinggi player */
+}
 
-  /* ===== Kontrol (1 baris, kecil di HP) ===== */
-  #controls{
-    display:flex; justify-content:center; align-items:center; gap:8px;
-    padding:8px; background:var(--panel-2); border-top:1px solid #222;
-    font-size:clamp(11px, 2.8vw, 14px);
-  }
-  .ctrl-btn{
-    background:#222; color:#fff; border:1px solid #333; border-radius:8px;
-    padding:6px 10px; cursor:pointer; font-weight:700; min-height:32px;
-  }
-  .ctrl-btn:hover{ background:#2d2d2d; }
-  /* Volume group kecil */
-  #volWrap{ display:flex; align-items:center; gap:6px; }
-  #volume{ width:clamp(70px, 18vw, 120px); accent-color:#fff; }
+#chatHeader{
+    padding:10px 12px; border-bottom:1px solid #222; font-weight:900; font-size:14px;
+}
+
+#chatBox{
+    flex:1; overflow-y:auto; padding:10px 10px 2px;
+    scroll-behavior:smooth;
+}
+
+.msg{ margin:6px 0; font-size:13px; }
+.msg .u{ color:#ff0; font-weight:900; }
+.msg.admin .u{ color:#0f0; }
+
+/* ===== FORM INPUT ===== */
+#chatForm{
+    display:flex; gap:6px; padding:10px; border-top:1px solid #222;
+    background:#0e0e0e;
+}
+
+#chatInput{
+    flex:1; background:#1c1c1c; color:#fff; border:1px solid #333;
+    border-radius:8px; padding:8px; font-size:14px;
+}
+
+#btnSend{
+    background:var(--danger); color:#fff; border:0; border-radius:8px;
+    padding:8px 12px; font-weight:900; cursor:pointer;
+}
+
+/* ===== HOVER / efek ===== */
+#btnSend:hover{ filter:brightness(1.08); }
+
+/* ===== RESPONSIVE: HP / layar sempit ===== */
+@media (max-width: 760px){
+    /* LAYOUT: player lebih besar, chat lebih kecil */
+    #right{ flex-basis:30%; min-width:150px; }
+    #left { flex-basis:70%; }
+
+    /* Chat input & tombol lebih kecil */
+    #chatForm{
+        gap:4px; padding:6px;
+    }
+    #chatInput{
+        font-size:12px; padding:6px;
+    }
+    #btnSend{
+        font-size:12px; padding:6px 8px;
+    }
+
+    /* Kontrol kecil di player */
+    .ctrl-btn{ padding:5px 8px; border-radius:8px; min-height:30px; }
+    #volume{ width:clamp(60px, 26vw, 110px); }
+}
 
   /* ===== Resolusi: dropdown ke atas ===== */
   #qualityWrap{ position:relative; }
@@ -180,7 +212,7 @@
     /* title orbitron kecil */
     .match-head{ font-size:13px; }
     /* kontrol diperkecil */
-    .ctrl-btn{ padding:5px 8px; border-radius:8px; min-height:30px; }
+    .ctrl-btn{ padding:6px 8px; border-radius:8px; min-height:30px; }
     #volume{ width:clamp(60px, 26vw, 110px); }
   }
 </style>
