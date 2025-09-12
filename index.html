@@ -369,59 +369,6 @@
       alert('Login gagal');
     }
   });
-
-  /***********************
-   *  SAWER POPUP
-   ***********************/
-  const NOMINALS = [10000,20000,30000,40000,50000];
-  function openPopup(){
-    if(isAdmin) return; // admin bypass
-    nominalWrap.innerHTML = '';
-    qrWrap.style.display = 'none';
-    NOMINALS.forEach(n=>{
-      const row = document.createElement('div');
-      row.className='nom-row';
-      row.innerHTML = `
-        <div>Rp ${n.toLocaleString('id-ID')}</div>
-        <div>
-          <button class="mini pay" data-method="gopay" data-n="${n}">GoPay</button>
-          <button class="mini pay" data-method="dana" data-n="${n}">Dana</button>
-        </div>`;
-      nominalWrap.appendChild(row);
-    });
-    nominalWrap.querySelectorAll('.pay').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const method = btn.dataset.method;
-        qrImg.src = method==='gopay' ? 'https://iili.io/Kos01X1.md.jpg' : 'https://iili.io/Kot8APe.md.jpg';
-        nominalWrap.style.display='none';
-        qrWrap.style.display='flex';
-        // auto back after 10s jika belum verif
-        setTimeout(()=>{
-          if(localStorage.getItem('verified_'+todayKey())!=='true'){
-            qrWrap.style.display='none';
-            nominalWrap.style.display='flex';
-          }
-        }, 10000);
-      });
-    });
-    popup.classList.add('show');
-    popup.setAttribute('aria-hidden','false');
-  }
-  function closePopup(){
-    popup.classList.remove('show');
-    popup.setAttribute('aria-hidden','true');
-    nominalWrap.style.display='flex';
-    qrWrap.style.display='none';
-  }
-  function todayKey(){ return new Date().toLocaleDateString('id-ID'); }
-  document.getElementById('btnClose').addEventListener('click', closePopup);
-  popup.addEventListener('click', (e)=>{ if(e.target===popup) closePopup(); });
-
-  // Jika sudah verified today, bypass
-  if(localStorage.getItem('verified_'+todayKey())==='true'){
-    // pass
-  }
-
   /***********************
    *  LOAD STREAM + QUALITY
    ***********************/
