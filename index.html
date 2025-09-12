@@ -17,199 +17,88 @@
     --link-bg:#222;
     --link-border:#444;
     --link-hover:#ff0;
-    --accent:#ff0;      /* kuning untuk link */
-    --danger:#e00;      /* merah tombol kirim */
+    --accent:#ff0;
+    --danger:#e00;
     --shadow:0 6px 16px rgba(0,0,0,.55);
     --radius:12px;
   }
   html,body{height:100%;}
-  body{
-    margin:0;background:var(--bg);color:var(--text);
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
-  }
+  body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;}
 
-  /* ===== Admin login kecil kanan atas ===== */
-  #adminLogin{
-    position:fixed; top:8px; right:10px; z-index:1000;
-    background:#222; color:#fff; border:1px solid #333; border-radius:8px;
-    padding:6px 10px; font-size:12px; cursor:pointer; box-shadow:var(--shadow);
-  }
+  #adminLogin{position:fixed;top:8px;right:10px;z-index:1000;background:#222;color:#fff;border:1px solid #333;border-radius:8px;padding:6px 10px;font-size:12px;cursor:pointer;box-shadow:var(--shadow);}
 
-  /* ===== Layout utama: dua kolom (kiri besar, kanan kecil) ===== */
-  #wrap{
-    width:100%; max-width:1400px; margin:0 auto; padding:10px 8px 16px;
-  }
-  #row{
-    display:flex; gap:10px; align-items:flex-start;
-  }
-  #left{
-    flex:1 1 auto; min-width:0;
-  }
-  #right{
-    flex:0 0 clamp(240px, 28vw, 360px); /* ±25–30% */
-    min-width:220px;
-  }
+  #wrap{width:100%;max-width:1400px;margin:0 auto;padding:10px 8px 16px;}
+  #row{display:flex;gap:10px;align-items:flex-start;}
+  #left{flex:1 1 auto;min-width:0;}
+  #right{flex:0 0 clamp(180px, 20vw, 280px);min-width:180px;}
 
-  /* ===== Player box (mepet ke chat) ===== */
-  #playerCard{
-    background:var(--panel); border-radius:var(--radius); box-shadow:var(--shadow);
-    overflow:hidden;
-  }
-  #player{
-    position:relative; width:100%; aspect-ratio:16/9; background:#000;
-  }
-  #video{ width:100%; height:100%; display:block; background:#000; }
-  #overlay{
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    background:rgba(255,255,255,.06); color:#ff2d2d; font-weight:800;
-  }
+  #playerCard{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  #player{position:relative;width:100%;aspect-ratio:16/9;background:#000;}
+  #video{width:100%;height:100%;display:block;background:#000;}
+  #overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.06);color:#ff2d2d;font-weight:800;}
 
-  /* ===== Kontrol (1 baris, kecil di HP) ===== */
-  #controls{
-    display:flex; justify-content:center; align-items:center; gap:8px;
-    padding:8px; background:var(--panel-2); border-top:1px solid #222;
-    font-size:clamp(11px, 2.8vw, 14px);
-  }
-  .ctrl-btn{
-    background:#222; color:#fff; border:1px solid #333; border-radius:8px;
-    padding:6px 10px; cursor:pointer; font-weight:700; min-height:32px;
-  }
-  .ctrl-btn:hover{ background:#2d2d2d; }
-  /* Volume group kecil */
-  #volWrap{ display:flex; align-items:center; gap:6px; }
-  #volume{ width:clamp(70px, 18vw, 120px); accent-color:#fff; }
+  #controls{display:flex;justify-content:center;align-items:center;gap:8px;padding:8px;background:var(--panel-2);border-top:1px solid #222;font-size:clamp(11px, 2.8vw, 14px);}
+  .ctrl-btn{background:#222;color:#fff;border:1px solid #333;border-radius:8px;padding:6px 10px;cursor:pointer;font-weight:700;min-height:32px;}
+  .ctrl-btn:hover{background:#2d2d2d;}
+  #volWrap{display:flex;align-items:center;gap:6px;}
+  #volume{width:clamp(70px, 18vw, 120px);accent-color:#fff;}
 
-  /* ===== Resolusi: dropdown ke atas ===== */
-  #qualityWrap{ position:relative; }
-  #qualityBtn{ position:relative; }
-  #qualityMenu{
-    position:absolute; bottom:100%; right:0; transform:translateY(-8px);
-    background:#000; border:1px solid #333; border-radius:10px; box-shadow:var(--shadow);
-    display:none; min-width:140px; padding:6px;
-  }
-  #qualityMenu.show{ display:block; }
-  #qualityMenu button{
-    display:block; width:100%; text-align:left;
-    background:transparent; color:#fff; border:0; padding:8px; border-radius:8px; cursor:pointer;
-    font-weight:800;
-  }
-  #qualityMenu button.active, #qualityMenu button:hover{ background:#111; color:#ff2d2d; }
+  #qualityWrap{position:relative;}
+  #qualityMenu{position:absolute;bottom:100%;right:0;transform:translateY(-8px);background:#000;border:1px solid #333;border-radius:10px;box-shadow:var(--shadow);display:none;min-width:140px;padding:6px;}
+  #qualityMenu.show{display:block;}
+  #qualityMenu button{display:block;width:100%;text-align:left;background:transparent;color:#fff;border:0;padding:8px;border-radius:8px;cursor:pointer;font-weight:800;}
+  #qualityMenu button.active,#qualityMenu button:hover{background:#111;color:#ff2d2d;}
 
-  /* ===== Info kuning ===== */
-  #info{
-    margin:10px 0; background:var(--accent); color:#000; font-weight:900; text-align:center;
-    padding:8px 10px; border-radius:10px;
-  }
+  #info{margin:10px 0;background:var(--accent);color:#000;font-weight:900;text-align:center;padding:8px 10px;border-radius:10px;}
 
-  /* ===== Baris link pertandingan ===== */
-  .match{
-    background:#111; border-radius:10px; padding:10px; box-shadow:var(--shadow);
-    margin-bottom:10px;
-  }
-  .match-head{
-    font-family:'Orbitron',sans-serif; letter-spacing:.5px;
-    font-weight:900; font-size:clamp(13px,3vw,16px); margin-bottom:8px;
-    display:flex; align-items:center; gap:8px; color:#fff;
-  }
-  .links{
-    display:flex; gap:8px; flex-wrap:wrap;
-  }
-  .link-btn{
-    background:var(--link-bg); color:#fff; border:1px solid var(--link-border);
-    padding:6px 10px; border-radius:8px; font-weight:900; cursor:pointer;
-  }
-  .link-btn:hover{ background:var(--link-hover); color:#000; }
-  .link-btn.active{ background:#ff2d2d; color:#fff; border-color:#ff2d2d; }
+  .match{background:#111;border-radius:10px;padding:10px;box-shadow:var(--shadow);margin-bottom:10px;}
+  .match-head{font-family:'Orbitron',sans-serif;letter-spacing:.5px;font-weight:900;font-size:clamp(13px,3vw,16px);margin-bottom:8px;display:flex;align-items:center;gap:8px;color:#fff;}
+  .links{display:flex;gap:8px;flex-wrap:wrap;}
+  .link-btn{background:var(--link-bg);color:#fff;border:1px solid var(--link-border);padding:6px 10px;border-radius:8px;font-weight:900;cursor:pointer;}
+  .link-btn:hover{background:var(--link-hover);color:#000;}
+  .link-btn.active{background:#ff2d2d;color:#fff;border-color:#ff2d2d;}
 
-  /* ===== Chat kanan ===== */
-  #chat{
-    background:#121212; border-radius:12px; box-shadow:var(--shadow);
-    display:flex; flex-direction:column; min-height:100%;
-    /* tingginya akan dipaksa = tinggi player via JS */
-  }
-  #chatHeader{
-    padding:10px 12px; border-bottom:1px solid #222; font-weight:900; font-size:14px;
-  }
-  #chatBox{
-    flex:1; overflow-y:auto; padding:10px 10px 2px;
-    scroll-behavior:smooth;
-  }
-  .msg{ margin:6px 0; font-size:13px; }
-  .msg .u{ color:#ff0; font-weight:900; }
-  .msg.admin .u{ color:#0f0; }
-  #chatForm{
-    display:flex; gap:6px; padding:10px; border-top:1px solid #222;
-    background:#0e0e0e;
-  }
-  #chatInput{
-    flex:1; background:#1c1c1c; color:#fff; border:1px solid #333; border-radius:8px; padding:8px;
-    font-size:14px;
-  }
-  #btnSend{
-    background:var(--danger); color:#fff; border:0; border-radius:8px; padding:8px 12px; font-weight:900;
-    cursor:pointer;
-  }
-  #btnSend:hover{ filter:brightness(1.08); }
+  #chat{background:#121212;border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:100%;}
+  #chatHeader{padding:10px 12px;border-bottom:1px solid #222;font-weight:900;font-size:14px;}
+  #chatBox{flex:1;overflow-y:auto;padding:10px 10px 2px;scroll-behavior:smooth;}
+  .msg{margin:6px 0;font-size:13px;}
+  .msg .u{color:#ff0;font-weight:900;}
+  .msg.admin .u{color:#0f0;}
+  #chatForm{display:flex;gap:6px;padding:10px;border-top:1px solid #222;background:#0e0e0e;}
+  #chatInput{flex:1;background:#1c1c1c;color:#fff;border:1px solid #333;border-radius:8px;padding:8px;font-size:14px;}
+  #btnSend{background:var(--danger);color:#fff;border:0;border-radius:8px;padding:8px 12px;font-weight:900;cursor:pointer;}
+  #btnSend:hover{filter:brightness(1.08);}
 
-  /* ===== Popup Sawer (GoPay/Dana) ===== */
-  #popup{
-    position:fixed; inset:0; background:rgba(0,0,0,.75); display:none; align-items:center; justify-content:center; z-index:1200;
-  }
-  #popup.show{ display:flex; }
-  #popCard{
-    width:min(92vw,420px); background:#fff; color:#000; border-radius:14px; padding:16px; text-align:center;
-    transform:translateY(-10px); opacity:0; transition:transform .2s, opacity .2s;
-  }
-  #popup.show #popCard{ transform:translateY(0); opacity:1; }
-  #popTitle{ font-weight:900; line-height:1.2; }
-  #nominal{ display:flex; flex-direction:column; gap:8px; margin-top:12px; }
-  .nom-row{
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
-    background:#fef08a; border-radius:10px; padding:8px 10px; font-weight:900;
-  }
-  .mini{ background:#111; color:#fff; border:0; border-radius:8px; padding:6px 9px; font-weight:900; cursor:pointer; }
-  #qrWrap{ display:none; margin-top:12px; align-items:center; flex-direction:column; gap:8px; }
-  #qr{ width:180px; height:180px; border:2px solid #000; border-radius:12px; object-fit:cover; }
-  #btnClose{ margin-top:10px; background:#111; color:#fff; border:0; border-radius:10px; padding:8px 12px; font-weight:900; cursor:pointer; }
-
-  /* ===== Responsif: tetap 2 kolom di HP (player besar, chat kecil) ===== */
-  @media (max-width: 760px){
-    #row{ gap:6px; }
-    #right{ flex-basis:38%; min-width:150px; }
-    #left { flex-basis:62%; }
-    /* title orbitron kecil */
-    .match-head{ font-size:13px; }
-    /* kontrol diperkecil */
-    .ctrl-btn{ padding:5px 8px; border-radius:8px; min-height:30px; }
-    #volume{ width:clamp(60px, 26vw, 110px); }
+  @media (max-width:760px){
+    #row{gap:6px;}
+    #right{flex-basis:30%;min-width:150px;}
+    #left{flex-basis:70%;}
+    .match-head{font-size:13px;}
+    .ctrl-btn{padding:5px 8px;border-radius:8px;min-height:30px;}
+    #volume{width:clamp(60px,26vw,110px);}
   }
 </style>
 </head>
 <body>
 
-<!-- Admin kecil kanan atas -->
 <button id="adminLogin" type="button">Admin</button>
 
 <div id="wrap">
   <div id="row">
-    <!-- ===== KIRI: Player + kontrol + link ===== -->
     <section id="left">
       <div id="playerCard">
         <div id="player">
           <video id="video" playsinline muted></video>
           <div id="overlay">⏳ Memuat stream...</div>
         </div>
-
-        <!-- Kontrol kecil (volume+mute, quality (dropdown ke atas), fullscreen) -->
         <div id="controls">
           <div id="volWrap">
-            <button class="ctrl-btn" id="btnMute" title="Mute/Unmute">🔊</button>
+            <button class="ctrl-btn" id="btnMute">🔊</button>
             <input type="range" id="volume" min="0" max="1" step="0.01" value="1" />
           </div>
-
           <div id="qualityWrap">
-            <button class="ctrl-btn" id="qualityBtn" title="Pilih Resolusi">HD ▾</button>
-            <div id="qualityMenu" role="menu" aria-hidden="true">
+            <button class="ctrl-btn" id="qualityBtn">HD ▾</button>
+            <div id="qualityMenu">
               <button data-q="auto" class="active">Auto</button>
               <button data-q="360">360p</button>
               <button data-q="480">480p</button>
@@ -217,52 +106,24 @@
               <button data-q="1080">1080p</button>
             </div>
           </div>
-
-          <button class="ctrl-btn" id="btnFS" title="Fullscreen / Exit">⤢</button>
+          <button class="ctrl-btn" id="btnFS">⤢</button>
         </div>
       </div>
-
       <div id="info">Klik Link untuk Tonton Live | Terima kasih atas dukungan Anda!</div>
 
-      <!-- Baris link sesuai screenshot: "Korea vs Indo : Link 1 Link 2 Link 3" -->
-      <div class="match">
-        <div class="match-head">🔴 FILIPINA vs TUNISIA :</div>
-        <div class="links">
-          <button class="link-btn" data-stream="stream1" data-index="0">Link 1</button>
-          <button class="link-btn" data-stream="stream1" data-index="1">Link 2</button>
-          <button class="link-btn" data-stream="stream1" data-index="2">Link 3</button>
-        </div>
-      </div>
+      <div class="match"><div class="match-head">🔴 FILIPINA vs TUNISIA :</div><div class="links">
+        <button class="link-btn" data-stream="stream1" data-index="0">Link 1</button>
+        <button class="link-btn" data-stream="stream1" data-index="1">Link 2</button>
+        <button class="link-btn" data-stream="stream1" data-index="2">Link 3</button>
+      </div></div>
 
-      <div class="match">
-        <div class="match-head">🔴 KOREA vs INDO :</div>
-        <div class="links">
-          <button class="link-btn" data-stream="stream2" data-index="0">Link 1</button>
-          <button class="link-btn" data-stream="stream2" data-index="1">Link 2</button>
-          <button class="link-btn" data-stream="stream2" data-index="2">Link 3</button>
-        </div>
-      </div>
+      <div class="match"><div class="match-head">🔴 A vs B :</div><div class="links">
+        <button class="link-btn" data-stream="stream2" data-index="0">Link 1</button>
+        <button class="link-btn" data-stream="stream2" data-index="1">Link 2</button>
+        <button class="link-btn" data-stream="stream2" data-index="2">Link 3</button>
 
-      <div class="match">
-        <div class="match-head">🔴 KOREA vs INDO :</div>
-        <div class="links">
-          <button class="link-btn" data-stream="stream3" data-index="0">Link 1</button>
-          <button class="link-btn" data-stream="stream3" data-index="1">Link 2</button>
-          <button class="link-btn" data-stream="stream3" data-index="2">Link 3</button>
-        </div>
-      </div>
-
-      <div class="match">
-        <div class="match-head">🔴 KOREA vs INDO :</div>
-        <div class="links">
-          <button class="link-btn" data-stream="stream4" data-index="0">Link 1</button>
-          <button class="link-btn" data-stream="stream4" data-index="1">Link 2</button>
-          <button class="link-btn" data-stream="stream4" data-index="2">Link 3</button>
-        </div>
-      </div>
     </section>
 
-    <!-- ===== KANAN: Chat (proporsional, sama tinggi player) ===== -->
     <aside id="right">
       <div id="chat">
         <div id="chatHeader">💬 Live Chat</div>
@@ -276,371 +137,75 @@
   </div>
 </div>
 
-<!-- ===== Popup Sawer ===== -->
-<div id="popup" aria-hidden="true">
-  <div id="popCard">
-    <div id="popTitle">💸 SAWER SEIKHLASNYA<br><small>Sekali Sawer Nonton Gratis Tanpa Iklan</small></div>
-    <div id="nominal"></div>
-    <div id="qrWrap">
-      <img id="qr" alt="QR">
-      <div>Silakan scan QR untuk verifikasi...</div>
-    </div>
-    <button id="btnClose">Tutup</button>
-  </div>
-</div>
-
 <script>
-  /***********************
-   *  STREAM SOURCES
-   ***********************/
-  // Tetap pakai sumber dari versimu (boleh ganti ke manifest HLS multi-bitrate agar quality switching efektif)
-  const STREAMS = {
-    stream1: {
-      urls: [
-        "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/2njG0JMy/live.isml/.m3u8",
-        "https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/2njG0JMy/live.isml/.m3u8",
-        "https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8",
-      ]
-    },
-    stream2: {
-      urls: [
-        "https://live.alilicloud.com/live/a7236226f7213711f9891683d978fb38/playlist.m3u8",
-        "https://live.alilicloud.com/live/a7236226f7213711f9891683d978fb38/playlist.m3u8",
-        "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
-      ]
-    },
-    stream3: {
-      urls: [
-        "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-        "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-        "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
-      ]
-    },
-    stream4: {
-      urls: [
-        "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-        "https://mahabawdilive.pyoneplay.com/hls/stream.m3u8",
-        "https://live.alilicloud.com/live/c8551919cfe98878229ef2d6b979aa49/playlist.m3u8",
-      ]
-    }
-  };
+const STREAMS = {
+  stream1:{urls:
+["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/2njG0JMy/live.isml/.m3u8"]},
+  stream2:{urls:
+["https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8?did=b2153788642168a388cac0681"]},
 
-  /***********************
-   *  ELEM / STATE
-   ***********************/
-  const video = document.getElementById('video');
-  const overlay = document.getElementById('overlay');
-  const player = document.getElementById('player');
-  const adminBtn = document.getElementById('adminLogin');
 
-  const btnMute = document.getElementById('btnMute');
-  const volume = document.getElementById('volume');
-  const btnFS = document.getElementById('btnFS');
+};
 
-  const qualityBtn = document.getElementById('qualityBtn');
-  const qualityMenu = document.getElementById('qualityMenu');
+const video=document.getElementById('video');
+const overlay=document.getElementById('overlay');
+const player=document.getElementById('player');
+const adminBtn=document.getElementById('adminLogin');
+const btnMute=document.getElementById('btnMute');
+const volume=document.getElementById('volume');
+const btnFS=document.getElementById('btnFS');
+const qualityBtn=document.getElementById('qualityBtn');
+const qualityMenu=document.getElementById('qualityMenu');
+const chatBox=document.getElementById('chatBox');
+const chatForm=document.getElementById('chatForm');
+const chatInput=document.getElementById('chatInput');
 
-  const chatBox = document.getElementById('chatBox');
-  const chatForm = document.getElementById('chatForm');
-  const chatInput = document.getElementById('chatInput');
+let hls=null;let isAdmin=false;let selectedStreamKey='stream1';let selectedUrlIndex=0;let selectedQuality='auto';
 
-  const popup = document.getElementById('popup');
-  const popCard = document.getElementById('popCard');
-  const nominalWrap = document.getElementById('nominal');
-  const qrWrap = document.getElementById('qrWrap');
-  const qrImg = document.getElementById('qr');
+adminBtn.addEventListener('click',()=>{const u=prompt('Username:');const p=prompt('Password:');if(u==='reno'&&p==='wadju'){isAdmin=true;alert('Admin aktif');}else{alert('Login gagal');}});
 
-  let hls = null;
-  let isAdmin = false;
-  let selectedStreamKey = 'stream1';
-  let selectedUrlIndex = 0;
-  let selectedQuality = 'auto'; // auto|360|480|720|1080
+function destroyHls(){if(hls){try{hls.destroy();}catch(e){}hls=null;}}
+function loadStreamBy(key,idx=0){
+  selectedStreamKey=key;selectedUrlIndex=idx;
+  const urls=STREAMS[key]?.urls||[];const src=urls[idx]||urls[0];if(!src)return;
+  destroyHls();overlay.style.display='flex';
+  if(Hls.isSupported()){hls=new Hls();hls.loadSource(src);hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED,()=>{applyQuality(selectedQuality);video.play().catch(()=>{});overlay.style.display='none';});}
+  else if(video.canPlayType('application/vnd.apple.mpegurl')){video.src=src;video.play().catch(()=>{});overlay.style.display='none';}
+  else{video.src=src;video.play().catch(()=>{});overlay.style.display='none';}
+  document.querySelectorAll('.link-btn').forEach(b=>b.classList.remove('active'));
+  const activeBtn=document.querySelector(`.link-btn[data-stream="${key}"][data-index="${idx}"]`);
+  if(activeBtn)activeBtn.classList.add('active');
+}
+function findLevelIndexByHeight(target){if(!hls||!hls.levels)return-1;const lvls=hls.levels;const arr=lvls.map((l,i)=>({i,h:l.height||0})).sort((a,b)=>a.h-b.h);let pick=arr[0].i;for(const item of arr){if(item.h<=target)pick=item.i;else break;}return pick;}
+function applyQuality(q){selectedQuality=q;if(!hls)return;if(q==='auto'){hls.currentLevel=-1;setQualityActive('auto');return;}const targetHeight=q==='360'?360:q==='480'?480:q==='720'?720:1080;const idx=findLevelIndexByHeight(targetHeight);if(idx>=0){hls.currentLevel=idx;setQualityActive(q);}else{setQualityActive('auto');hls.currentLevel=-1;}}
+function setQualityActive(val){qualityMenu.querySelectorAll('button').forEach(b=>b.classList.remove('active'));const btn=qualityMenu.querySelector(`button[data-q="${val}"]`);if(btn)btn.classList.add('active');qualityBtn.textContent=(val==='auto'?'HD ▾':val+'p ▾');}
+qualityBtn.addEventListener('click',()=>{qualityMenu.classList.toggle('show');});
+qualityMenu.querySelectorAll('button').forEach(b=>{b.addEventListener('click',()=>{applyQuality(b.dataset.q);qualityMenu.classList.remove('show');});});
+document.querySelectorAll('.link-btn').forEach(btn=>{btn.addEventListener('click',()=>{loadStreamBy(btn.dataset.stream,parseInt(btn.dataset.index));});});
+loadStreamBy('stream1',0);
 
-  /***********************
-   *  ADMIN LOGIN KECIL
-   ***********************/
-  adminBtn.addEventListener('click', ()=>{
-    const u = prompt('Username user:');
-    const p = prompt('Password password:');
-    if(u==='reno' && p==='wadju'){
-      isAdmin = true;
-      alert('Admin mode aktif');
-    } else {
-      alert('Login gagal');
-    }
-  });
-  /***********************
-   *  LOAD STREAM + QUALITY
-   ***********************/
-  function destroyHls(){
-    if(hls){
-      try{ hls.destroy(); }catch(e){}
-      hls = null;
-    }
-  }
+function setMuteIcon(){btnMute.textContent=(video.muted||video.volume===0)?'🔇':'🔊';}
+btnMute.addEventListener('click',()=>{video.muted=!video.muted;if(!video.muted&&video.volume===0){video.volume=0.6;volume.value=0.6;}setMuteIcon();});
+volume.addEventListener('input',(e)=>{video.volume=parseFloat(e.target.value);video.muted=(video.volume===0);setMuteIcon();});setMuteIcon();
 
-  function loadStreamBy(key, idx=0){
-    selectedStreamKey = key;
-    selectedUrlIndex = idx;
-    const urls = (STREAMS[key] && STREAMS[key].urls) ? STREAMS[key].urls : [];
-    const src = urls[idx] || urls[0];
-    if(!src){ console.warn('URL stream tidak ditemukan'); return; }
+async function enterFS(el){try{if(el.requestFullscreen)await el.requestFullscreen();if(screen.orientation?.lock){try{await screen.orientation.lock('landscape');}catch(e){}}}catch(e){}}
+async function exitFS(){try{if(document.exitFullscreen)await document.exitFullscreen();if(screen.orientation?.unlock){try{screen.orientation.unlock();}catch(e){}}}catch(e){}}
+btnFS.addEventListener('click',()=>{if(!document.fullscreenElement)enterFS(player);else exitFS();});
+document.addEventListener('fullscreenchange',()=>{btnFS.textContent=(document.fullscreenElement?'⤡':'⤢');});
 
-    // Non-admin: tampilkan popup verifikasi QR sekali per hari sebelum play
-    if(!isAdmin && localStorage.getItem('verified_'+todayKey())!=='true'){
-      openPopup();
-      return;
-    }
-
-    destroyHls();
-    overlay.style.display = 'flex';
-
-    if(Hls.isSupported()){
-      hls = new Hls();
-      hls.loadSource(src);
-      hls.attachMedia(video);
-
-      hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
-        // apply selectedQuality bila bukan auto
-        applyQuality(selectedQuality);
-        video.play().catch(()=>{});
-        overlay.style.display = 'none';
-      });
-
-      hls.on(Hls.Events.LEVEL_SWITCHED, (_e,data)=>{
-        // console.log('Level switched ->', data.level);
-      });
-
-      hls.on(Hls.Events.ERROR, (_ev, data)=>{
-        console.warn('HLS error', data);
-      });
-    }else if(video.canPlayType('application/vnd.apple.mpegurl')){
-      // Safari iOS
-      video.src = src;
-      video.play().catch(()=>{});
-      overlay.style.display='none';
-    }else{
-      // fallback
-      video.src = src;
-      video.play().catch(()=>{});
-      overlay.style.display='none';
-    }
-
-    // tandai tombol link aktif
-    document.querySelectorAll('.link-btn').forEach(b=>b.classList.remove('active'));
-    const activeBtn = document.querySelector(`.link-btn[data-stream="${key}"][data-index="${idx}"]`);
-    if(activeBtn) activeBtn.classList.add('active');
-  }
-
-  // Map tinggi ke label (mencari level terdekat yang <= target)
-  function findLevelIndexByHeight(target){
-    if(!hls || !hls.levels || !hls.levels.length) return -1;
-    const lvls = hls.levels;
-    // urutkan berdasarkan height
-    const arr = lvls.map((l,i)=>({i,h:l.height||0})).sort((a,b)=>a.h-b.h);
-    // cari <= target yang paling besar, kalau tidak ada ambil terkecil di atasnya
-    let pick = arr[0].i;
-    for(const item of arr){
-      if(item.h <= target) pick = item.i;
-      else break;
-    }
-    return pick;
-  }
-
-  function applyQuality(q){
-    selectedQuality = q;
-    if(!hls){ return; }
-
-    if(q==='auto'){
-      hls.currentLevel = -1; // auto
-      setQualityActive('auto');
-      return;
-    }
-    const targetHeight = q==='360'?360 : q==='480'?480 : q==='720'?720 : 1080;
-    const idx = findLevelIndexByHeight(targetHeight);
-    if(idx>=0){
-      hls.currentLevel = idx;
-      setQualityActive(q);
-    }else{
-      // jika manifest tidak multi-bitrate
-      setQualityActive('auto');
-      hls.currentLevel = -1;
-    }
-  }
-
-  function setQualityActive(val){
-    qualityMenu.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
-    const btn = qualityMenu.querySelector(`button[data-q="${val}"]`);
-    if(btn) btn.classList.add('active');
-    qualityBtn.textContent = (val==='auto'?'HD ▾': (val+'p ▾'));
-  }
-
-  // Klik tombol quality -> menu muncul ke atas
-  qualityBtn.addEventListener('click', ()=>{
-    qualityMenu.classList.toggle('show');
-    qualityMenu.setAttribute('aria-hidden', !qualityMenu.classList.contains('show'));
-  });
-  // Pilih quality
-  qualityMenu.querySelectorAll('button').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      const q = b.dataset.q;
-      qualityMenu.classList.remove('show');
-      applyQuality(q);
-    });
-  });
-  // Tutup menu saat klik luar
-  document.addEventListener('click', (e)=>{
-    if(!qualityMenu.contains(e.target) && !qualityBtn.contains(e.target)){
-      qualityMenu.classList.remove('show');
-    }
-  });
-
-  // Bind link baris
-  document.querySelectorAll('.link-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const k = btn.dataset.stream;
-      const i = parseInt(btn.dataset.index||0,10);
-      loadStreamBy(k,i);
-    });
-  });
-
-  // Load default
-  loadStreamBy('stream1',0);
-
-  /***********************
-   *  VOLUME / MUTE
-   ***********************/
-  function setMuteIcon(){
-    btnMute.textContent = (video.muted || video.volume===0) ? '🔇' : '🔊';
-  }
-  btnMute.addEventListener('click', ()=>{
-    video.muted = !video.muted;
-    if(!video.muted && video.volume===0){ video.volume = 0.6; volume.value = 0.6; }
-    setMuteIcon();
-  });
-  volume.addEventListener('input', (e)=>{
-    const v = parseFloat(e.target.value);
-    video.volume = isNaN(v)?1:v;
-    video.muted = (video.volume===0);
-    setMuteIcon();
-  });
-  setMuteIcon();
-
-  /***********************
-   *  FULLSCREEN + ROTASI
-   ***********************/
-  async function enterFS(el){
-    try{
-      if(el.requestFullscreen) await el.requestFullscreen();
-      else if(el.webkitRequestFullscreen) await el.webkitRequestFullscreen();
-      // rotate landscape (best effort)
-      if(screen.orientation && screen.orientation.lock){
-        try{ await screen.orientation.lock('landscape'); }catch(e){}
-      }
-    }catch(e){ console.warn(e); }
-  }
-  async function exitFS(){
-    try{
-      if(document.exitFullscreen) await document.exitFullscreen();
-      else if(document.webkitExitFullscreen) await document.webkitExitFullscreen();
-      if(screen.orientation && screen.orientation.unlock){
-        try{ screen.orientation.unlock(); }catch(e){}
-      }
-    }catch(e){ console.warn(e); }
-  }
-  btnFS.addEventListener('click', ()=>{
-    if(!document.fullscreenElement && !document.webkitFullscreenElement) enterFS(player);
-    else exitFS();
-  });
-  document.addEventListener('fullscreenchange', ()=>{
-    btnFS.textContent = (document.fullscreenElement?'⤡':'⤢');
-  });
-
-  /***********************
-   *  CHAT (localStorage 5 menit)
-   ***********************/
-  const CHAT_KEY = 'rc_chat_items';
-  const MAX_AGE = 5*60*1000;
-
-  function now(){ return Date.now(); }
-  function saveChat(user, text){
-    const arr = getChat().filter(m => now()-m.t < MAX_AGE);
-    arr.push({u:user, x:text, t:now()});
-    localStorage.setItem(CHAT_KEY, JSON.stringify(arr));
-  }
-  function getChat(){
-    try{ return JSON.parse(localStorage.getItem(CHAT_KEY)||'[]'); }catch{ return []; }
-  }
-  function renderChat(){
-    chatBox.innerHTML = '';
-    getChat().forEach(m=> addMsg(m.u, m.x));
-  }
-  function addMsg(u,x){
-    const d = document.createElement('div');
-    d.className = 'msg' + (u==='Admin'?' admin':'');
-    d.innerHTML = `<span class="u">${u}</span>: <span class="t"></span>`;
-    d.querySelector('.t').textContent = x;
-    chatBox.appendChild(d);
-  }
-
-  chatForm.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const txt = chatInput.value.trim();
-    if(!txt) return;
-    const user = isAdmin ? 'Admin' : 'Guest';
-    addMsg(user, txt);
-    saveChat(user, txt);
-    chatInput.value='';
-    chatBox.scrollTop = chatBox.scrollHeight;
-  });
-
-  // initial load & purge
-  (function initChat(){
-    // purge >5 menit
-    const arr = getChat().filter(m => now()-m.t < MAX_AGE);
-    localStorage.setItem(CHAT_KEY, JSON.stringify(arr));
-    renderChat();
-    chatBox.scrollTop = chatBox.scrollHeight;
-  })();
-
-  // sinkron tab
-  window.addEventListener('storage', (e)=>{
-    if(e.key===CHAT_KEY){
-      renderChat();
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-  });
-
-  /***********************
-   *  SINKRON TINGGI CHAT = PLAYER
-   ***********************/
-  function syncChatHeight(){
-    const rect = document.getElementById('playerCard').getBoundingClientRect();
-    const controlsH = document.getElementById('controls').getBoundingClientRect().height;
-    const playerH = rect.height; // termasuk kontrol
-    const chat = document.getElementById('chat');
-    chat.style.minHeight = playerH+'px';
-    chat.style.height = playerH+'px';
-  }
-  window.addEventListener('load', syncChatHeight);
-  window.addEventListener('resize', syncChatHeight);
-  // saat masuk/keluar fullscreen, tetap sinkron
-  document.addEventListener('fullscreenchange', syncChatHeight);
-
-  /***********************
-   *  VERIFIKASI (setelah scan QR)
-   ***********************/
-  // Kamu bisa set verified secara manual misalnya setelah klik tombol Play atau sukses bayar.
-  // Contoh sederhana: double-tap overlay utk set verified hari ini.
-  overlay.addEventListener('dblclick', ()=>{
-    localStorage.setItem('verified_'+todayKey(), 'true');
-    overlay.style.display='none';
-  });
-
-  // Pertama kali, biar terlihat loading lalu hilang saat video play
-  video.addEventListener('play', ()=>{ overlay.style.display='none'; });
-  video.addEventListener('pause', ()=>{ /* overlay tetap off */ });
-
+const CHAT_KEY='rc_chat_items';const MAX_AGE=5*60*1000;
+function now(){return Date.now();}
+function saveChat(user,text){const arr=getChat().filter(m=>now()-m.t<MAX_AGE);arr.push({u:user,x:text,t:now()});localStorage.setItem(CHAT_KEY,JSON.stringify(arr));}
+function getChat(){try{return JSON.parse(localStorage.getItem(CHAT_KEY)||'[]');}catch{return[];}}
+function renderChat(){chatBox.innerHTML='';getChat().forEach(m=>addMsg(m.u,m.x));}
+function addMsg(u,x){const d=document.createElement('div');d.className='msg'+(u==='Admin'?' admin':'');d.innerHTML=`<span class="u">${u}</span>: <span class="t"></span>`;d.querySelector('.t').textContent=x;chatBox.appendChild(d);}
+chatForm.addEventListener('submit',(e)=>{e.preventDefault();const txt=chatInput.value.trim();if(!txt)return;const user=isAdmin?'Admin':'Guest';addMsg(user,txt);saveChat(user,txt);chatInput.value='';chatBox.scrollTop=chatBox.scrollHeight;});
+(function initChat(){const arr=getChat().filter(m=>now()-m.t<MAX_AGE);localStorage.setItem(CHAT_KEY,JSON.stringify(arr));renderChat();chatBox.scrollTop=chatBox.scrollHeight;})();
+window.addEventListener('storage',(e)=>{if(e.key===CHAT_KEY){renderChat();chatBox.scrollTop=chatBox.scrollHeight;}});
+function syncChatHeight(){const rect=document.getElementById('playerCard').getBoundingClientRect();const chat=document.getElementById('chat');chat.style.minHeight=rect.height+'px';chat.style.height=rect.height+'px';}
+window.addEventListener('load',syncChatHeight);window.addEventListener('resize',syncChatHeight);document.addEventListener('fullscreenchange',syncChatHeight);
+video.addEventListener('play',()=>{overlay.style.display='none';});
 </script>
 </body>
 </html>
