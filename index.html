@@ -29,8 +29,7 @@
 
   #wrap{width:100%;max-width:1400px;margin:0 auto;padding:10px 8px 16px;}
   #row{display:flex;gap:10px;align-items:flex-start;}
-  #left{flex:1 1 auto;min-width:0;}
-  #right{flex:0 0 clamp(180px, 20vw, 280px);min-width:180px;}
+  #left{flex:1 1 100%;min-width:0;} /* player full width */
 
   #playerCard{background:var(--panel);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
   #player{position:relative;width:100%;aspect-ratio:16/9;background:#000;}
@@ -58,21 +57,8 @@
   .link-btn:hover{background:var(--link-hover);color:#000;}
   .link-btn.active{background:#ff2d2d;color:#fff;border-color:#ff2d2d;}
 
-  #chat{background:#121212;border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:100%;}
-  #chatHeader{padding:10px 12px;border-bottom:1px solid #222;font-weight:900;font-size:14px;}
-  #chatBox{flex:1;overflow-y:auto;padding:10px 10px 2px;scroll-behavior:smooth;}
-  .msg{margin:6px 0;font-size:13px;}
-  .msg .u{color:#ff0;font-weight:900;}
-  .msg.admin .u{color:#0f0;}
-  #chatForm{display:flex;gap:6px;padding:10px;border-top:1px solid #222;background:#0e0e0e;}
-  #chatInput{flex:1;background:#1c1c1c;color:#fff;border:1px solid #333;border-radius:8px;padding:8px;font-size:14px;}
-  #btnSend{background:var(--danger);color:#fff;border:0;border-radius:8px;padding:8px 12px;font-weight:900;cursor:pointer;}
-  #btnSend:hover{filter:brightness(1.08);}
-
   @media (max-width:760px){
     #row{gap:6px;}
-    #right{flex-basis:30%;min-width:150px;}
-    #left{flex-basis:70%;}
     .match-head{font-size:13px;}
     .ctrl-btn{padding:5px 8px;border-radius:8px;min-height:30px;}
     #volume{width:clamp(60px,26vw,110px);}
@@ -129,33 +115,17 @@
       <div class="match"><div class="match-head">🔴 SLO vs CHI :</div><div class="links">
         <button class="link-btn" data-stream="stream4" data-index="0">Link 1</button>
         <button class="link-btn" data-stream="stream4" data-index="1">Link 2</button>
-
-
+      </div></div>
     </section>
-
-    <aside id="right">
-      <div id="chat">
-        <div id="chatHeader">💬 Live Chat</div>
-        <div id="chatBox"></div>
-        <form id="chatForm" autocomplete="off">
-          <input id="chatInput" type="text" placeholder="Ketik pesan..." />
-          <button id="btnSend" type="submit">Kirim</button>
-        </form>
-      </div>
-    </aside>
   </div>
 </div>
 
 <script>
 const STREAMS = {
-  stream1:{urls:
-["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/xwbw1V9k/live.isml/.m3u8"]}, 
-  stream2:{urls:
-["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/mNgHbyLd/live.isml/.m3u8"]},
-  stream3:{urls:
-["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/L4ILmT6M/live.isml/.m3u8"]},
-  stream4:{urls:
-["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/dKe4tpwq/live.isml/.m3u8"]},
+  stream1:{urls:["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/xwbw1V9k/live.isml/.m3u8"]}, 
+  stream2:{urls:["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/mNgHbyLd/live.isml/.m3u8"]},
+  stream3:{urls:["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/L4ILmT6M/live.isml/.m3u8"]},
+  stream4:{urls:["https://livecdn.euw1-0005.jwplive.com/live/sites/fM9jRrkn/media/dKe4tpwq/live.isml/.m3u8"]},
 };
 
 const video=document.getElementById('video');
@@ -167,18 +137,20 @@ const volume=document.getElementById('volume');
 const btnFS=document.getElementById('btnFS');
 const qualityBtn=document.getElementById('qualityBtn');
 const qualityMenu=document.getElementById('qualityMenu');
-const chatBox=document.getElementById('chatBox');
-const chatForm=document.getElementById('chatForm');
-const chatInput=document.getElementById('chatInput');
 
 let hls=null;let isAdmin=false;let selectedStreamKey='stream1';let selectedUrlIndex=0;let selectedQuality='auto';
 
-adminBtn.addEventListener('click',()=>{const u=prompt('Username:');const p=prompt('Password:');if(u==='reno'&&p==='wadju'){isAdmin=true;alert('Admin aktif');}else{alert('Login gagal');}});
+adminBtn.addEventListener('click',()=>{
+  const u=prompt('Username:');
+  const p=prompt('Password:');
+  if(u==='reno'&&p==='wadju'){isAdmin=true;alert('Admin aktif');}else{alert('Login gagal');}
+});
 
 function destroyHls(){if(hls){try{hls.destroy();}catch(e){}hls=null;}}
 function loadStreamBy(key,idx=0){
   selectedStreamKey=key;selectedUrlIndex=idx;
-  const urls=STREAMS[key]?.urls||[];const src=urls[idx]||urls[0];if(!src)return;
+  const urls=STREAMS[key]?.urls||[];
+  const src=urls[idx]||urls[0];if(!src)return;
   destroyHls();overlay.style.display='flex';
   if(Hls.isSupported()){hls=new Hls();hls.loadSource(src);hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED,()=>{applyQuality(selectedQuality);video.play().catch(()=>{});overlay.style.display='none';});}
@@ -204,18 +176,6 @@ async function enterFS(el){try{if(el.requestFullscreen)await el.requestFullscree
 async function exitFS(){try{if(document.exitFullscreen)await document.exitFullscreen();if(screen.orientation?.unlock){try{screen.orientation.unlock();}catch(e){}}}catch(e){}}
 btnFS.addEventListener('click',()=>{if(!document.fullscreenElement)enterFS(player);else exitFS();});
 document.addEventListener('fullscreenchange',()=>{btnFS.textContent=(document.fullscreenElement?'⤡':'⤢');});
-
-const CHAT_KEY='rc_chat_items';const MAX_AGE=5*60*1000;
-function now(){return Date.now();}
-function saveChat(user,text){const arr=getChat().filter(m=>now()-m.t<MAX_AGE);arr.push({u:user,x:text,t:now()});localStorage.setItem(CHAT_KEY,JSON.stringify(arr));}
-function getChat(){try{return JSON.parse(localStorage.getItem(CHAT_KEY)||'[]');}catch{return[];}}
-function renderChat(){chatBox.innerHTML='';getChat().forEach(m=>addMsg(m.u,m.x));}
-function addMsg(u,x){const d=document.createElement('div');d.className='msg'+(u==='Admin'?' admin':'');d.innerHTML=`<span class="u">${u}</span>: <span class="t"></span>`;d.querySelector('.t').textContent=x;chatBox.appendChild(d);}
-chatForm.addEventListener('submit',(e)=>{e.preventDefault();const txt=chatInput.value.trim();if(!txt)return;const user=isAdmin?'Admin':'Guest';addMsg(user,txt);saveChat(user,txt);chatInput.value='';chatBox.scrollTop=chatBox.scrollHeight;});
-(function initChat(){const arr=getChat().filter(m=>now()-m.t<MAX_AGE);localStorage.setItem(CHAT_KEY,JSON.stringify(arr));renderChat();chatBox.scrollTop=chatBox.scrollHeight;})();
-window.addEventListener('storage',(e)=>{if(e.key===CHAT_KEY){renderChat();chatBox.scrollTop=chatBox.scrollHeight;}});
-function syncChatHeight(){const rect=document.getElementById('playerCard').getBoundingClientRect();const chat=document.getElementById('chat');chat.style.minHeight=rect.height+'px';chat.style.height=rect.height+'px';}
-window.addEventListener('load',syncChatHeight);window.addEventListener('resize',syncChatHeight);document.addEventListener('fullscreenchange',syncChatHeight);
 video.addEventListener('play',()=>{overlay.style.display='none';});
 </script>
 </body>
